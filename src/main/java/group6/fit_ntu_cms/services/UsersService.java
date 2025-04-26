@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface UsersService {
     Optional<UsersModel> login(String email, String password);
+    boolean register(UsersModel user);
 }

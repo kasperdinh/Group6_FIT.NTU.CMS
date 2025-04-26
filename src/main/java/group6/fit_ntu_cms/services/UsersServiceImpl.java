@@ -24,4 +24,14 @@ public class UsersServiceImpl implements UsersService{
         }
         return Optional.empty();
     }
+
+    @Override
+    public boolean register(UsersModel user) {
+        if(usersRepository.findByUsername(user.getUsername().trim()).isPresent() ||
+        usersRepository.findByEmail(user.getEmail().trim()).isPresent()){
+            return false;
+        }
+        usersRepository.save(user);
+        return true;
+    }
 }
