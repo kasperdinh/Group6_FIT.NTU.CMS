@@ -8,20 +8,44 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 public class EventController {
-  @Autowired
-  private EventService eventService; // ✅ Đã thêm @Autowired
 
+  @Autowired
+  private EventService eventService;
 
   @PostMapping("/events")
-  public String addEvent(@ModelAttribute EventModel event) {
-    eventService.createEvent(event); // ✅ Gọi đúng service đã khai báo
+  public String addEvent(
+          @ModelAttribute EventModel event,
+          @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+
+    if (imageFile != null && !imageFile.isEmpty()) {
+      // Lấy đường dẫn tuyệt đối thực sự của dự án
+      String uploadDir = new File("src/main/resources/static/img/").getAbsolutePath();
+
+      String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+      File saveFile = new File(uploadDir, filename);
+
+      saveFile.getParentFile().mkdirs(); // Tạo thư mục nếu chưa có
+      imageFile.transferTo(saveFile);
+
+      event.setEventImage("/img/" + filename); // Đường link để truy cập ảnh
+    }
+
+    eventService.saveEvent(event);
     return "redirect:/events";
   }
+
+
+
   @GetMapping("/events")
   public String getAllEvents(Model model) {
     List<EventModel> events = eventService.getAllEvents();
@@ -32,8 +56,6 @@ public class EventController {
     newEvent.setEventId(eventService.generateNextEventId());
     model.addAttribute("event", newEvent);
 
-    return "Event/events"; // Trả về trang Event/events
+    return "Event/events";
   }
-
-
 }

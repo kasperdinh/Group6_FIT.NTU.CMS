@@ -40,4 +40,7 @@ public class EventService {
     return String.format("EVT%03d", numericPart);
   }
 
+  public EventModel  saveEvent(EventModel event) {
+    return eventRepository.save(event);
+  }
 }
