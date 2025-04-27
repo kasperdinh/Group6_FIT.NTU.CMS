@@ -44,8 +44,6 @@ public class EventController {
     return "redirect:/events";
   }
 
-
-
   @GetMapping("/events")
   public String getAllEvents(Model model) {
     List<EventModel> events = eventService.getAllEvents();
@@ -57,5 +55,27 @@ public class EventController {
     model.addAttribute("event", newEvent);
 
     return "Event/events";
+  }
+  @PostMapping("/deleteEvent")
+  public String removeEvent(@RequestParam("eventId") String eventId) {
+    // Tìm sự kiện theo eventId
+    EventModel event = eventService.getAllEvents().stream()
+            .filter(e -> e.getEventId().equals(eventId))
+            .findFirst()
+            .orElse(null);
+
+    if (event != null) {
+      // Xóa file ảnh nếu có
+      if (event.getEventImage() != null) {
+        String imagePath = new File("src/main/resources/static" + event.getEventImage()).getAbsolutePath();
+        File imageFile = new File(imagePath);
+        if (imageFile.exists()) {
+          imageFile.delete();
+        }
+      }
+      // Xóa sự kiện
+      eventService.deleteEvent(event);
+    }
+    return "redirect:/events";
   }
 }
