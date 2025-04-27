@@ -85,6 +85,12 @@ h1 {
 }
 .action-buttons .btn {
     margin-right: 5px;
+    font-size: 1.2rem;
+    transition: transform 0.2s ease;
+}
+.action-buttons .btn:hover {
+    transform: scale(1.2);
+    animation: shake 0.9s ease-in-out!important;
 }
 .pagination {
     justify-content: center;

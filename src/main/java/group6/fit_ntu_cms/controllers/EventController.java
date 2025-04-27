@@ -78,4 +78,9 @@ public class EventController {
     }
     return "redirect:/events";
   }
+  @PostMapping("/Editevents")
+  public String editEvents(EventModel event){
+    eventService.saveEvent(event);
+    return "redirect:/events";
+  }
 }

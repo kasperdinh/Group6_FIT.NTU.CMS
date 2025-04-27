@@ -54,4 +54,33 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('deleteEventId').value = eventId;
         });
     });
+    document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const eventId = this.getAttribute('data-event-id');
+            const row = this.closest('.event-row');
+            const cells = row.querySelectorAll('td');
+
+            // Lấy dữ liệu từ hàng
+            const eventData = {
+                eventId: cells[0].textContent,
+                eventName: cells[1].textContent,
+                eventDate: cells[2].textContent,
+                eventTime: cells[3].textContent,
+                eventLocation: cells[4].textContent,
+                eventDescription: cells[5].textContent,
+                eventImage: cells[6].querySelector('img') ? cells[6].querySelector('img').src : ''
+            };
+
+            // Điền dữ liệu vào modal chỉnh sửa
+            document.getElementById('editEventId').value = eventData.eventId;
+            document.getElementById('editEventName').value = eventData.eventName;
+            document.getElementById('editEventDate').value = eventData.eventDate;
+            document.getElementById('editEventTime').value = eventData.eventTime;
+            document.getElementById('editEventLocation').value = eventData.eventLocation;
+            document.getElementById('editEventDescription').value = eventData.eventDescription;
+            document.getElementById('editEventImage').src = eventData.eventImage || '';
+            document.getElementById('editEventImage').style.display = eventData.eventImage ? 'block' : 'none';
+            document.getElementById('editExistingImage').value = eventData.eventImage || '';
+        });
+    });
 });
