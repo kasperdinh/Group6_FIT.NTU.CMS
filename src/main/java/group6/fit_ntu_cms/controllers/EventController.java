@@ -44,8 +44,6 @@ public class EventController {
     return "redirect:/events";
   }
 
-
-
   @GetMapping("/events")
   public String getAllEvents(Model model) {
     List<EventModel> events = eventService.getAllEvents();
@@ -56,6 +54,6 @@ public class EventController {
     newEvent.setEventId(eventService.generateNextEventId());
     model.addAttribute("event", newEvent);
 
-    return "Event/events";
+    return "event/events";
   }
 }
