@@ -17,7 +17,21 @@ public class AuthController {
     private UsersService usersService;
 
 
+<<<<<<< HEAD
     @PostMapping({"/login", "signin"})
+=======
+    @GetMapping("/index")
+    public String showIndex() {
+        return "index";
+    }
+
+    @GetMapping("/register")
+    public String showRegisterForm() {
+        return "register";
+    }
+
+    @PostMapping("/login" )
+>>>>>>> bcdd82e07ceec5f8b59673cb4687499241583428
     public String login(@RequestParam String email,
                         @RequestParam String password,
                         ModelMap model) {
