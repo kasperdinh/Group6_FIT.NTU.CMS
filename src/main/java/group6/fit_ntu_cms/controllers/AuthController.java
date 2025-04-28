@@ -31,7 +31,7 @@ public class AuthController {
         return "register";
     }
 
-    @PostMapping("/login")
+    @PostMapping("/login" )
     public String login(@RequestParam String email,
                         @RequestParam String password,
                         ModelMap model) {

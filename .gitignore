@@ -42,3 +42,6 @@ Desktop.ini
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
+
+# applcartion.properties
+application.properties
