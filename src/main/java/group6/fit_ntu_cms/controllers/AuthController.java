@@ -16,22 +16,8 @@ public class AuthController {
     @Autowired
     private UsersService usersService;
 
-    @GetMapping("/login")
-    public String showLogin() {
-        return "login";
-    }
 
-    @GetMapping("/index")
-    public String showIndex() {
-        return "index";
-    }
-
-    @GetMapping("/register")
-    public String showRegisterForm() {
-        return "register";
-    }
-
-    @PostMapping("/login")
+    @PostMapping({"/login", "signin"})
     public String login(@RequestParam String email,
                         @RequestParam String password,
                         ModelMap model) {

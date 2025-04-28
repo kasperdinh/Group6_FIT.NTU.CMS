@@ -13,16 +13,16 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/", "/login", "/register", "/css/**", "/js/**").permitAll()
+                                .requestMatchers("/", "/signin", "/signup", "/css/**", "/js/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 ->
                         oauth2
-                                .loginPage("/login")
+                                .loginPage("/signin")
                                 .defaultSuccessUrl("/index", true)
                 )
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/register", "/login")
+                        .ignoringRequestMatchers( "/signin", "/signup", "/css/**", "/js/**")
                 );
         return http.build();
     }
