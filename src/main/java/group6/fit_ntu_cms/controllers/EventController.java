@@ -54,7 +54,7 @@ public class EventController {
     newEvent.setEventId(eventService.generateNextEventId());
     model.addAttribute("event", newEvent);
 
-    return "Event/events";
+    return "event/events";
   }
   @PostMapping("/deleteEvent")
   public String removeEvent(@RequestParam("eventId") String eventId) {

@@ -38,6 +38,26 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
+# Logs
+*.log
+logs/
+*.log.*
+spring.log
+
+# Database
+*.h2.db
+*.mv.db
+*.sqlite
+
+# Environment & secrets
+.env
+*.env
+.env.*
+application.properties
+application.yml
+application-*.properties
+application-*.yml
+
 # Build tools
 build/
 !**/src/main/**/build/
