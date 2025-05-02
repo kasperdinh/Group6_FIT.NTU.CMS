@@ -44,6 +44,10 @@ h1 {
     max-width: 100px;
     border-radius: 5px;
 }
+.action-buttons{
+    display: flex;
+    align-items: center;
+}
 .modal-content {
     border-radius: 10px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
@@ -57,10 +61,14 @@ h1 {
 .modal-title {
     font-weight: 500;
 }
+.modal label{
+    font-weight: 500;
+}
 .form-control, .form-control:focus {
     border-radius: 5px;
     border: 1px solid #ced4da;
     transition: border-color 0.3s ease;
+    width: 80%;
 }
 .form-control:focus {
     border-color: #007bff;
@@ -77,6 +85,12 @@ h1 {
 }
 .action-buttons .btn {
     margin-right: 5px;
+    font-size: 1.2rem;
+    transition: transform 0.2s ease;
+}
+.action-buttons .btn:hover {
+    transform: scale(1.2);
+    animation: shake 0.9s ease-in-out!important;
 }
 .pagination {
     justify-content: center;
@@ -92,3 +106,12 @@ h1 {
 .pagination .page-link:hover {
     background-color: #e9ecef;
 }
+.input-row{
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+.flex-item{
+    flex: 1;
+}
+

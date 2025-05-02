@@ -15,11 +15,6 @@ public class EventService {
   public List<EventModel> getAllEvents() {
     return eventRepository.findAll();
   }
-  // Hàm tạo event mới
-  public EventModel createEvent(EventModel event) {
-    event.setEventId(generateNextEventId());
-    return eventRepository.save(event);
-  }
   // hàm sinh id mới nhất khi thêm mới event
   public String generateNextEventId() {
     List<EventModel> allEvents = eventRepository.findAll();
@@ -40,7 +35,10 @@ public class EventService {
     return String.format("EVT%03d", numericPart);
   }
 
-  public EventModel  saveEvent(EventModel event) {
-    return eventRepository.save(event);
+  public void saveEvent(EventModel event) {
+    eventRepository.save(event);
+  }
+  public void deleteEvent(EventModel event){
+    eventRepository.delete(event);
   }
 }
