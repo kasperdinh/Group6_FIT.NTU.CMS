@@ -79,7 +79,25 @@ public class EventController {
     return "redirect:/events";
   }
   @PostMapping("/Editevents")
-  public String editEvents(EventModel event){
+  public String editEvents(EventModel event,
+                           @RequestParam("imageFile") MultipartFile imageFile,
+                           @RequestParam(value = "existingImage", required = false) String editEventFile) throws IOException {
+
+    if (imageFile != null && !imageFile.isEmpty()) {
+      // Lấy đường dẫn tuyệt đối thực sự của dự án
+      String uploadDir = new File("src/main/resources/static/img/").getAbsolutePath();
+
+      String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+      File saveFile = new File(uploadDir, filename);
+
+      saveFile.getParentFile().mkdirs(); // Tạo thư mục nếu chưa có
+      imageFile.transferTo(saveFile);
+
+      event.setEventImage("/img/" + filename); // Đường link để truy cập ảnh
+    }
+    else{
+      event.setEventImage(editEventFile);
+    }
     eventService.saveEvent(event);
     return "redirect:/events";
   }
