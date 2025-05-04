@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Phân trang
     const table = document.getElementById('eventTable');
     const rows = table.querySelectorAll('.event-row');
-    const rowsPerPage = 15;
+    const rowsPerPage = 7;
     const totalRows = rows.length;
     const totalPages = Math.ceil(totalRows / rowsPerPage);
     let currentPage = 1;
