@@ -32,7 +32,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/register")
+    @PostMapping({"/register", "signup"})
     public String register(@RequestParam String username,
                            @RequestParam String email,
                            @RequestParam String password,
