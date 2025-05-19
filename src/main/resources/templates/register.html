@@ -39,19 +39,26 @@
                                 <div class="form-group">
                                     <label for="exampleUsername"></label>
                                     <input type="text" class="form-control form-control-user" id="exampleUsername" placeholder="Username" name="username">
+                                    <small id="usernameError" style="color: red;"></small>
+
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputEmail"></label>
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail" placeholder="Email Address" name="email">
+                                    <input type="text" class="form-control form-control-user" id="exampleInputEmail" placeholder="Email Address" name="email"
+                                           oninvalid="this.setCustomValidity('Vui lòng nhập đúng định dạng email, ví dụ: ten@gmail.com')"
+                                           oninput="this.setCustomValidity('')">
+                                    <small id="emailError" style="color: red;"></small>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <label for="exampleInputPassword"></label>
                                         <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password" name="password">
+                                        <small id="passwordError" style="color: red;"></small>
                                     </div>
                                     <div class="col-sm-6">
                                         <label for="exampleRepeatPassword"></label>
                                         <input type="password" class="form-control form-control-user" id="exampleRepeatPassword" placeholder="Repeat Password" name="repeatPassword">
+                                        <small id="repeatPasswordError" style="color: red;"></small>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-user btn-block" style="margin-top: 30px;">
@@ -82,7 +89,62 @@
 
     <!-- Custom scripts for all pages-->
     <script src="/js/sb-admin-2.min.js"></script>
+    <script>
+        const form = document.querySelector('form');
+        const emailInput = document.getElementById('exampleInputEmail');
+        const usernameInput = document.getElementById('exampleUsername');
+        const passwordInput = document.getElementById('exampleInputPassword');
+        const repeatPasswordInput = document.getElementById('exampleRepeatPassword');
 
+        const emailError = document.getElementById('emailError');
+        const usernameError = document.getElementById("usernameError");
+        const passwordError = document.getElementById("passwordError");
+        const repeatPasswordError = document.getElementById("repeatPasswordError");
+
+        form.addEventListener('submit', function (e) {
+            let isValid = true;
+
+            const email = emailInput.value.trim();
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+            const repeatPassword = repeatPasswordInput.value;
+
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                emailError.textContent = "Please enter a valid email, e.g., example@gmail.com";
+                isValid = false;
+            } else {
+                emailError.textContent = "";
+            }
+
+            const usernameRegex = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/;
+            if (!usernameRegex.test(username)) {
+                usernameError.textContent = "Name must starting with a capital letter";
+                isValid = false;
+            } else {
+                usernameError.textContent = "";
+            }
+
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
+            if (!passwordRegex.test(password)) {
+                passwordError.textContent = "Password must contain uppercase, lowercase, number, special character, and be at least 6 characters long.";
+                isValid = false;
+            } else {
+                passwordError.textContent = "";
+            }
+
+            if (password !== repeatPassword) {
+                repeatPasswordError.textContent = "Passwords do not match.";
+                isValid = false;
+            } else {
+                repeatPasswordError.textContent = "";
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    </script>
 </body>
 
 </html>

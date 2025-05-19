@@ -34,4 +34,19 @@ public class UsersServiceImpl implements UsersService{
         usersRepository.save(user);
         return true;
     }
+
+    @Override
+    public Optional<UsersModel> findByEmail(String email) {
+        return usersRepository.findByEmail(email);
+    }
+
+    @Override
+    public Optional<UsersModel> findByResetToken(String token) {
+        return usersRepository.findByResetToken(token);
+    }
+
+    @Override
+    public void save(UsersModel user) {
+        usersRepository.save(user);
+    }
 }

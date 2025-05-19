@@ -8,6 +8,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import java.util.UUID;
 
 import java.util.Optional;
 
@@ -25,10 +28,11 @@ public class AuthController {
         Optional<UsersModel> user = usersService.login(email, password);
         if(user.isPresent()) {
             model.addAttribute("user", user.get());
-            return "redirect:/index";
+            model.addAttribute("success","Login successfully!");
+            return "redirect:index";
         } else {
-            model.addAttribute("error", "Sai tên đăng nhập hoặc mật khẩu");
-            return "redirect:/login";
+            model.addAttribute("error", "Incorrect email ỏ password!");
+            return "login";
         }
     }
 
@@ -39,7 +43,7 @@ public class AuthController {
                            @RequestParam String repeatPassword,
                            ModelMap model) {
         if(!repeatPassword.equals(password)) {
-            model.addAttribute("error", "Mật khẩu không khớp");
+            model.addAttribute("error", "Password do not match.");
             return "register";
         }
         UsersModel user = new UsersModel();
@@ -49,11 +53,78 @@ public class AuthController {
 
         boolean result = usersService.register(user);
         if(result) {
-            model.addAttribute("success", "Đăng ký tài khoản thành công");
-            return "redirect:/login";
+            model.addAttribute("success", "Registration successfully!");
+            return "login";
         } else {
-            model.addAttribute("error", "Email hoặc Username đã tồn tại");
-            return "redirect:/register";
+            return "register";
         }
+    }
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @PostMapping("/forgot-password")
+    public String processForgotPassword(@RequestParam("email") String email, ModelMap model) {
+        Optional<UsersModel> userOpt = usersService.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            model.addAttribute("error", "Email not found");
+            return "forgot-password";
+        }
+
+        UsersModel user = userOpt.get();
+        String token = UUID.randomUUID().toString();
+        user.setResetToken(token);
+        usersService.save(user);
+
+        String resetLink = "http://localhost:8080/reset-password?token=" + token;
+        sendResetEmail(email, resetLink);
+
+        model.addAttribute("success", "Successfully! Please check your email to reset your password.");
+        return "forgot-password";
+    }
+
+    private void sendResetEmail(String toEmail, String resetLink) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(toEmail);
+        message.setSubject("Password reset request");
+        message.setText("Click the link to reset your password: " + resetLink);
+        mailSender.send(message);
+    }
+
+    @GetMapping("/reset-password")
+    public String showResetForm(@RequestParam("token") String token, ModelMap model) {
+        Optional<UsersModel> userOpt = usersService.findByResetToken(token);
+        if (userOpt.isEmpty()) {
+            model.addAttribute("error", "Token invalid.");
+            return "reset-password";
+        }
+        model.addAttribute("token", token);
+        return "reset-password";
+    }
+
+    @PostMapping("/reset-password")
+    public String processResetPassword(@RequestParam String token,
+                                       @RequestParam String password,
+                                       @RequestParam String confirmPassword,
+                                       ModelMap model) {
+        if (!password.equals(confirmPassword)) {
+            model.addAttribute("error", "Password do not match.");
+            model.addAttribute("token", token);
+            return "reset-password";
+        }
+
+        Optional<UsersModel> userOpt = usersService.findByResetToken(token);
+        if (userOpt.isEmpty()) {
+            model.addAttribute("error", "Token invalid.");
+            return "reset-password";
+        }
+
+        UsersModel user = userOpt.get();
+        user.setPassword(password);
+        user.setResetToken(null);
+        usersService.save(user);
+
+        model.addAttribute("success", "Password reset successfully. You can now log in.");
+        return "login";
     }
 }

@@ -1,6 +1,7 @@
 package group6.fit_ntu_cms.models;
 
 import jakarta.persistence.*;
+import jdk.jfr.Name;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,4 +18,8 @@ public class UsersModel {
     private String username;
     private String password;
     private String email;
+
+    @Column(name = "reset_token")
+    private String resetToken;
+
 }
