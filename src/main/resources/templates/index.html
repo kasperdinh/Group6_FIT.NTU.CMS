@@ -1,7 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<div th:replace="fragments/head :: #head"></div>
+<div th:replace="fragments/head "></div>
 
 <body id="page-top">
 
@@ -9,7 +9,7 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <div th:replace="fragments/sidebar :: #accordionSidebar"></div>
+    <div th:replace="fragments/sidebar"></div>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -19,14 +19,14 @@
         <div id="content">
 
             <!-- Topbar -->
-            <div th:replace="fragments/topbar :: #topbar"></div>
+            <div th:replace="fragments/topbar"></div>
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
                 <!-- Page Heading -->
-                <h1 class="h3 mb-4 text-gray-800">Welcome to Admin Dashboard</h1>
+                <h1 th:text="#{welcome}" class="h3 mb-4 text-gray-800">Welcome to Admin Dashboard</h1>
 
                 <div style="height: 1000px"></div>
 
@@ -37,7 +37,7 @@
         <!-- End of Main Content -->
 
         <!-- Footer -->
-        <div th:replace="fragments/footer :: #footer"></div>
+        <div th:replace="fragments/footer"></div>
         <!-- End of Footer -->
 
     </div>
