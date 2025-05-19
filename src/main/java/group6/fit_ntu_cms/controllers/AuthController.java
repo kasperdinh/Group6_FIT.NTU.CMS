@@ -1,7 +1,9 @@
 package group6.fit_ntu_cms.controllers;
 
+import group6.fit_ntu_cms.models.Role;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.services.UsersService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -10,6 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 import java.util.Optional;
@@ -24,12 +29,14 @@ public class AuthController {
 
     public String login(@RequestParam String email,
                         @RequestParam String password,
-                        ModelMap model) {
+                        ModelMap model,
+                        HttpSession session) {
         Optional<UsersModel> user = usersService.login(email, password);
         if(user.isPresent()) {
-            model.addAttribute("user", user.get());
+            session.setAttribute("username", user.get().getUsername());
+            session.setAttribute("role", user.get().getRole().name());
             model.addAttribute("success","Login successfully!");
-            return "redirect:index";
+            return "index";
         } else {
             model.addAttribute("error", "Incorrect email ỏ password!");
             return "login";
@@ -50,6 +57,8 @@ public class AuthController {
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(password);
+        user.setCreatedDate(LocalDateTime.now());
+        user.setRole(Role.USER);
 
         boolean result = usersService.register(user);
         if(result) {
@@ -126,5 +135,11 @@ public class AuthController {
 
         model.addAttribute("success", "Password reset successfully. You can now log in.");
         return "login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login?logout";
     }
 }

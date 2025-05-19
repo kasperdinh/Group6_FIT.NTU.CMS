@@ -5,6 +5,9 @@ import jdk.jfr.Name;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Getter
 @Setter
 
@@ -19,7 +22,14 @@ public class UsersModel {
     private String password;
     private String email;
 
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
+
     @Column(name = "reset_token")
     private String resetToken;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
 
 }

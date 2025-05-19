@@ -38,15 +38,13 @@
                             <form class="user" method="POST" action="/signup">
                                 <div class="form-group">
                                     <label for="exampleUsername"></label>
-                                    <input type="text" class="form-control form-control-user" id="exampleUsername" placeholder="Username" name="username">
+                                    <input type="text" class="form-control form-control-user" id="exampleUsername" placeholder="Full Name" name="username">
                                     <small id="usernameError" style="color: red;"></small>
 
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputEmail"></label>
-                                    <input type="text" class="form-control form-control-user" id="exampleInputEmail" placeholder="Email Address" name="email"
-                                           oninvalid="this.setCustomValidity('Vui lòng nhập đúng định dạng email, ví dụ: ten@gmail.com')"
-                                           oninput="this.setCustomValidity('')">
+                                    <input type="text" class="form-control form-control-user" id="exampleInputEmail" placeholder="Email Address" name="email">
                                     <small id="emailError" style="color: red;"></small>
                                 </div>
                                 <div class="form-group row">
@@ -67,10 +65,10 @@
                             </form>
                             <hr>
                             <div class="text-center">
-                                <a class="small" href="forgot-password.html">Forgot Password?</a>
+                                <a class="small" href="/forgot-password">Forgot Password?</a>
                             </div>
                             <div class="text-center">
-                                <a class="small" href="signin">Already have an account? Login!</a>
+                                <a class="small" href="/signin">Already have an account? Login!</a>
                             </div>
                         </div>
                     </div>
@@ -117,7 +115,7 @@
                 emailError.textContent = "";
             }
 
-            const usernameRegex = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/;
+            const usernameRegex = /^([a-zA-Z'-]{1,})(\s[a-zA-Z'-]{1,})*$/;
             if (!usernameRegex.test(username)) {
                 usernameError.textContent = "Name must starting with a capital letter";
                 isValid = false;
