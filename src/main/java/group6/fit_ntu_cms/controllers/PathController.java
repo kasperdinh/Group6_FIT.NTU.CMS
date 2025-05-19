@@ -19,4 +19,9 @@
     public String login() {
       return "login";
     }
+
+    @GetMapping("/forgot-password")
+    public String forgotPassword() {
+      return "forgot-password";
+    }
   }
