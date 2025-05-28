@@ -1,27 +1,29 @@
-  package group6.fit_ntu_cms.controllers;
+package group6.fit_ntu_cms.controllers;
 
-  import org.springframework.stereotype.Controller;
-  import org.springframework.web.bind.annotation.GetMapping;
+import group6.fit_ntu_cms.models.Role;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
-  @Controller
-  public class PathController {
-    @GetMapping({"/", "/index"})
-    public String index() {
-      return "index";
-    }
+@Controller
+public class PathController {
+  private final HttpSession httpSession;
 
-    @GetMapping({"/register", "/signup"})
-    public String register() {
-      return "register";
-    }
-
-    @GetMapping({"/login", "/signin"})
-    public String login() {
-      return "login";
-    }
-
-    @GetMapping("/forgot-password")
-    public String forgotPassword() {
-      return "forgot-password";
-    }
+  public PathController(HttpSession httpSession) {
+    this.httpSession = httpSession;
   }
+
+  @GetMapping({"/", "/home", "/index"})
+  public String home() {
+    return "index";
+  }
+
+  @GetMapping("/dashboard")
+  public String dashboard() {
+    Role role = (Role) httpSession.getAttribute("role");
+    if (role != Role.ADMIN) {
+      return "redirect:/login";
+    }
+    return "dashboard";
+  }
+}
