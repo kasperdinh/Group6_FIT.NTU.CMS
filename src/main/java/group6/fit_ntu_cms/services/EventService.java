@@ -1,11 +1,15 @@
 package group6.fit_ntu_cms.services;
 
 import group6.fit_ntu_cms.models.EventModel;
+import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.repositories.EventRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EventService {
@@ -15,30 +19,22 @@ public class EventService {
   public List<EventModel> getAllEvents() {
     return eventRepository.findAll();
   }
-  // hàm sinh id mới nhất khi thêm mới event
-  public String generateNextEventId() {
-    List<EventModel> allEvents = eventRepository.findAll();
-    if (allEvents.isEmpty()) {
-      return "EVT001";
+
+  public void saveEvent(EventModel event, HttpSession session) {
+    UsersModel user = (UsersModel) session.getAttribute("user");
+    if (user == null) {
+      throw new IllegalStateException("Người dùng chưa đăng nhập.");
     }
-    // Lấy eventId có số lớn nhất
-    String maxId = allEvents.stream()
-            .map(EventModel::getEventId)
-            .max(String::compareTo)
-            .orElse("EVT000");
-
-    // Tách phần số ra khỏi "EVT"
-    int numericPart = Integer.parseInt(maxId.substring(3));
-    numericPart++; // Tăng lên 1
-
-    // Trả lại dạng EVT###
-    return String.format("EVT%03d", numericPart);
-  }
-
-  public void saveEvent(EventModel event) {
+    event.setCreateDate(LocalDateTime.now());
+    event.setUser(user);
     eventRepository.save(event);
   }
-  public void deleteEvent(EventModel event){
-    eventRepository.delete(event);
+
+  public void deleteEvent(Long eventId) {
+    eventRepository.deleteById(eventId);
+  }
+
+  public Optional<EventModel> getEventById(Long eventId) {
+    return eventRepository.findById(eventId);
   }
 }

@@ -1,20 +1,20 @@
 package group6.fit_ntu_cms.controllers;
-
 import group6.fit_ntu_cms.models.EventModel;
+import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.services.EventService;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+
 
 @Controller
 public class EventController {
@@ -22,50 +22,132 @@ public class EventController {
   @Autowired
   private EventService eventService;
 
+  @GetMapping("/events")
+  public String getAllEvents(Model model, HttpSession session) {
+    UsersModel user = (UsersModel) session.getAttribute("user");
+    if (user == null) {
+      return "redirect:/login";
+    }
+    model.addAttribute("events", eventService.getAllEvents());
+    model.addAttribute("event", new EventModel());
+    return "event/events";
+  }
+
   @PostMapping("/events")
   public String addEvent(
-          @ModelAttribute EventModel event,
-          @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-
-    if (imageFile != null && !imageFile.isEmpty()) {
-      // Lấy đường dẫn tuyệt đối thực sự của dự án
-      String uploadDir = new File("src/main/resources/static/img/").getAbsolutePath();
-
-      String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
-      File saveFile = new File(uploadDir, filename);
-
-      saveFile.getParentFile().mkdirs(); // Tạo thư mục nếu chưa có
-      imageFile.transferTo(saveFile);
-
-      event.setEventImage("/img/" + filename); // Đường link để truy cập ảnh
+          @Valid @ModelAttribute("event") EventModel event,
+          BindingResult result,
+          @RequestParam("imageFile") MultipartFile imageFile,
+          @RequestParam("file") MultipartFile filePath,
+          HttpSession session,
+          Model model) throws IOException {
+    // Kiểm tra người dùng
+    UsersModel user = (UsersModel) session.getAttribute("user");
+    if (user == null) {
+      model.addAttribute("events", eventService.getAllEvents());
+      model.addAttribute("event", event);
+      model.addAttribute("errorMessage", "Vui lòng đăng nhập để thêm sự kiện.");
+      return "event/events";
     }
 
-    eventService.saveEvent(event);
+    // Kiểm tra lỗi xác thực
+    if (result.hasErrors()) {
+      model.addAttribute("events", eventService.getAllEvents());
+      model.addAttribute("event", event);
+      model.addAttribute("errorMessage", "Vui lòng sửa các lỗi trong biểu mẫu.");
+      return "event/events";
+    }
+
+    // Xử lý tải lên tệp ảnh
+    if (imageFile != null && !imageFile.isEmpty()) {
+      String uploadDir = new File("src/main/resources/static/img/").getAbsolutePath();
+      String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+      File saveFile = new File(uploadDir, filename);
+      saveFile.getParentFile().mkdirs();
+      imageFile.transferTo(saveFile);
+      event.setEventImage("/img/" + filename);
+    }
+
+    // Xử lý tải lên tệp tài liệu
+    if (filePath != null && !filePath.isEmpty()) {
+      String uploadDir = new File("src/main/resources/static/uploads/").getAbsolutePath();
+      String filename = UUID.randomUUID() + "_" + filePath.getOriginalFilename();
+      File saveFile = new File(uploadDir, filename);
+      saveFile.getParentFile().mkdirs();
+      filePath.transferTo(saveFile);
+      event.setFilePath("/uploads/" + filename);
+    }
+
+    // Lưu sự kiện
+    try {
+      eventService.saveEvent(event, session);
+      model.addAttribute("successMessage", "Sự kiện đã được thêm thành công!");
+    } catch (IllegalStateException e) {
+      model.addAttribute("events", eventService.getAllEvents());
+      model.addAttribute("event", event);
+      model.addAttribute("errorMessage", e.getMessage());
+      return "event/events";
+    }
+
     return "redirect:/events";
   }
 
-  @GetMapping("/events")
-  public String getAllEvents(Model model) {
-    List<EventModel> events = eventService.getAllEvents();
-    model.addAttribute("events", events);
+  @PostMapping("/editEvents")
+  public String editEvent(
+          @ModelAttribute EventModel event,
+          HttpSession session,
+          @RequestParam("imageFile") MultipartFile imageFile,
+          @RequestParam(value = "existingImage", required = false) String existingImage,
+          @RequestParam(value = "existingFilePath", required = false) String existingFilePath,
+          @RequestParam("file") MultipartFile filePath) throws IOException {
 
-    // Tạo một event mới với eventId tự sinh
-    EventModel newEvent = new EventModel();
-    newEvent.setEventId(eventService.generateNextEventId());
-    model.addAttribute("event", newEvent);
+    if (imageFile != null && !imageFile.isEmpty()) {
+      String uploadDir = new File("src/main/resources/static/img/").getAbsolutePath();
+      String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+      File saveFile = new File(uploadDir, filename);
+      saveFile.getParentFile().mkdirs();
+      imageFile.transferTo(saveFile);
 
-    return "event/events";
+      if (existingImage != null && !existingImage.isEmpty()) {
+        String oldImagePath = new File("src/main/resources/static" + existingImage).getAbsolutePath();
+        File oldImageFile = new File(oldImagePath);
+        if (oldImageFile.exists()) {
+          oldImageFile.delete();
+        }
+      }
+      event.setEventImage("/img/" + filename);
+    } else {
+      event.setEventImage(existingImage);
+    }
+
+    if (filePath != null && !filePath.isEmpty()) {
+      String uploadDir = new File("src/main/resources/static/uploads/").getAbsolutePath();
+      String filename = UUID.randomUUID() + "_" + filePath.getOriginalFilename();
+      File saveFile = new File(uploadDir, filename);
+      saveFile.getParentFile().mkdirs();
+      filePath.transferTo(saveFile);
+
+      if (existingFilePath != null && !existingFilePath.isEmpty()) {
+        String oldFilePath = new File("src/main/resources/static" + existingFilePath).getAbsolutePath();
+        File oldFile = new File(oldFilePath);
+        if (oldFile.exists()) {
+          oldFile.delete();
+        }
+      }
+
+      event.setFilePath("/uploads/" + filename);
+    } else{
+      event.setFilePath(existingFilePath);
+    }
+
+    eventService.saveEvent(event, session);
+    return "redirect:/events";
   }
-  @PostMapping("/deleteEvent")
-  public String removeEvent(@RequestParam("eventId") String eventId) {
-    // Tìm sự kiện theo eventId
-    EventModel event = eventService.getAllEvents().stream()
-            .filter(e -> e.getEventId().equals(eventId))
-            .findFirst()
-            .orElse(null);
 
+  @PostMapping("/deleteEvent")
+  public String removeEvent(@RequestParam("eventId") Long eventId) {
+    EventModel event = eventService.getEventById(eventId).orElse(null);
     if (event != null) {
-      // Xóa file ảnh nếu có
       if (event.getEventImage() != null) {
         String imagePath = new File("src/main/resources/static" + event.getEventImage()).getAbsolutePath();
         File imageFile = new File(imagePath);
@@ -73,32 +155,21 @@ public class EventController {
           imageFile.delete();
         }
       }
-      // Xóa sự kiện
-      eventService.deleteEvent(event);
+      if (event.getFilePath() != null) {
+        String filePath = new File("src/main/resources/static" + event.getFilePath()).getAbsolutePath();
+        File file = new File(filePath);
+        if (file.exists()) {
+          file.delete();
+        }
+      }
+      eventService.deleteEvent(eventId);
     }
     return "redirect:/events";
   }
-  @PostMapping("/Editevents")
-  public String editEvents(EventModel event,
-                           @RequestParam("imageFile") MultipartFile imageFile,
-                           @RequestParam(value = "existingImage", required = false) String editEventFile) throws IOException {
 
-    if (imageFile != null && !imageFile.isEmpty()) {
-      // Lấy đường dẫn tuyệt đối thực sự của dự án
-      String uploadDir = new File("src/main/resources/static/img/").getAbsolutePath();
-
-      String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
-      File saveFile = new File(uploadDir, filename);
-
-      saveFile.getParentFile().mkdirs(); // Tạo thư mục nếu chưa có
-      imageFile.transferTo(saveFile);
-
-      event.setEventImage("/img/" + filename); // Đường link để truy cập ảnh
-    }
-    else{
-      event.setEventImage(editEventFile);
-    }
-    eventService.saveEvent(event);
-    return "redirect:/events";
+  @GetMapping("/events/{id}")
+  @ResponseBody
+  public EventModel getEventById(@PathVariable Long id) {
+    return eventService.getEventById(id).orElseThrow(() -> new RuntimeException("Event not found"));
   }
 }

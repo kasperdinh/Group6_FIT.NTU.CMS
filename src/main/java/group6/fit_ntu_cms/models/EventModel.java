@@ -1,11 +1,11 @@
 package group6.fit_ntu_cms.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,11 +13,35 @@ import org.springframework.web.multipart.MultipartFile;
 @Table(name = "events")
 public class EventModel {
   @Id
-  private String eventId;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long eventId;
+
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private UsersModel user; // Remove @NotNull
+
+  @NotBlank(message = "Tên sự kiện không được để trống")
+  @Size(max = 100, message = "Tên sự kiện không được vượt quá 100 ký tự")
   private String eventName;
-  private String eventDate;
-  private String eventLocation;
+
+  @NotBlank(message = "Tóm tắt không được để trống")
+  @Size(max = 255, message = "Tóm tắt không được vượt quá 255 ký tự")
+  private String summary;
+
   private String eventDescription;
+
+  @NotBlank(message = "Địa điểm không được để trống")
+  private String eventLocation;
+
+  private String filePath;
+
   private String eventImage;
-  private String eventTime;
+
+  private LocalDateTime createDate; // Remove @NotNull
+
+  @NotNull(message = "Thời gian bắt đầu không được để trống")
+  private LocalDateTime beginDate;
+
+  @NotNull(message = "Thời gian kết thúc không được để trống")
+  private LocalDateTime finishDate;
 }

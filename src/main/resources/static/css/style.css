@@ -115,4 +115,8 @@ h1 {
 .flex-item{
     flex: 1;
 }
+.object-fit-cover {
+    object-fit: cover;
+}
+
 

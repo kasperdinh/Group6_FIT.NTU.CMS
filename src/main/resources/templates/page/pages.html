@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/head "></div>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+  <!-- Sidebar -->
+  <div th:replace="fragments/sidebar"></div>
+  <!-- End of Sidebar -->
+
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+
+    <!-- Main Content -->
+    <div id="content">
+
+      <!-- Topbar -->
+      <div th:replace="fragments/topbar"></div>
+      <!-- End of Topbar -->
+
+      <!-- Begin Page Content -->
+      <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-4 text-gray-800">Pages</h1>
+
+        <!-- Pages Table -->
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tên trang</th>
+            <th>Đường dẫn</th>
+            <th>Nội dung</th>
+            <th>Hành động</th>
+          </thead>
+          <tbody>
+          <tr th:each="page : ${pages}">
+            <td th:text="${page.id}"></td>
+            <td th:text="${page.title}"></td>
+            <td>
+              <a th:href="@{'/' + ${page.slug}}" th:text="${page.slug}"></a>
+            </td>
+            <td th:text="${page.content}"></td>
+            <td>
+              <a th:href="@{/pages/edit/{id}(id=${page.id})}" class="btn btn-primary btn-sm">Sửa</a>
+              <a th:href="@{/pages/delete/{id}(id=${page.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa trang này?');">Xóa</a>
+              <a class="btn btn-sm btn-info" th:href="@{/pages/set-default/{id}(id=${page.id})}" th:if="${!page.default}">Đặt làm mặc định</a>
+              <span class="badge bg-success" th:if="${page.default}">Trang mặc định</span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+      </div>
+      <!-- /.container-fluid -->
+
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <div th:replace="fragments/footer"></div>
+    <!-- End of Footer -->
+
+  </div>
+  <!-- End of Content Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
+<div th:if="${success}"
+     class="alert alert-success"
+     style="position: fixed; top: 100px; right: 20px; z-index: 1050; min-width: 250px; box-shadow: 0 0 10px rgba(0,0,0,0.3);"
+     th:text="${success}">
+</div>
+<div th:if="${error}"
+     class="alert alert-danger"
+     style="position: fixed; top: 100px; right: 20px; z-index: 1050; min-width: 250px; box-shadow: 0 0 10px rgba(0,0,0,0.3);"
+     th:text="${error}">
+</div>
+<script>
+    setTimeout(() => {
+        const alert = document.querySelector('.alert');
+        if(alert) alert.style.display = 'none';
+    }, 3000);
+</script>
+</body>
+
+</html>
