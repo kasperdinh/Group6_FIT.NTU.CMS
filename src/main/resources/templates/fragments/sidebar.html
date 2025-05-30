@@ -60,6 +60,14 @@
     </div>
   </li>
 
+  <!-- Nav Item - Menu -->
+  <li class="nav-item">
+    <a class="nav-link" href="/menus">
+      <i class="fas fa-fw fa-list"></i>
+      <span th:text="#{menu}">Menu</span>
+    </a>
+  </li>
+
   <!-- Nav Item - Event -->
   <li class="nav-item" th:if="${session.role.name() == 'ADMIN'}">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEvent" aria-expanded="true" aria-controls="collapseEvent">
