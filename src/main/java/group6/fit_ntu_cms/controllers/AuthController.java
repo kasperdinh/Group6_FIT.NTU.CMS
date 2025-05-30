@@ -38,6 +38,7 @@ public class AuthController {
         }
 
         session.setAttribute("user", user);
+
         session.setAttribute("role", user.getRole());
 
         model.addAttribute("success", "Đăng nhập thành công!");

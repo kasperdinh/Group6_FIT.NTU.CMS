@@ -1,7 +1,9 @@
 package group6.fit_ntu_cms.controllers;
-
 import group6.fit_ntu_cms.models.EventModel;
+import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.services.EventService;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+
 @Controller
 public class EventController {
 
@@ -20,25 +23,42 @@ public class EventController {
   private EventService eventService;
 
   @GetMapping("/events")
-  public String getAllEvents(Model model) {
-    List<EventModel> events = eventService.getAllEvents();
-    model.addAttribute("events", events);
+  public String getAllEvents(Model model, HttpSession session) {
+    UsersModel user = (UsersModel) session.getAttribute("user");
+    if (user == null) {
+      return "redirect:/login";
+    }
+    model.addAttribute("events", eventService.getAllEvents());
     model.addAttribute("event", new EventModel());
     return "event/events";
   }
 
   @PostMapping("/events")
   public String addEvent(
-          @ModelAttribute EventModel event,
+          @Valid @ModelAttribute("event") EventModel event,
           BindingResult result,
           @RequestParam("imageFile") MultipartFile imageFile,
-          @RequestParam("filePath") MultipartFile filePath,
+          @RequestParam("file") MultipartFile filePath,
+          HttpSession session,
           Model model) throws IOException {
-    if (result.hasErrors()) {
+    // Kiểm tra người dùng
+    UsersModel user = (UsersModel) session.getAttribute("user");
+    if (user == null) {
       model.addAttribute("events", eventService.getAllEvents());
+      model.addAttribute("event", event);
+      model.addAttribute("errorMessage", "Vui lòng đăng nhập để thêm sự kiện.");
       return "event/events";
     }
 
+    // Kiểm tra lỗi xác thực
+    if (result.hasErrors()) {
+      model.addAttribute("events", eventService.getAllEvents());
+      model.addAttribute("event", event);
+      model.addAttribute("errorMessage", "Vui lòng sửa các lỗi trong biểu mẫu.");
+      return "event/events";
+    }
+
+    // Xử lý tải lên tệp ảnh
     if (imageFile != null && !imageFile.isEmpty()) {
       String uploadDir = new File("src/main/resources/static/img/").getAbsolutePath();
       String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
@@ -48,6 +68,7 @@ public class EventController {
       event.setEventImage("/img/" + filename);
     }
 
+    // Xử lý tải lên tệp tài liệu
     if (filePath != null && !filePath.isEmpty()) {
       String uploadDir = new File("src/main/resources/static/uploads/").getAbsolutePath();
       String filename = UUID.randomUUID() + "_" + filePath.getOriginalFilename();
@@ -57,20 +78,28 @@ public class EventController {
       event.setFilePath("/uploads/" + filename);
     }
 
-    eventService.saveEvent(event);
+    // Lưu sự kiện
+    try {
+      eventService.saveEvent(event, session);
+      model.addAttribute("successMessage", "Sự kiện đã được thêm thành công!");
+    } catch (IllegalStateException e) {
+      model.addAttribute("events", eventService.getAllEvents());
+      model.addAttribute("event", event);
+      model.addAttribute("errorMessage", e.getMessage());
+      return "event/events";
+    }
+
     return "redirect:/events";
   }
 
   @PostMapping("/editEvents")
   public String editEvent(
           @ModelAttribute EventModel event,
-          BindingResult result,
+          HttpSession session,
           @RequestParam("imageFile") MultipartFile imageFile,
           @RequestParam(value = "existingImage", required = false) String existingImage,
-          @RequestParam("filePath") MultipartFile filePath) throws IOException {
-    if (result.hasErrors()) {
-      return "event/events";
-    }
+          @RequestParam(value = "existingFilePath", required = false) String existingFilePath,
+          @RequestParam("file") MultipartFile filePath) throws IOException {
 
     if (imageFile != null && !imageFile.isEmpty()) {
       String uploadDir = new File("src/main/resources/static/img/").getAbsolutePath();
@@ -86,7 +115,6 @@ public class EventController {
           oldImageFile.delete();
         }
       }
-
       event.setEventImage("/img/" + filename);
     } else {
       event.setEventImage(existingImage);
@@ -99,8 +127,8 @@ public class EventController {
       saveFile.getParentFile().mkdirs();
       filePath.transferTo(saveFile);
 
-      if (event.getFilePath() != null) {
-        String oldFilePath = new File("src/main/resources/static" + event.getFilePath()).getAbsolutePath();
+      if (existingFilePath != null && !existingFilePath.isEmpty()) {
+        String oldFilePath = new File("src/main/resources/static" + existingFilePath).getAbsolutePath();
         File oldFile = new File(oldFilePath);
         if (oldFile.exists()) {
           oldFile.delete();
@@ -108,9 +136,11 @@ public class EventController {
       }
 
       event.setFilePath("/uploads/" + filename);
+    } else{
+      event.setFilePath(existingFilePath);
     }
 
-    eventService.saveEvent(event);
+    eventService.saveEvent(event, session);
     return "redirect:/events";
   }
 

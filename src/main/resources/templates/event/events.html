@@ -19,8 +19,6 @@
       <div class="container-fluid">
         <h1 th:text="#{list.events}">List of Events</h1>
         <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addEventModal" th:text="#{event.add}">Add Event</button>
-
-        <!-- Add Event Modal -->
         <div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -30,32 +28,46 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                  <!-- Error message -->
+                  <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+                  <!-- Validation errors -->
+                  <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                    <ul>
+                      <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                    </ul>
+                  </div>
                   <div class="input-row">
                     <div class="mb-3">
-                      <label class="form-label" th:text="#{event.name}">Event Name</label>
+                      <label class="form-label" th:text="#{event.name}"></label>
                       <input type="text" class="form-control" th:field="*{eventName}" required>
+                      <div th:errors="*{eventName}" class="text-danger"></div>
                     </div>
                     <div class="mb-3">
                       <label class="form-label" th:text="#{event.sumary}">Summary</label>
                       <input type="text" class="form-control" th:field="*{summary}" required>
+                      <div th:errors="*{summary}" class="text-danger"></div>
                     </div>
                     <div class="mb-3 flex-item">
                       <label class="form-label" th:text="#{event.location}">Location</label>
                       <input type="text" class="form-control" th:field="*{eventLocation}">
+                      <div th:errors="*{eventLocation}" class="text-danger"></div>
                     </div>
                   </div>
                   <div class="mb-3">
                     <label class="form-label" th:text="#{event.description}">Event Description</label>
                     <textarea class="form-control" th:field="*{eventDescription}" rows="2"></textarea>
+                    <div th:errors="*{eventDescription}" class="text-danger"></div>
                   </div>
                   <div class="input-row">
                     <div class="mb-3 flex-item">
                       <label class="form-label" th:text="#{event.timeBegin}">Begin Time</label>
-                      <input type="time" class="form-control" th:field="*{beginDate}" required>
+                      <input type="datetime-local" class="form-control" th:field="*{beginDate}" required>
+                      <div th:errors="*{beginDate}" class="text-danger"></div>
                     </div>
                     <div class="mb-3 flex-item">
                       <label class="form-label" th:text="#{event.timeFinish}">Finish Time</label>
-                      <input type="time" class="form-control" th:field="*{finishDate}" required>
+                      <input type="datetime-local" class="form-control" th:field="*{finishDate}" required>
+                      <div th:errors="*{finishDate}" class="text-danger"></div>
                     </div>
                     <div class="mb-3">
                       <label class="form-label" th:text="#{event.image}">Event Image</label>
@@ -63,7 +75,7 @@
                     </div>
                     <div class="mb-3">
                       <label class="form-label" th:text="#{event.filePath}">Event File</label>
-                      <input type="file" class="form-control" name="filePath" accept=".pdf,.doc,.docx,.png">
+                      <input type="file" class="form-control" name="file" accept=".pdf,.doc,.docx,.png">
                     </div>
                   </div>
                 </div>
@@ -111,11 +123,11 @@
                   <div class="input-row">
                     <div class="mb-3 flex-item">
                       <label class="form-label" th:text="#{event.timeBegin}">Begin Time</label>
-                      <input type="time" class="form-control" id="editBeginDate" name="beginDate" required>
+                      <input type="datetime-local" class="form-control" id="editBeginDate" name="beginDate" required>
                     </div>
                     <div class="mb-3 flex-item">
                       <label class="form-label" th:text="#{event.timeFinish}">Finish Time</label>
-                      <input type="time" class="form-control" id="editFinishDate" name="finishDate" required>
+                      <input type="datetime-local" class="form-control" id="editFinishDate" name="finishDate" required>
                     </div>
                   </div>
                   <div class="mb-3">
@@ -125,10 +137,13 @@
                     <input type="file" class="form-control" id="editImageFile" name="imageFile" accept="image/*">
                   </div>
                   <div class="mb-3">
-                    <label class="form-label" th:text="#{event.filePath}">Event File</label>
-                    <input type="file" class="form-control" id="editFilePath" name="filePath" accept=".pdf,.doc,.docx,.png">
+                    <label class="form-label" th:text="#{current.filePath}">Current File</label>
+                    <a id="editFilePathLink" th:href="#{event.filePath}" target="_blank" style="display: none;"></a>
+                    <label class="form-label" th:text="#{upload.filePath}">Upload New File (optional)</label>
+                    <input type="file" class="form-control" id="editFilePath" name="file" accept=".pdf,.doc,.docx,.png" />
                   </div>
                   <input type="hidden" name="existingImage" id="editExistingImage">
+                  <input type="hidden" name="existingFilePath" id="existingFilePath">
                 </div>
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary" th:text="#{save.changes}">Save Changes</button>
@@ -167,7 +182,7 @@
             <div class="card mb-3 shadow-sm h-100 event-card">
               <div class="row g-0">
                 <div class="col-md-4">
-                  <img th:src="${event.eventImage}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Event Image">
+                  <img style="width: 50%" th:src="${event.eventImage}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Event Image">
                 </div>
                 <div class="col-md-8">
                   <div class="card-body">

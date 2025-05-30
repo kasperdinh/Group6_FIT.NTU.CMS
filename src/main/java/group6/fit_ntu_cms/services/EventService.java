@@ -1,7 +1,9 @@
 package group6.fit_ntu_cms.services;
 
 import group6.fit_ntu_cms.models.EventModel;
+import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.repositories.EventRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +20,13 @@ public class EventService {
     return eventRepository.findAll();
   }
 
-  public void saveEvent(EventModel event) {
+  public void saveEvent(EventModel event, HttpSession session) {
+    UsersModel user = (UsersModel) session.getAttribute("user");
+    if (user == null) {
+      throw new IllegalStateException("Người dùng chưa đăng nhập.");
+    }
     event.setCreateDate(LocalDateTime.now());
+    event.setUser(user);
     eventRepository.save(event);
   }
 
