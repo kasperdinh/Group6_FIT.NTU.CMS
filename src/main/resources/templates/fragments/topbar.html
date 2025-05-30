@@ -22,8 +22,11 @@
     <!-- Nav Item - User Information -->
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="mr-2 d-none d-lg-inline text-gray-600 small"
-              th:text="${session.role == 'ADMIN'} ? #{user.admin} : #{user.user}">
+        <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:switch="${session.role}">
+          <span th:case="${T(group6.fit_ntu_cms.models.Role).ADMIN}" th:text="#{user.admin}"></span>
+          <span th:case="${T(group6.fit_ntu_cms.models.Role).WRITER}" th:text="#{user.writer}"></span>
+          <span th:case="${T(group6.fit_ntu_cms.models.Role).MODERATOR}" th:text="#{user.moderator}"></span>
+          <span th:case="*" th:text="#{user.user}"></span>
         </span>
         <img class="img-profile rounded-circle" src="/img/undraw_profile.svg" alt="">
       </a>

@@ -93,10 +93,17 @@
 
   <!-- Nav Item - Users -->
   <li class="nav-item" th:if="${session.role.name() == 'ADMIN'}">
-    <a class="nav-link" href="/users">
-      <i class="fas fa-fw fa-users"></i>
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUser" aria-expanded="true" aria-controls="collapseUser">
+      <i class="fas fa-fw fa-file-alt"></i>
       <span th:text="#{users}">Users</span>
     </a>
+    <div id="collapseUser" class="collapse" aria-labelledby="headingUser" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <h6 th:text="#{user.features}" class="collapse-header">Page Features:</h6>
+        <a th:text="#{list.users}" class="collapse-item" href="/users">List of Users</a>
+        <a th:text="#{create.user}" class="collapse-item" href="/users/create">Create User</a>
+      </div>
+    </div>
   </li>
 
   <!-- Nav Item - Setting -->
