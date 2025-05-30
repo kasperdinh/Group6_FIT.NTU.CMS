@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title th:text="${page.title}"></title>
-</head>
+<div th:replace="fragments/head"></div>
 <body>
-<h1 th:text="${page.title}"></h1>
-<div th:utext="${page.content}"></div>
+<div th:replace="fragments/public-navbar"></div>
 </body>
 </html>

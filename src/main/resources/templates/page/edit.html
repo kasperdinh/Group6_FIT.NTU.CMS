@@ -31,7 +31,7 @@
         <!-- Form Card -->
         <div class="card shadow mb-4">
           <div class="card-body">
-            <form th:action="@{|/pages/${page.id}/edit|}" method="post">
+            <form th:action="@{|/pages/edit/${page.id}|}" method="post">
               <div class="form-group">
                 <label for="title">Tên trang</label>
                 <input type="text" id="title" name="title" th:value="${page.title}" class="form-control" required />

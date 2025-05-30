@@ -29,53 +29,69 @@
         <h1 class="h3 mb-4 text-gray-800">Danh sách menu</h1>
 
         <!-- Form tạo menu -->
-        <form method="post" action="/menus/create" class="mb-4">
-          <div class="row g-3 align-items-center">
-            <div class="col-auto">
-              <input type="text" name="name" class="form-control" placeholder="Tên menu" required />
-            </div>
-            <div class="col-auto">
-              <select name="pageId" class="form-select" required>
-                <option value="" disabled selected>Chọn trang</option>
-                <option th:each="page : ${pages}" th:value="${page.id}" th:text="${page.title}"></option>
-              </select>
-            </div>
-            <div class="col-auto">
-              <input type="number" name="order" class="form-control" placeholder="Thứ tự" required min="0" />
-            </div>
-            <div class="col-auto">
-              <button type="submit" class="btn btn-primary">Tạo</button>
-            </div>
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Tạo menu mới</h5>
           </div>
-        </form>
+          <div class="card-body">
+            <form method="post" action="/menus/create">
+              <div class="row g-3 align-items-center">
+                <div class="col-md-4">
+                  <label for="menuName" class="form-label">Tên menu</label>
+                  <input type="text" id="menuName" name="name" class="form-control" placeholder="Tên menu" required />
+                </div>
+                <div class="col-md-4">
+                  <label for="menuPage" class="form-label">Trang</label>
+                  <select id="menuPage" name="pageId" class="form-select" required>
+                    <option value="" disabled selected>Chọn trang</option>
+                    <option th:each="page : ${pages}" th:value="${page.id}" th:text="${page.title}"></option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <label for="menuOrder" class="form-label">Thứ tự</label>
+                  <input type="number" id="menuOrder" name="order" class="form-control" placeholder="Thứ tự" required min="0" />
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                  <button type="submit" class="btn btn-primary w-100">Tạo</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
 
         <!-- Bảng danh sách menu -->
-        <table class="table table-bordered table-hover">
-          <thead class="table-light">
-          <tr>
-            <th>Tên menu</th>
-            <th>Trang</th>
-            <th>Thứ tự</th>
-            <th>Hành động</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr th:each="menu : ${menus}">
-            <td th:text="${menu.name}"></td>
-            <!-- Hiển thị tiêu đề trang thay vì pageId -->
-            <td th:text="${menu.page != null ? menu.page.title : 'Không xác định'}"></td>
-            <td th:text="${menu.order}"></td>
-            <td>
-              <form th:action="@{/menus/{id}/delete(id=${menu.id})}" method="post" style="display:inline-block;">
-                <button type="submit" class="btn btn-danger btn-sm"
-                        onclick="return confirm('Bạn có chắc chắn muốn xóa menu này?');">
-                  Xóa
-                </button>
-              </form>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Danh sách menu</h5>
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered table-striped table-hover">
+              <thead class="table-light">
+              <tr>
+                <th>Tên menu</th>
+                <th>Trang</th>
+                <th>Thứ tự</th>
+                <th>Hành động</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="menu : ${menus}">
+                <td th:text="${menu.name}"></td>
+                <td th:text="${menu.page != null ? menu.page.title : 'Không xác định'}"></td>
+                <td th:text="${menu.order}"></td>
+                <td>
+                  <form th:action="@{/menus/delete/{id}(id=${menu.id})}" method="post" style="display:inline-block;">
+                    <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Bạn có chắc chắn muốn xóa menu này?');">
+                      <i class="fas fa-trash-alt"></i> Xóa
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
       </div>
       <!-- /.container-fluid -->
