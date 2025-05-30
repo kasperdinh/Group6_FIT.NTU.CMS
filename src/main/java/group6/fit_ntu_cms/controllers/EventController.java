@@ -98,7 +98,8 @@ public class EventController {
           HttpSession session,
           @RequestParam("imageFile") MultipartFile imageFile,
           @RequestParam(value = "existingImage", required = false) String existingImage,
-          @RequestParam("filePath") MultipartFile filePath) throws IOException {
+          @RequestParam(value = "existingFilePath", required = false) String existingFilePath,
+          @RequestParam("file") MultipartFile filePath) throws IOException {
 
     if (imageFile != null && !imageFile.isEmpty()) {
       String uploadDir = new File("src/main/resources/static/img/").getAbsolutePath();
@@ -114,7 +115,6 @@ public class EventController {
           oldImageFile.delete();
         }
       }
-
       event.setEventImage("/img/" + filename);
     } else {
       event.setEventImage(existingImage);
@@ -127,8 +127,9 @@ public class EventController {
       saveFile.getParentFile().mkdirs();
       filePath.transferTo(saveFile);
 
-      if (event.getFilePath() != null) {
-        String oldFilePath = new File("src/main/resources/static" + event.getFilePath()).getAbsolutePath();
+
+      if (existingFilePath != null && !existingFilePath.isEmpty()) {
+        String oldFilePath = new File("src/main/resources/static" + existingFilePath).getAbsolutePath();
         File oldFile = new File(oldFilePath);
         if (oldFile.exists()) {
           oldFile.delete();

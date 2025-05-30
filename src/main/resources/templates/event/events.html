@@ -137,10 +137,13 @@
                     <input type="file" class="form-control" id="editImageFile" name="imageFile" accept="image/*">
                   </div>
                   <div class="mb-3">
-                    <label class="form-label" th:text="#{event.filePath}">Event File</label>
-                    <input type="file" class="form-control" id="editFilePath" name="filePath" accept=".pdf,.doc,.docx,.png">
+                    <label class="form-label" th:text="#{current.filePath}">Current File</label>
+                    <a id="editFilePathLink" th:href="#{event.filePath}" target="_blank" style="display: none;"></a>
+                    <label class="form-label" th:text="#{upload.filePath}">Upload New File (optional)</label>
+                    <input type="file" class="form-control" id="editFilePath" name="file" accept=".pdf,.doc,.docx,.png" />
                   </div>
                   <input type="hidden" name="existingImage" id="editExistingImage">
+                  <input type="hidden" name="existingFilePath" id="existingFilePath">
                 </div>
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary" th:text="#{save.changes}">Save Changes</button>

@@ -70,11 +70,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('editSummary').value = event.summary || '';
                     document.getElementById('editEventLocation').value = event.eventLocation || '';
                     document.getElementById('editEventDescription').value = event.eventDescription || '';
-                    document.getElementById('editBeginDate').value = event.beginDate || '';
-                    document.getElementById('editFinishDate').value = event.finishDate || '';
+                    // Format dates for datetime-local input (e.g., "2025-05-30T10:24")
+                    document.getElementById('editBeginDate').value = event.beginDate ? new Date(event.beginDate).toISOString().slice(0, 16) : '';
+                    document.getElementById('editFinishDate').value = event.finishDate ? new Date(event.finishDate).toISOString().slice(0, 16) : '';
                     document.getElementById('editEventImage').src = event.eventImage || '';
                     document.getElementById('editEventImage').style.display = event.eventImage ? 'block' : 'none';
                     document.getElementById('editExistingImage').value = event.eventImage || '';
+                    document.getElementById('editFilePathLink').href = event.filePath || '';
+                    document.getElementById('editFilePathLink').textContent = event.filePath || '';
+                    document.getElementById('editFilePathLink').style.display = event.filePath ? 'block' : 'none';
+                    document.getElementById('editExistingFilePath').value = event.filePath || '';
                 })
                 .catch(error => console.error('Error fetching event:', error));
         });
