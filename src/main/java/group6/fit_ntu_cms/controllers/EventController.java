@@ -127,7 +127,6 @@ public class EventController {
       saveFile.getParentFile().mkdirs();
       filePath.transferTo(saveFile);
 
-
       if (existingFilePath != null && !existingFilePath.isEmpty()) {
         String oldFilePath = new File("src/main/resources/static" + existingFilePath).getAbsolutePath();
         File oldFile = new File(oldFilePath);
@@ -137,6 +136,8 @@ public class EventController {
       }
 
       event.setFilePath("/uploads/" + filename);
+    } else{
+      event.setFilePath(existingFilePath);
     }
 
     eventService.saveEvent(event, session);
