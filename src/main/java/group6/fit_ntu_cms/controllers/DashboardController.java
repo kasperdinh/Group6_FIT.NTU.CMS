@@ -6,16 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class PathController {
+public class DashboardController {
   private final HttpSession httpSession;
 
-  public PathController(HttpSession httpSession) {
+  public DashboardController(HttpSession httpSession) {
     this.httpSession = httpSession;
-  }
-
-  @GetMapping({"/", "/home", "/index"})
-  public String home() {
-    return "index";
   }
 
   @GetMapping("/dashboard")
