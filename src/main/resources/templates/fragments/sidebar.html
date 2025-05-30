@@ -31,7 +31,7 @@
     <div id="collapsePost" class="collapse" aria-labelledby="headingPost" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <h6 class="collapse-header">Post Features:</h6>
-        <a th:text="#{list.posts}" class="collapse-item" href="/posts">List of Posts</a>
+        <a th:text="#{list.posts}" class="collapse-item" th:href="@{/posts}">List of Posts</a>
         <a th:text="#{create.post}" class="collapse-item" href="/post/create">Create Post</a>
       </div>
     </div>

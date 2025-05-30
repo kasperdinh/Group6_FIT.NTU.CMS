@@ -1,0 +1,23 @@
+INSERT INTO Tittle (ma_chuyen_muc, ten_chuyen_muc) VALUES
+(1, 'Artificial Intelligence'),
+(2, 'Cybersecurity'),
+(3, 'Cloud Computing'),
+(4, 'Software Development'),
+(5, 'Data Science'),
+(6, 'Blockchain Technology'),
+(7, 'Internet of Things'),
+(8, 'DevOps Practices'),
+(9, 'Machine Learning'),
+(10, 'Web Development');
+
+INSERT INTO bai_viet (ma_bai_viet, ma_chuyen_muc, ma_nguoi_dung, ten_bai_viet, tom_tat, noi_dung, duong_dan_file, ngay_tao, ngay_cap_nhat, trang_thai) VALUES
+(1, 1, 1, 'AI Trends in 2025', 'The latest advancements in AI.', 'Explore the top trends in Artificial Intelligence for 2025, including generative AI and more...', '/uploads/ai-trends-2025.pdf', '2025-05-28 10:00:00', '2025-05-30 20:04:00', 'published'),
+(2, 2, 2, 'Cybersecurity Best Practices', 'Protect your systems effectively.', 'Learn the best practices for cybersecurity in 2025, including zero-trust architecture...', NULL, '2025-05-27 14:30:00', '2025-05-30 18:00:00', 'draft'),
+(3, 3, 3, 'AWS vs Azure in 2025', 'Comparing top cloud platforms.', 'A detailed comparison of AWS and Azure for cloud computing in 2025...', '/uploads/aws-vs-azure.pdf', '2025-05-26 09:00:00', '2025-05-29 15:00:00', 'published'),
+(4, 4, 4, 'Spring Boot 3.4 Guide', 'Master Spring Boot for Java devs.', 'A comprehensive guide to building applications with Spring Boot 3.4...', NULL, '2025-05-25 11:00:00', '2025-05-28 12:00:00', 'published'),
+(5, 5, 5, 'Big Data Analytics Tools', 'Top tools for data science.', 'Discover the best tools for big data analytics in 2025, including Apache Spark...', '/uploads/big-data-tools.pdf', '2025-05-24 16:00:00', '2025-05-30 19:00:00', 'draft'),
+(6, NULL, 1, 'IT News Roundup', 'Latest updates in IT.', 'A summary of recent news in the IT industry, from AI to cybersecurity...', NULL, '2025-05-23 13:00:00', '2025-05-29 10:00:00', 'published'),
+(7, 6, 2, 'Blockchain Beyond Crypto', 'New uses for blockchain.', 'Explore how blockchain is being used beyond cryptocurrencies in 2025...', '/uploads/blockchain-uses.pdf', '2025-05-22 08:00:00', '2025-05-27 14:00:00', 'published'),
+(8, 7, 3, 'IoT Security Challenges', 'Securing IoT devices.', 'An in-depth look at the security challenges facing IoT devices in 2025...', NULL, '2025-05-21 17:00:00', '2025-05-26 11:00:00', 'draft'),
+(9, 9, 4, 'ML Model Optimization', 'Improve your ML models.', 'Tips and techniques for optimizing machine learning models in production...', '/uploads/ml-optimization.pdf', '2025-05-20 12:00:00', '2025-05-25 09:00:00', 'published'),
+(10, 10, 5, 'React 19 Features', 'What’s new in React 19.', 'A deep dive into the new features and improvements in React 19...', NULL, '2025-05-19 15:00:00', '2025-05-24 16:00:00', 'published');
