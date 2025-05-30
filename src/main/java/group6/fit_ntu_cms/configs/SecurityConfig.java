@@ -13,7 +13,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/","/index", "/signin", "/signup", "/login", "/register","/forgot-password", "/reset-password","/css/**", "/js/**", "/img/**", "/scss/**", "/vendor/**").permitAll()
+                                .requestMatchers("/","/index", "/signin", "/signup", "/login", "/register","/forgot-password", "/reset-password","/events","/css/**", "/js/**", "/img/**", "/scss/**", "/vendor/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 ->
@@ -22,7 +22,7 @@ public class SecurityConfig {
                                 .defaultSuccessUrl("/index", true)
                 )
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers( "/signin", "/signup","/login", "/register","/forgot-password", "/reset-password", "/css/**", "/js/**", "/img/**", "/scss/**", "/vendor/**")
+                        .ignoringRequestMatchers( "/signin", "/signup","/login", "/register","/forgot-password", "/reset-password","/events", "/css/**", "/js/**", "/img/**", "/scss/**", "/vendor/**")
                 );
         return http.build();
     }
