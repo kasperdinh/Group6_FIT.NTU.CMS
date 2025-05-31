@@ -1,10 +1,12 @@
 package group6.fit_ntu_cms.controllers;
 
-import group6.fit_ntu_cms.models.EventModel;
+import group6.fit_ntu_cms.models.MediaModel;
 import group6.fit_ntu_cms.models.PostModel;
 import group6.fit_ntu_cms.models.UsersModel;
+import group6.fit_ntu_cms.repositories.MediaRePository;
+import group6.fit_ntu_cms.services.MediaService;
 import group6.fit_ntu_cms.services.PostService;
-import group6.fit_ntu_cms.services.TittleService;
+import group6.fit_ntu_cms.services.CategoryService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,9 @@ public class PostController {
     @Autowired
     private PostService postService;
     @Autowired
-    private TittleService tittleService;
+    private CategoryService categoryService;
+    @Autowired
+    private MediaService mediaService;
     @GetMapping("/posts")
     public String showPosts(@RequestParam(required = false) String status,
                             @RequestParam(required = false) Long category,
@@ -34,7 +38,7 @@ public class PostController {
         List<PostModel> posts = postService.filterPosts(status, category, search);
         model.addAttribute("posts", posts);
         model.addAttribute("post", new PostModel());
-        model.addAttribute("allCategories", tittleService.getAllTittles());
+        model.addAttribute("allCategories", categoryService.getAllTittles());
         return "/post/posts";
     }
     @PostMapping("/post-add")
@@ -64,22 +68,29 @@ public class PostController {
 
         // Xử lý tải lên tệp ảnh
         if (imageFile != null && !imageFile.isEmpty()) {
-            String uploadDir = new File("src/main/resources/static/img/").getAbsolutePath();
+
+            String uploadDir = new File("src/main/resources/static/uploads/img").getAbsolutePath();
             String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
             File saveFile = new File(uploadDir, filename);
             saveFile.getParentFile().mkdirs();
             imageFile.transferTo(saveFile);
-            post.setPostImage("/img/" + filename);
+            String filePathStr = "/uploads/img/" + filename;
+            post.setPostImage(filePathStr);
+            MediaModel media = new MediaModel();
+            mediaService.saveMedia(media,user,filePathStr);
         }
 
         // Xử lý tải lên tệp tài liệu
         if (filePath != null && !filePath.isEmpty()) {
-            String uploadDir = new File("src/main/resources/static/uploads/").getAbsolutePath();
+            String uploadDir = new File("src/main/resources/static/uploads/files").getAbsolutePath();
             String filename = UUID.randomUUID() + "_" + filePath.getOriginalFilename();
             File saveFile = new File(uploadDir, filename);
             saveFile.getParentFile().mkdirs();
             filePath.transferTo(saveFile);
-            post.setFilePath("/uploads/" + filename);
+            post.setFilePath("/uploads/files" + filename);
+            String filePathStr = "/uploads/files/" + filename;
+            MediaModel media = new MediaModel();
+            mediaService.saveMedia(media,user,filePathStr);
         }
 
         // Lưu sự kiện
@@ -116,6 +127,7 @@ public class PostController {
                 if (imageFile.exists()) {
                     imageFile.delete();
                 }
+                mediaService.deleteMedia(post.getPostImage());
             }
 
             // Delete associated document file
@@ -125,6 +137,7 @@ public class PostController {
                 if (file.exists()) {
                     file.delete();
                 }
+                mediaService.deleteMedia(post.getFilePath());
             }
 
             // Delete the post from the database
@@ -146,11 +159,14 @@ public class PostController {
             @RequestParam("file") MultipartFile filePath) throws IOException {
         UsersModel user = (UsersModel) session.getAttribute("user");
         if (imageFile != null && !imageFile.isEmpty()) {
-            String uploadDir = new File("src/main/resources/static/img/").getAbsolutePath();
+            String uploadDir = new File("src/main/resources/static/uploads/img").getAbsolutePath();
             String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
             File saveFile = new File(uploadDir, filename);
             saveFile.getParentFile().mkdirs();
             imageFile.transferTo(saveFile);
+            MediaModel media = new MediaModel();
+            String file = "/uploads/img" + filename;
+            mediaService.saveMedia(media,user,file);
 
             if (existingImage != null && !existingImage.isEmpty()) {
                 String oldImagePath = new File("src/main/resources/static" + existingImage).getAbsolutePath();
@@ -159,17 +175,20 @@ public class PostController {
                     oldImageFile.delete();
                 }
             }
-            post.setPostImage("/img/" + filename);
+            post.setPostImage(file);
         } else {
             post.setPostImage(existingImage);
         }
 
         if (filePath != null && !filePath.isEmpty()) {
-            String uploadDir = new File("src/main/resources/static/uploads/").getAbsolutePath();
+            String uploadDir = new File("src/main/resources/static/uploads/files").getAbsolutePath();
             String filename = UUID.randomUUID() + "_" + filePath.getOriginalFilename();
             File saveFile = new File(uploadDir, filename);
             saveFile.getParentFile().mkdirs();
             filePath.transferTo(saveFile);
+            MediaModel media = new MediaModel();
+            String file = "/uploads/files" + filename;
+            mediaService.saveMedia(media,user,file);
 
             if (existingFilePath != null && !existingFilePath.isEmpty()) {
                 String oldFilePath = new File("src/main/resources/static" + existingFilePath).getAbsolutePath();
@@ -179,7 +198,7 @@ public class PostController {
                 }
             }
 
-            post.setFilePath("/uploads/" + filename);
+            post.setFilePath(file);
         } else{
             post.setFilePath(existingFilePath);
         }
