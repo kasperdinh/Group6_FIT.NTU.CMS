@@ -1,5 +1,6 @@
 package group6.fit_ntu_cms.controllers;
 
+import group6.fit_ntu_cms.models.Role;
 import group6.fit_ntu_cms.models.TittleModel;
 import group6.fit_ntu_cms.services.TittleService;
 import jakarta.servlet.http.HttpSession;
@@ -15,6 +16,12 @@ import java.util.Optional;
 @RequestMapping("/tittles")
 public class TittleController {
 
+    private final HttpSession httpSession;
+
+    public TittleController(HttpSession httpSession) {
+        this.httpSession = httpSession;
+    }
+
     @Autowired
     private TittleService tittleService;
 
@@ -22,6 +29,11 @@ public class TittleController {
     public String getAllTittles(Model model, @RequestParam(value = "search", required = false) String search,
                                 @RequestParam(value = "page", defaultValue = "1") int page,
                                 HttpSession session) {
+
+        Role role = (Role) httpSession.getAttribute("role");
+        if (role == Role.USER) {
+            return "redirect:/access-denied";
+        }
         int pageSize = 20; // Số mục trên mỗi trang, tương tự WordPress
         List<TittleModel> tittles = tittleService.getTittles(search, page, pageSize);
         int totalItems = tittleService.countTittles(search);

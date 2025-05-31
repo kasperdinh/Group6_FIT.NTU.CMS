@@ -3,6 +3,7 @@ package group6.fit_ntu_cms.controllers;
 import group6.fit_ntu_cms.models.Role;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.repositories.UsersRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +20,13 @@ import java.util.List;
 @Controller
 @RequestMapping("/users")
 public class UserController {
+
+    private final HttpSession httpSession;
+
+    public UserController(HttpSession httpSession) {
+        this.httpSession = httpSession;
+    }
+
     @Autowired
     private UsersRepository userRepository;
 
@@ -28,6 +36,11 @@ public class UserController {
             @RequestParam(defaultValue = "7") int size,
             ModelMap model
     ) {
+
+        Role role = (Role) httpSession.getAttribute("role");
+        if (role == Role.USER) {
+            return "redirect:/access-denied";
+        }
         Pageable pageable = PageRequest.of(page, size);
         Page<UsersModel> userPage = userRepository.findAll(pageable);
 
@@ -82,6 +95,10 @@ public class UserController {
 
     @GetMapping("/create")
     public String showCreateForm(ModelMap model) {
+        Role role = (Role) httpSession.getAttribute("role");
+        if (role == Role.USER) {
+            return "redirect:/access-denied";
+        }
         model.addAttribute("user", new UsersModel());
         model.addAttribute("roles", Role.values());
         return "user/create";

@@ -1,4 +1,5 @@
 package group6.fit_ntu_cms.controllers;
+import group6.fit_ntu_cms.models.Role;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.repositories.UsersRepository;
 import group6.fit_ntu_cms.services.UserService;
@@ -49,7 +50,12 @@ public class AuthController {
         session.setAttribute("role", user.getRole());
 
         model.addAttribute("success", "Đăng nhập thành công!");
-        return "redirect:/dashboard";
+
+        if (user.getRole() == Role.USER) {
+            return "index";
+        } else {
+            return "redirect:/dashboard";
+        }
     }
 
     @GetMapping({"/register", "/signup"})
@@ -90,6 +96,23 @@ public class AuthController {
         } else {
             model.addAttribute("error", "Invalid or expired OTP");
             return "auth/enter-otp";
+        }
+    }
+
+    @PostMapping("/resend-otp")
+    public String resendOtp(@RequestParam("email") String email, Model model) {
+        UsersModel user = usersRepository.findByEmail(email);
+        if (user != null) {
+            user.setOtp(null);
+            user.setOtpRequestedTime(null);
+            usersRepository.save(user);
+            userService.generateAndSendOtp(email);
+            model.addAttribute("email", email);
+            model.addAttribute("success", "Mã OTP mới đã được gửi.");
+            return "auth/enter-otp";
+        } else {
+            model.addAttribute("error", "Không tìm thấy địa chỉ email.");
+            return "auth/forgot-password";
         }
     }
 

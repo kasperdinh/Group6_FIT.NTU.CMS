@@ -16,8 +16,8 @@ public class DashboardController {
   @GetMapping("/dashboard")
   public String dashboard() {
     Role role = (Role) httpSession.getAttribute("role");
-    if (role != Role.ADMIN) {
-      return "redirect:/login";
+    if (role == Role.USER) {
+      return "redirect:/access-denied";
     }
     return "dashboard";
   }
