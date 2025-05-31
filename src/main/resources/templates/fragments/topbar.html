@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <nav th:fragment="topbar" id="topbar" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
   <!-- Sidebar Toggle (Topbar) -->
   <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -10,18 +8,18 @@
   <ul class="navbar-nav ml-auto">
     <!-- Language Switcher -->
     <li class="nav-item dropdown no-arrow">
-      <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${#locale.language == 'vi' ? 'VI' : 'EN'}">EN</span>
       </a>
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="languageDropdown">
-        <a class="dropdown-item" th:href="@{/(lang=en)}" th:text="#{lang.english}">English</a>
-        <a class="dropdown-item" th:href="@{/(lang=vi)}" th:text="#{lang.vietnamese}">Vietnamese</a>
+        <a class="dropdown-item" th:href="@{/changeLanguage(lang='en')}" th:text="#{lang.english}">English</a>
+        <a class="dropdown-item" th:href="@{/changeLanguage(lang='vi')}" th:text="#{lang.vietnamese}">Vietnamese</a>
       </div>
     </li>
 
     <!-- Nav Item - User Information -->
     <li class="nav-item dropdown no-arrow">
-      <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="mr-2 d-none d-lg-inline text-gray-600 small"
               th:text="${session.role == 'ADMIN'} ? #{user.admin} : #{user.user}">
         </span>
@@ -38,7 +36,7 @@
           <span th:text="#{user.settings}">Settings</span>
         </a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
           <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
           <span th:href="@{/logout}" th:text="#{user.logout}">Logout</span>
         </a>
@@ -70,4 +68,3 @@
     <i class="fas fa-angle-up"></i>
   </a>
 </nav>
-</html>

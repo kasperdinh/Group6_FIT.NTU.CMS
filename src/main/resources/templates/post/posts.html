@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Posts</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body id="page-top">
+<div th:replace="~{fragments/head}"></div>
+<div id="wrapper">
+  <div th:replace="~{fragments/sidebar}"></div>
+  <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content">
+      <div th:replace="~{fragments/topbar}"></div>
+      <div class="container-fluid">
+        <h1 th:text="#{list.posts}">List of Posts</h1>
+
+        <!-- Add Post Button and Search Form -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPostModal" th:text="#{post.add}">Add Post</button>
+          <form class="d-flex" th:action="@{/posts}" method="get">
+            <input class="form-control me-2" type="search" name="search" placeholder="Search Posts" aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+          </form>
+        </div>
+
+        <!-- Filters -->
+        <div class="d-flex mb-3">
+          <form th:action="@{/posts}" method="get" class="d-flex">
+            <select name="status" class="form-select me-2" style="width: auto;">
+              <option value="">All Statuses</option>
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+            </select>
+            <select name="category" class="form-select me-2" style="width: auto;">
+              <option value="">All Categories</option>
+              <option th:each="category : ${allCategories}"
+                      th:value="${category.tittleId}"
+                      th:text="${category.titleName}"></option>
+            </select>
+            <button class="btn btn-outline-secondary" type="submit">Filter</button>
+          </form>
+        </div>
+
+        <!-- Add Post Modal -->
+        <div class="modal fade" id="addPostModal" tabindex="-1" aria-labelledby="addPostModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <form th:action="@{/post-add}" th:object="${post}" method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="addPostModalLabel" th:text="#{add.post}">Add New Post</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+                  <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                    <ul>
+                      <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                    </ul>
+                  </div>
+                  <div class="input-row">
+                    <div class="mb-3">
+                      <label class="form-label" th:text="#{post.title}">Post Title</label>
+                      <input type="text" class="form-control" th:field="*{postTitle}" required>
+                      <div th:errors="*{postTitle}" class="text-danger"></div>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label" th:text="#{post.summary}">Summary</label>
+                      <input type="text" class="form-control" th:field="*{summary}" required>
+                      <div th:errors="*{summary}" class="text-danger"></div>
+                    </div>
+                    <div class="mb-3 flex-item">
+                      <label class="form-label" th:text="#{post.category}">Category</label>
+                      <select class="form-control" th:field="*{category}">
+                        <option value="">-- Select a category (optional) --</option>
+                        <option th:each="category : ${allCategories}"
+                                th:value="${category.tittleId}"
+                                th:text="${category.titleName}"></option>
+                      </select>
+                      <div th:errors="*{category}" class="text-danger"></div>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" th:text="#{post.content}">Content</label>
+                    <textarea class="form-control" th:field="*{content}" rows="3"></textarea>
+                    <div th:errors="*{content}" class="text-danger"></div>
+                  </div>
+                  <div class="input-row">
+                    <div class="mb-3 flex-item">
+                      <label class="form-label" th:text="#{post.creationDate}">Creation Date</label>
+                      <input type="datetime-local" class="form-control" th:field="*{creationDate}" required>
+                      <div th:errors="*{creationDate}" class="text-danger"></div>
+                    </div>
+                    <div class="mb-3 flex-item">
+                      <label class="form-label" th:text="#{post.updateDate}">Update Date</label>
+                      <input type="datetime-local" class="form-control" th:field="*{updateDate}" required>
+                      <div th:errors="*{updateDate}" class="text-danger"></div>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label" th:text="#{post.file}">File</label>
+                      <input type="file" class="form-control" name="file" accept=".pdf,.doc,.docx,.png">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label" th:text="#{event.image}">File</label>
+                      <input type="file" class="form-control" name="imgFile" accept="image/*">
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" th:text="#{post.status}">Status</label>
+                    <select class="form-control" th:field="*{status}" required>
+                      <option value="draft">Draft</option>
+                      <option value="published">Published</option>
+                    </select>
+                    <div th:errors="*{status}" class="text-danger"></div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary" th:text="#{save.changes}">Save Post</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Post Modal -->
+        <div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="editPostModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <form th:action="@{/editPosts}" method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="editPostModalLabel" th:text="#{edit.post}">Edit Post</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="input-row">
+                    <div class="mb-3 flex-item">
+                      <label class="form-label" th:text="#{post.id}">Post ID</label>
+                      <input type="text" class="form-control" id="editPostId" name="postId" readonly />
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label" th:text="#{post.title}">Post Title</label>
+                      <input type="text" class="form-control" id="editPostTitle" name="postTitle" required />
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label" th:text="#{post.summary}">Summary</label>
+                      <input type="text" class="form-control" id="editSummary" name="summary" required />
+                    </div>
+                    <div class="mb-3 flex-item">
+                      <label class="form-label" th:text="#{post.category}">Category</label>
+                      <select class="form-control" id="editCategory" name="category">
+                        <option value="">-- Select a category (optional) --</option>
+                        <option th:each="category : ${allCategories}"
+                                th:value="${category.tittleId}"
+                                th:text="${category.titleName}"></option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" th:text="#{post.content}">Content</label>
+                    <textarea class="form-control" id="editContent" name="content" rows="3"></textarea>
+                  </div>
+                  <div class="input-row">
+                    <div class="mb-3 flex-item">
+                      <label class="form-label" th:text="#{post.creationDate}">Creation Date</label>
+                      <input type="datetime-local" class="form-control" id="editCreationDate" name="creationDate" required />
+                    </div>
+                    <div class="mb-3 flex-item">
+                      <label class="form-label" th:text="#{post.updateDate}">Update Date</label>
+                      <input type="datetime-local" class="form-control" id="editUpdateDate" name="updateDate" required />
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" th:text="#{current.image}">Current Image</label>
+                    <img id="editPostImage" src="" alt="Post Image" style="max-width: 200px; display: none;" />
+                    <input type="hidden" id="editExistingImage" name="existingImagePath" />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" th:text="#{upload.image}">Upload New Image (optional)</label>
+                    <input type="file" class="form-control" name="imgFile" accept="image/*" />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" th:text="#{current.filePath}">Current File</label>
+                    <a id="editFilePathLink" href="" target="_blank" style="display: none;">No file</a>
+                    <input type="hidden" id="editExistingFilePath" name="existingFilePath" />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" th:text="#{upload.filePath}">Upload New File (optional)</label>
+                    <input type="file" class="form-control" name="file" accept=".pdf,.doc,.docx,.png" />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" th:text="#{post.status}">Status</label>
+                    <select class="form-control" id="editStatus" name="status" required>
+                      <option value="draft">Draft</option>
+                      <option value="published">Published</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary" th:text="#{save.changes}">Save Changes</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form th:action="@{/deletePost}" method="post">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteConfirmModalLabel" th:text="#{confirm.delete}">Confirm Delete</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <span th:text="#{quotes.delete}">Are you sure you want to delete this post?</span>
+                  <input type="hidden" name="postId" id="deletePostId">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{delete.no}">No</button>
+                  <button type="submit" class="btn btn-danger" id="confirmDeleteBtn" th:text="#{delete.yes}">Yes</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Post List Table -->
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+              <th scope="col" th:text="#{post.title}">Title</th>
+              <th scope="col" th:text="#{post.author}">Author</th>
+              <th scope="col" th:text="#{post.category}">Category</th>
+              <th scope="col" th:text="#{post.status}">Status</th>
+              <th scope="col" th:text="#{post.creationDate}">Date</th>
+              <th scope="col" th:text="#{actions}">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="post : ${posts}">
+              <td>
+                <a th:href="@{/posts/{id}(id=${post.postId})}" th:text="${post.postTitle}"></a>
+                <div class="post-actions small">
+                  <a href="#" class="edit-btn me-1"
+                     data-bs-toggle="modal"
+                     data-bs-target="#editPostModal"
+                     th:data-post-id="${post.postId}"
+                     th:text="#{edit}">Edit</a> |
+                  <a href="#" class="delete-btn text-danger"
+                     data-bs-toggle="modal"
+                     data-bs-target="#deleteConfirmModal"
+                     th:data-post-id="${post.postId}"
+                     th:text="#{delete}">Delete</a>
+                </div>
+              </td>
+              <td th:text="${post.user.username}">Author</td>
+              <td th:text="${post.category != null ? post.category.titleName : 'Uncategorized'}">Category</td>
+              <td th:text="${post.status}">Status</td>
+              <td th:text="${#temporals.format(post.creationDate, 'dd/MM/yyyy HH:mm')}">Date</td>
+              <td>
+                <button class="btn btn-sm btn-outline-warning edit-btn me-1"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editPostModal"
+                        th:data-post-id="${post.postId}">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger delete-btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteConfirmModal"
+                        th:data-post-id="${post.postId}">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div th:replace="~{fragments/pageNavigate}"></div>
+        <div th:replace="~{fragments/footer}"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/postJs/script.js"></script>
+</div>
+</body>
+</html>
