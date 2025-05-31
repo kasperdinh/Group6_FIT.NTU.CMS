@@ -25,8 +25,11 @@ public class UsersModel {
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
-    @Column(name = "reset_token")
-    private String resetToken;
+    @Column(name = "otp")
+    private String otp;
+
+    @Column(name = "otp_requested_time")
+    private LocalDateTime otpRequestedTime;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/head"></div>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+  <!-- Sidebar -->
+  <div th:replace="fragments/sidebar"></div>
+  <!-- End of Sidebar -->
+
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+
+    <!-- Main Content -->
+    <div id="content">
+
+      <!-- Topbar -->
+      <div th:replace="fragments/topbar"></div>
+      <!-- End of Topbar -->
+
+      <!-- Begin Page Content -->
+      <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-4 text-gray-800">Chi tiết người dùng</h1>
+
+        <!-- Form Card -->
+        <div class="card shadow mb-4">
+          <div class="card-body">
+            <p>ID: <span th:text="${user.id}"></span></p>
+            <p>Tên: <span th:text="${user.username}"></span></p>
+            <p>Email: <span th:text="${user.email}"></span></p>
+            <p>Vai trò: <span th:text="${user.role}"></span></p>
+            <p>Ngày tạo: <span th:text="${#temporals.format(user.createdDate, 'dd/MM/yyyy HH:mm:ss')}"></span></p>
+            <button type="button" class="btn-secondary" onclick="window.history.back()">Quay lại</button>
+          </div>
+        </div>
+
+      </div>
+      <!-- /.container-fluid -->
+
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <div th:replace="fragments/footer"></div>
+    <!-- End of Footer -->
+
+  </div>
+  <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+</body>
+</html>
