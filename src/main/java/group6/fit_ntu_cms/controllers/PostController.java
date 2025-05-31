@@ -8,6 +8,7 @@ import group6.fit_ntu_cms.services.TittleService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -188,7 +189,16 @@ public class PostController {
     }
     @GetMapping("/posts/{id}")
     @ResponseBody
-    public PostModel getPostById(@PathVariable Long id) {
-        return postService.getPostById(id).orElseThrow(() -> new RuntimeException("Event not found"));
+    public ResponseEntity<PostModel> getPostById(@PathVariable Long id) {
+        System.out.println("Fetching post with ID: " + id);
+        try {
+            PostModel post = postService.getPostById(id)
+                    .orElseThrow(() -> new RuntimeException("Post not found with ID: " + id));
+            return ResponseEntity.ok(post);
+        } catch (Exception e) {
+            System.err.println("Error fetching post with ID " + id + ": " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
     }
 }

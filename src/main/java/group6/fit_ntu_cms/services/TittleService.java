@@ -4,6 +4,7 @@ import group6.fit_ntu_cms.models.TittleModel;
 import group6.fit_ntu_cms.repositories.TittleRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,5 +36,19 @@ public class TittleService {
     @Transactional
     public void deleteTittle(Long id) {
         tittleRepository.deleteById(id);
+    }
+    public List<TittleModel> getTittles(String search, int page, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+        if (search != null && !search.isEmpty()) {
+            return tittleRepository.findByTitleNameContainingIgnoreCase(search, pageRequest).getContent();
+        }
+        return tittleRepository.findAll(pageRequest).getContent();
+    }
+
+    public int countTittles(String search) {
+        if (search != null && !search.isEmpty()) {
+            return (int) tittleRepository.countByTitleNameContainingIgnoreCase(search);
+        }
+        return (int) tittleRepository.count();
     }
 }

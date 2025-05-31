@@ -1,5 +1,6 @@
 package group6.fit_ntu_cms.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -26,5 +27,6 @@ public class TittleModel {
 
     // One-to-Many relationship with BaiViet
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<PostModel> posts;
 }

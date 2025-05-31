@@ -1,5 +1,6 @@
 package group6.fit_ntu_cms.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,10 +23,12 @@ public class PostModel {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaChuyenMuc")
+    @JsonBackReference
     private TittleModel category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaNguoiDung", nullable = false)
+    @JsonBackReference
     private UsersModel user;
 
     @NotBlank(message = "Post title cannot be empty")
