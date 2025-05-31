@@ -58,17 +58,17 @@
         <div >
           <ul class="pagination justify-content-center">
             <li th:if="${currentPage > 0}">
-              <a class="page-link" th:href="@{'/users'(page=${currentPage - 1}, size=5)}"><</a>
+              <a class="page-link" th:href="@{'/users'(page=${currentPage - 1}, size=7)}"><</a>
             </li>
 
             <li class="page-item"
                 th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
                 th:classappend="${i == currentPage} ? 'active'">
-              <a class="page-link" th:href="@{'/users'(page=${i}, size=5)}" th:text="${i + 1}"></a>
+              <a class="page-link" th:href="@{'/users'(page=${i}, size=7)}" th:text="${i + 1}"></a>
             </li>
 
             <li th:if="${currentPage < totalPages - 1}">
-              <a class="page-link" th:href="@{'/users'(page=${currentPage + 1}, size=5)}">></a>
+              <a class="page-link" th:href="@{'/users'(page=${currentPage + 1}, size=7)}">></a>
             </li>
           </ul>
         </div>
@@ -102,6 +102,7 @@
     if(alert) alert.style.display = 'none';
   }, 3000);
 </script>
+
 </body>
 
 </html>

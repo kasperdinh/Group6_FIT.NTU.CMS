@@ -21,7 +21,11 @@
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="mr-2 d-none d-lg-inline text-gray-600 small"
-              th:text="${session.role == 'ADMIN'} ? #{user.admin} : #{user.user}">
+              th:switch="${session.role.name()}">
+          <span th:case="'ADMIN'" th:text="#{user.admin}">Quản trị viên</span>
+          <span th:case="'WRITER'" th:text="#{user.writer}">Người viết</span>
+          <span th:case="'MODERATOR'" th:text="#{user.moderator}">Người kiểm duyệt</span>
+          <span th:case="*" th:text="#{user.user}">Người dùng</span>
         </span>
         <img class="img-profile rounded-circle" src="/img/undraw_profile.svg" alt="">
       </a>
