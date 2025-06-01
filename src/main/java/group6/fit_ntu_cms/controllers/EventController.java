@@ -60,17 +60,17 @@ public class EventController {
 
     // Xử lý tải lên tệp ảnh
     if (imageFile != null && !imageFile.isEmpty()) {
-      String uploadDir = new File("src/main/resources/static/uploads/img").getAbsolutePath();
+      String uploadDir = new File("src/main/resources/static/uploads/img/").getAbsolutePath();
       String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
       File saveFile = new File(uploadDir, filename);
       saveFile.getParentFile().mkdirs();
       imageFile.transferTo(saveFile);
-      event.setEventImage("/uploads/img" + filename);
+      event.setEventImage("/uploads/img/" + filename);
     }
 
     // Xử lý tải lên tệp tài liệu
     if (filePath != null && !filePath.isEmpty()) {
-      String uploadDir = new File("src/main/resources/static/uploads/files").getAbsolutePath();
+      String uploadDir = new File("src/main/resources/static/uploads/files/").getAbsolutePath();
       String filename = UUID.randomUUID() + "_" + filePath.getOriginalFilename();
       File saveFile = new File(uploadDir, filename);
       saveFile.getParentFile().mkdirs();

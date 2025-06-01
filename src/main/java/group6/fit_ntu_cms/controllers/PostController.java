@@ -69,7 +69,7 @@ public class PostController {
         // Xử lý tải lên tệp ảnh
         if (imageFile != null && !imageFile.isEmpty()) {
 
-            String uploadDir = new File("src/main/resources/static/uploads/img").getAbsolutePath();
+            String uploadDir = new File("src/main/resources/static/uploads/img/").getAbsolutePath();
             String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
             File saveFile = new File(uploadDir, filename);
             saveFile.getParentFile().mkdirs();
@@ -82,12 +82,12 @@ public class PostController {
 
         // Xử lý tải lên tệp tài liệu
         if (filePath != null && !filePath.isEmpty()) {
-            String uploadDir = new File("src/main/resources/static/uploads/files").getAbsolutePath();
+            String uploadDir = new File("src/main/resources/static/uploads/files/").getAbsolutePath();
             String filename = UUID.randomUUID() + "_" + filePath.getOriginalFilename();
             File saveFile = new File(uploadDir, filename);
             saveFile.getParentFile().mkdirs();
             filePath.transferTo(saveFile);
-            post.setFilePath("/uploads/files" + filename);
+            post.setFilePath("/uploads/files/" + filename);
             String filePathStr = "/uploads/files/" + filename;
             MediaModel media = new MediaModel();
             mediaService.saveMedia(media,user,filePathStr);
@@ -159,13 +159,13 @@ public class PostController {
             @RequestParam("file") MultipartFile filePath) throws IOException {
         UsersModel user = (UsersModel) session.getAttribute("user");
         if (imageFile != null && !imageFile.isEmpty()) {
-            String uploadDir = new File("src/main/resources/static/uploads/img").getAbsolutePath();
+            String uploadDir = new File("src/main/resources/static/uploads/img/").getAbsolutePath();
             String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
             File saveFile = new File(uploadDir, filename);
             saveFile.getParentFile().mkdirs();
             imageFile.transferTo(saveFile);
             MediaModel media = new MediaModel();
-            String file = "/uploads/img" + filename;
+            String file = "/uploads/img/" + filename;
             mediaService.saveMedia(media,user,file);
 
             if (existingImage != null && !existingImage.isEmpty()) {
@@ -181,13 +181,13 @@ public class PostController {
         }
 
         if (filePath != null && !filePath.isEmpty()) {
-            String uploadDir = new File("src/main/resources/static/uploads/files").getAbsolutePath();
+            String uploadDir = new File("src/main/resources/static/uploads/files/").getAbsolutePath();
             String filename = UUID.randomUUID() + "_" + filePath.getOriginalFilename();
             File saveFile = new File(uploadDir, filename);
             saveFile.getParentFile().mkdirs();
             filePath.transferTo(saveFile);
             MediaModel media = new MediaModel();
-            String file = "/uploads/files" + filename;
+            String file = "/uploads/files/" + filename;
             mediaService.saveMedia(media,user,file);
 
             if (existingFilePath != null && !existingFilePath.isEmpty()) {

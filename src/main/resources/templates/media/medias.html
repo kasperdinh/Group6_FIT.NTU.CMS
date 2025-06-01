@@ -8,6 +8,64 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+      padding: 15px;
+    }
+    .media-item {
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      background: #fff;
+      text-align: center;
+      padding: 10px;
+      transition: box-shadow 0.2s;
+    }
+    .media-item:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .media-item img {
+      max-width: 100%;
+      height: 100px;
+      object-fit: cover;
+    }
+    .media-item .file-icon {
+      font-size: 50px;
+      color: #6c757d;
+    }
+    .media-item .media-info {
+      margin-top: 5px;
+      font-size: 0.9em;
+    }
+    .media-item .media-actions {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      display: none;
+    }
+    .media-item:hover .media-actions {
+      display: block;
+    }
+    .dropzone {
+      border: 2px dashed #007bff;
+      border-radius: 5px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 20px;
+      background: #f8f9fa;
+      transition: background 0.2s;
+    }
+    .dropzone.dragover {
+      background: #e1f0ff;
+    }
+    .view-toggle {
+      margin-left: 10px;
+    }
+  </style>
 </head>
 <body id="page-top">
 <div th:replace="~{fragments/head}"></div>
@@ -17,11 +75,19 @@
     <div id="content">
       <div th:replace="~{fragments/topbar}"></div>
       <div class="container-fluid">
-        <h1 class="wp-heading-inline" th:text="#{media.library}">Media Library</h1>
-
-        <!-- Add Media Button and Search Form -->
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <button class="btn btn-success page-title-action" data-bs-toggle="modal" data-bs-target="#addMediaModal" th:text="#{media.add}">Add Media File</button>
+          <h1 class="wp-heading-inline" th:text="#{media.library}">Media Library</h1>
+          <div class="d-flex align-items-center">
+            <button class="btn btn-success page-title-action" data-bs-toggle="modal" data-bs-target="#addMediaModal" th:text="#{media.add}">Add Media File</button>
+            <div class="view-toggle">
+              <button id="gridViewBtn" class="btn btn-outline-secondary btn-sm active"><i class="bi bi-grid"></i></button>
+              <button id="listViewBtn" class="btn btn-outline-secondary btn-sm"><i class="bi bi-list"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Search Form -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
           <form class="d-flex" th:action="@{/media}" method="get">
             <input class="form-control me-2" type="search" name="search" placeholder="Search Media" aria-label="Search" th:value="${search}">
             <button class="btn btn-outline-primary" type="submit">Search</button>
@@ -31,6 +97,14 @@
         <!-- Success/Error Messages -->
         <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="${successMessage}"></div>
         <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+
+        <!-- Drag and Drop Area -->
+        <div class="dropzone" id="dropzone">
+          <p>Drag and drop files here or click to upload</p>
+          <form id="dropzoneForm" th:action="@{/media/add}" method="post" enctype="multipart/form-data" style="display: none;">
+            <input type="file" id="dropzoneInput" name="file" accept="image/*,.pdf,.doc,.docx" multiple>
+          </form>
+        </div>
 
         <!-- Add Media Modal -->
         <div class="modal fade" id="addMediaModal" tabindex="-1" aria-labelledby="addMediaModalLabel" aria-hidden="true">
@@ -56,8 +130,35 @@
           </div>
         </div>
 
-        <!-- Media List Table -->
-        <div class="table-responsive">
+        <!-- Media Grid View -->
+        <div id="gridView" class="media-grid">
+          <div class="media-item" th:each="mediaData : ${mediaFilesWithStatus}">
+            <div th:with="media=${mediaData.media}">
+              <div th:if="${#strings.contains(media.fileUpload, '.jpg') or #strings.contains(media.fileUpload, '.jpeg') or #strings.contains(media.fileUpload, '.png') or #strings.contains(media.fileUpload, '.gif')}">
+                <img th:src="@{${media.fileUpload}}" alt="Media Image" th:unless="${mediaData.exists == false}" />
+                <span th:if="${mediaData.exists == false}" class="text-danger">File not found</span>
+              </div>
+              <div th:unless="${#strings.contains(media.fileUpload, '.jpg') or #strings.contains(media.fileUpload, '.jpeg') or #strings.contains(media.fileUpload, '.png') or #strings.contains(media.fileUpload, '.gif')}">
+                <i class="bi bi-file-earmark file-icon"></i>
+              </div>
+              <div class="media-info">
+                <div th:text="${media.fileUpload.substring(media.fileUpload.lastIndexOf('/') + 1)}"></div>
+                <div th:text="${media.user != null ? media.user.username : 'Unknown'}"></div>
+                <div th:text="${#temporals.format(media.uploadDate, 'dd/MM/yyyy HH:mm')}"></div>
+              </div>
+              <div class="media-actions">
+                <form th:action="@{/media/delete/{id}(id=${media.mediaId})}" method="post" style="display:inline;">
+                  <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this file?')">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Media List View (Hidden by Default) -->
+        <div id="listView" class="table-responsive" style="display: none;">
           <table class="table table-striped table-hover">
             <thead>
             <tr>
@@ -68,15 +169,17 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="media : ${mediaFiles}">
+            <tr th:each="mediaData : ${mediaFilesWithStatus}">
               <td>
-                <a
-                   th:href="@{${media.fileUpload}}" target="_blank" th:text="${media.fileUpload}"></a>
+                <div th:with="media=${mediaData.media}">
+                  <a th:if="${mediaData.exists}" th:href="@{${media.fileUpload}}" target="_blank" th:text="${media.fileUpload}"></a>
+                  <span th:unless="${mediaData.exists}" class="text-danger">File not found</span>
+                </div>
               </td>
-              <td th:text="${media.user != null ? media.user.username : 'Unknown'}"></td>
-              <td th:text="${#temporals.format(media.uploadDate, 'dd/MM/yyyy HH:mm')}"></td>
+              <td th:text="${mediaData.media.user != null ? mediaData.media.user.username : 'Unknown'}"></td>
+              <td th:text="${#temporals.format(mediaData.media.uploadDate, 'dd/MM/yyyy HH:mm')}"></td>
               <td>
-                <form th:action="@{/media/delete/{id}(id=${media.mediaId})}" method="post" style="display:inline;">
+                <form th:action="@{/media/delete/{id}(id=${mediaData.media.mediaId})}" method="post" style="display:inline;">
                   <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this file?')">
                     <i class="bi bi-trash"></i>
                   </button>
@@ -97,6 +200,60 @@
 <div th:replace="~{fragments/footer}"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/js/mediaJs/script.js"></script>
+<script>
+  // Toggle between Grid and List View
+  const gridViewBtn = document.getElementById('gridViewBtn');
+  const listViewBtn = document.getElementById('listViewBtn');
+  const gridView = document.getElementById('gridView');
+  const listView = document.getElementById('listView');
+
+  gridViewBtn.addEventListener('click', () => {
+    gridView.style.display = 'grid';
+    listView.style.display = 'none';
+    gridViewBtn.classList.add('active');
+    listViewBtn.classList.remove('active');
+  });
+
+  listViewBtn.addEventListener('click', () => {
+    gridView.style.display = 'none';
+    listView.style.display = 'block';
+    gridViewBtn.classList.remove('active');
+    listViewBtn.classList.add('active');
+  });
+
+  // Drag and Drop Functionality
+  const dropzone = document.getElementById('dropzone');
+  const dropzoneInput = document.getElementById('dropzoneInput');
+  const dropzoneForm = document.getElementById('dropzoneForm');
+
+  dropzone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('dragover');
+  });
+
+  dropzone.addEventListener('dragleave', () => {
+    dropzone.classList.remove('dragover');
+  });
+
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      dropzoneInput.files = files;
+      dropzoneForm.submit();
+    }
+  });
+
+  dropzone.addEventListener('click', () => {
+    dropzoneInput.click();
+  });
+
+  dropzoneInput.addEventListener('change', () => {
+    if (dropzoneInput.files.length > 0) {
+      dropzoneForm.submit();
+    }
+  });
+</script>
 </body>
 </html>
