@@ -3,7 +3,6 @@ package group6.fit_ntu_cms.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +23,7 @@ public class PostModel {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaChuyenMuc")
     @JsonBackReference
-    private TittleModel category;
+    private CategoryModel category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaNguoiDung", nullable = false)
