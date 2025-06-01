@@ -28,8 +28,11 @@ public class PostController {
 
     private final HttpSession httpSession;
 
-    public PostController(HttpSession httpSession) {
+    private final GlobalController globalController;
+
+    public PostController(HttpSession httpSession, GlobalController globalController) {
         this.httpSession = httpSession;
+        this.globalController = globalController;
     }
 
     @Autowired
@@ -43,11 +46,13 @@ public class PostController {
                             @RequestParam(required = false) Long category,
                             @RequestParam(required = false) String search,
                             Model model) {
-        Role role = (Role) httpSession.getAttribute("role");
-        if (role == Role.USER) {
+        UsersModel user = (UsersModel) httpSession.getAttribute("user");
+        if (user == null) {
+            return "redirect:/access-denied";
+        } else if (globalController.isUserRole()) {
             return "redirect:/access-denied";
         }
-
+        model.addAttribute("user", user);
         List<PostModel> posts = postService.filterPosts(status, category, search);
         model.addAttribute("posts", posts);
         model.addAttribute("post", new PostModel());

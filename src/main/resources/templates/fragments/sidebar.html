@@ -82,6 +82,20 @@
     </div>
   </li>
 
+  <li class="nav-item" th:if="${session.role.name() != 'USER'}">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNotice" aria-expanded="true" aria-controls="collapseNotice">
+      <i class="fas fa-fw fa-calendar-alt"></i>
+      <span th:text="#{notice}">Notice</span>
+    </a>
+    <div id="collapseNotice" class="collapse" aria-labelledby="headingNotice" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <h6 th:text="#{notice.features}" class="collapse-header">Notice Features:</h6>
+        <a class="collapse-item" th:text="#{list.notice}" href="/notices">List of Events</a>
+        <a class="collapse-item" th:text="#{create.notice}" href="/notices/create">List of Events</a>
+      </div>
+    </div>
+  </li>
+
   <!-- Nav Item - Comments -->
   <li class="nav-item" th:if="${session.role.name() != 'USER'}">
     <a class="nav-link" href="/comments">

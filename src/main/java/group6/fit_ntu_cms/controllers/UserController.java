@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +21,16 @@ import java.util.List;
 @Controller
 @RequestMapping("/users")
 public class UserController {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private final HttpSession httpSession;
 
-    public UserController(HttpSession httpSession) {
+    private final GlobalController globalController;
+
+    public UserController(HttpSession httpSession, GlobalController globalController) {
         this.httpSession = httpSession;
+        this.globalController = globalController;
     }
 
     @Autowired
@@ -37,10 +43,13 @@ public class UserController {
             ModelMap model
     ) {
 
-        Role role = (Role) httpSession.getAttribute("role");
-        if (role == Role.USER) {
+        UsersModel user = (UsersModel) httpSession.getAttribute("user");
+        if (user == null) {
+            return "redirect:/access-denied";
+        } else if (globalController.isUserRole()) {
             return "redirect:/access-denied";
         }
+        model.addAttribute("user", user);
         Pageable pageable = PageRequest.of(page, size);
         Page<UsersModel> userPage = userRepository.findAll(pageable);
 
@@ -125,4 +134,32 @@ public class UserController {
         }
         return "redirect:/users";
     }
+
+    @PostMapping("/profile/update")
+    public String updateProfile(@ModelAttribute UsersModel updatedUser, HttpSession session, RedirectAttributes redirectAttributes) {
+        UsersModel currentUser = (UsersModel) session.getAttribute("user");
+        boolean changed = false;
+        if (!currentUser.getEmail().equals(updatedUser.getEmail())) {
+            currentUser.setEmail(updatedUser.getEmail());
+            changed = true;
+        }
+        String newPassword = updatedUser.getPassword();
+
+        if (newPassword != null && !newPassword.isBlank()) {
+            if (!passwordEncoder.matches(newPassword, currentUser.getPassword())) {
+                currentUser.setPassword(passwordEncoder.encode(newPassword));
+                changed = true;
+            }
+        }
+        if (changed) {
+            userRepository.save(currentUser);
+            session.setAttribute("user", currentUser);
+            redirectAttributes.addFlashAttribute("success", "Cập nhật thành công!");
+        }
+        else {
+            redirectAttributes.addFlashAttribute("warning", "Bạn chưa thay đổi thông tin nào.");
+        }
+        return "redirect:/dashboard";
+    }
 }
+

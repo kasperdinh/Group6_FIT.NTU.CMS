@@ -1,5 +1,6 @@
 package group6.fit_ntu_cms.controllers;
 
+import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.models.CategoryModel;
 import group6.fit_ntu_cms.services.CategoryService;
 import jakarta.servlet.http.HttpSession;
@@ -14,6 +15,14 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/tittles")
 public class CategoryController {
+    private final HttpSession httpSession;
+
+    private final GlobalController globalController;
+
+    public CategoryController(HttpSession httpSession, GlobalController globalController) {
+        this.httpSession = httpSession;
+        this.globalController = globalController;
+    }
 
     @Autowired
     private CategoryService categoryService;
@@ -22,6 +31,14 @@ public class CategoryController {
     public String getAllTittles(Model model, @RequestParam(value = "search", required = false) String search,
                                 @RequestParam(value = "page", defaultValue = "1") int page,
                                 HttpSession session) {
+
+        UsersModel user = (UsersModel) httpSession.getAttribute("user");
+        if (user == null) {
+            return "redirect:/access-denied";
+        } else if (globalController.isUserRole()) {
+            return "redirect:/access-denied";
+        }
+        model.addAttribute("user", user);
         int pageSize = 20; // Số mục trên mỗi trang, tương tự WordPress
         List<CategoryModel> tittles = categoryService.getTittles(search, page, pageSize);
         int totalItems = categoryService.countTittles(search);

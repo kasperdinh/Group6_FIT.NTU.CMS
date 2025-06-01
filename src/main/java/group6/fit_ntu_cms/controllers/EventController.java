@@ -20,9 +20,11 @@ import java.util.UUID;
 @Controller
 public class EventController {
   private final HttpSession httpSession;
+  private final GlobalController globalController;
 
-  public EventController(HttpSession httpSession) {
-      this.httpSession = httpSession;
+  public EventController(HttpSession httpSession, GlobalController globalController) {
+    this.httpSession = httpSession;
+    this.globalController = globalController;
   }
 
   @Autowired
@@ -30,14 +32,13 @@ public class EventController {
 
   @GetMapping("/events")
   public String getAllEvents(Model model, HttpSession session) {
-    UsersModel user = (UsersModel) session.getAttribute("user");
+    UsersModel user = (UsersModel) httpSession.getAttribute("user");
     if (user == null) {
       return "redirect:/access-denied";
+    } else if (globalController.isUserRole()) {
+      return "redirect:/access-denied";
     }
-    Role role = (Role) httpSession.getAttribute("role");
-    if (role == Role.USER) {
-      return "redirect:/login";
-    }
+    model.addAttribute("user", user);
     model.addAttribute("events", eventService.getAllEvents());
     model.addAttribute("event", new EventModel());
     return "event/events";
