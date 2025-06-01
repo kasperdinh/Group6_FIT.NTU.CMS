@@ -20,13 +20,13 @@ public class DashboardController {
 
   @GetMapping("/dashboard")
   public String dashboard(Model model) {
-    if (globalController.isUserRole()) {
+    UsersModel user = (UsersModel) httpSession.getAttribute("user");
+    if (user == null) {
+      return "redirect:/access-denied";
+    } else if (globalController.isUserRole()) {
       return "redirect:/access-denied";
     }
-    UsersModel user = (UsersModel) httpSession.getAttribute("user");
-    if (user != null) {
-      model.addAttribute("user", user);
-    }
+    model.addAttribute("user", user);
     return "dashboard";
   }
 }

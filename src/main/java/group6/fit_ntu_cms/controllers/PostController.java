@@ -42,13 +42,13 @@ public class PostController {
                             @RequestParam(required = false) Long category,
                             @RequestParam(required = false) String search,
                             Model model) {
-        if (globalController.isUserRole()) {
+        UsersModel user = (UsersModel) httpSession.getAttribute("user");
+        if (user == null) {
+            return "redirect:/access-denied";
+        } else if (globalController.isUserRole()) {
             return "redirect:/access-denied";
         }
-        UsersModel user = (UsersModel) httpSession.getAttribute("user");
-        if (user != null) {
-            model.addAttribute("user", user);
-        }
+        model.addAttribute("user", user);
         List<PostModel> posts = postService.filterPosts(status, category, search);
         model.addAttribute("posts", posts);
         model.addAttribute("post", new PostModel());

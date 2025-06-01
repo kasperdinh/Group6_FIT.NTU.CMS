@@ -32,13 +32,13 @@ public class EventController {
 
   @GetMapping("/events")
   public String getAllEvents(Model model, HttpSession session) {
-    if (globalController.isUserRole()) {
+    UsersModel user = (UsersModel) httpSession.getAttribute("user");
+    if (user == null) {
+      return "redirect:/access-denied";
+    } else if (globalController.isUserRole()) {
       return "redirect:/access-denied";
     }
-    UsersModel user = (UsersModel) httpSession.getAttribute("user");
-    if (user != null) {
-      model.addAttribute("user", user);
-    }
+    model.addAttribute("user", user);
     model.addAttribute("events", eventService.getAllEvents());
     model.addAttribute("event", new EventModel());
     return "event/events";

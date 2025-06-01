@@ -28,13 +28,13 @@ public class PageController {
 
   @GetMapping
   public String listPages(Model model) {
-    if (globalController.isUserRole()) {
+    UsersModel user = (UsersModel) httpSession.getAttribute("user");
+    if (user == null) {
+      return "redirect:/access-denied";
+    } else if (globalController.isUserRole()) {
       return "redirect:/access-denied";
     }
-    UsersModel user = (UsersModel) httpSession.getAttribute("user");
-    if (user != null) {
-      model.addAttribute("user", user);
-    }
+    model.addAttribute("user", user);
     model.addAttribute("pages", pageService.getAllPages());
     return "page/pages";
   }

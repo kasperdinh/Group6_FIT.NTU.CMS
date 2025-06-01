@@ -34,13 +34,13 @@ public class TittleController {
                                 @RequestParam(value = "page", defaultValue = "1") int page,
                                 HttpSession session) {
 
-        if (globalController.isUserRole()) {
+        UsersModel user = (UsersModel) httpSession.getAttribute("user");
+        if (user == null) {
+            return "redirect:/access-denied";
+        } else if (globalController.isUserRole()) {
             return "redirect:/access-denied";
         }
-        UsersModel user = (UsersModel) httpSession.getAttribute("user");
-        if (user != null) {
-            model.addAttribute("user", user);
-        }
+        model.addAttribute("user", user);
         int pageSize = 20; // Số mục trên mỗi trang, tương tự WordPress
         List<TittleModel> tittles = tittleService.getTittles(search, page, pageSize);
         int totalItems = tittleService.countTittles(search);

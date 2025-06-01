@@ -32,13 +32,13 @@ public class MenuController {
 
   @GetMapping
   public String listMenus(Model model) {
-    if (globalController.isUserRole()) {
+    UsersModel user = (UsersModel) httpSession.getAttribute("user");
+    if (user == null) {
+      return "redirect:/access-denied";
+    } else if (globalController.isUserRole()) {
       return "redirect:/access-denied";
     }
-    UsersModel user = (UsersModel) httpSession.getAttribute("user");
-    if (user != null) {
-      model.addAttribute("user", user);
-    }
+    model.addAttribute("user", user);
     model.addAttribute("menus", menuService.getAllMenus());
     model.addAttribute("pages", pageService.getAllPages());
     return "menu/menus";
