@@ -2,6 +2,7 @@ package group6.fit_ntu_cms.controllers;
 
 import group6.fit_ntu_cms.models.MediaModel;
 import group6.fit_ntu_cms.models.PostModel;
+import group6.fit_ntu_cms.models.Role;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.repositories.MediaRePository;
 import group6.fit_ntu_cms.services.MediaService;
@@ -24,6 +25,13 @@ import java.util.UUID;
 
 @Controller
 public class PostController {
+
+    private final HttpSession httpSession;
+
+    public PostController(HttpSession httpSession) {
+        this.httpSession = httpSession;
+    }
+
     @Autowired
     private PostService postService;
     @Autowired
@@ -35,6 +43,11 @@ public class PostController {
                             @RequestParam(required = false) Long category,
                             @RequestParam(required = false) String search,
                             Model model) {
+        Role role = (Role) httpSession.getAttribute("role");
+        if (role == Role.USER) {
+            return "redirect:/access-denied";
+        }
+
         List<PostModel> posts = postService.filterPosts(status, category, search);
         model.addAttribute("posts", posts);
         model.addAttribute("post", new PostModel());
@@ -56,6 +69,10 @@ public class PostController {
             model.addAttribute("post", post);
             model.addAttribute("errorMessage", "Vui lòng đăng nhập để thêm bài viết.");
             return "post/posts";
+        }
+        Role role = (Role) httpSession.getAttribute("role");
+        if (role == Role.USER) {
+            return "redirect:/access-denied";
         }
 
         // Kiểm tra lỗi xác thực

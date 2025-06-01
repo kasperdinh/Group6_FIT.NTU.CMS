@@ -12,7 +12,7 @@
   <hr class="sidebar-divider my-0">
 
   <!-- Nav Item - Dashboard -->
-  <li class="nav-item active">
+  <li class="nav-item active" th:if="${session.role.name() != 'USER'}">
     <a class="nav-link" href="/dashboard">
       <i class="fas fa-fw fa-tachometer-alt"></i>
       <span th:text="#{dashboard}">Dashboard</span>
@@ -23,7 +23,7 @@
   <hr class="sidebar-divider">
 
   <!-- Nav Item - Post -->
-  <li class="nav-item">
+  <li class="nav-item" th:if="${session.role.name() != 'USER'}">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePost" aria-expanded="true" aria-controls="collapsePost">
       <i class="fas fa-fw fa-edit"></i>
       <span th:text="#{post}">Post</span>
@@ -38,22 +38,15 @@
   </li>
 
   <!-- Nav Item - Media -->
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMedia" aria-expanded="true" aria-controls="collapseMedia">
+  <li class="nav-item" th:if="${session.role.name() != 'USER'}">
+    <a class="nav-link" href="/media">
       <i class="fas fa-fw fa-photo-video"></i>
       <span th:text="#{media}">Media</span>
     </a>
-    <div id="collapseMedia" class="collapse" aria-labelledby="headingMedia" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <h6 class="collapse-header">Media Features:</h6>
-        <a th:text="#{list.media}" class="collapse-item" th:href="@{/media}">List of Posts</a>
-        <a th:text="#{media.add}" class="collapse-item" th:href="@{/tittles}">Create Post</a>
-      </div>
-    </div>
   </li>
 
   <!-- Nav Item - Pages -->
-  <li class="nav-item" th:if="${session.role.name() == 'ADMIN'}">
+  <li class="nav-item" th:if="${session.role.name() != 'USER'}">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePage" aria-expanded="true" aria-controls="collapsePage">
       <i class="fas fa-fw fa-file-alt"></i>
       <span th:text="#{pages}">Pages</span>
@@ -68,7 +61,7 @@
   </li>
 
   <!-- Nav Item - Menu -->
-  <li class="nav-item">
+  <li class="nav-item" th:if="${session.role.name() == 'ADMIN' or session.role.name() == 'MODERATOR'}">
     <a class="nav-link" href="/menus">
       <i class="fas fa-fw fa-list"></i>
       <span th:text="#{menu}">Menu</span>
@@ -76,7 +69,7 @@
   </li>
 
   <!-- Nav Item - Event -->
-  <li class="nav-item" th:if="${session.role.name() == 'ADMIN'}">
+  <li class="nav-item" th:if="${session.role.name() != 'USER'}">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEvent" aria-expanded="true" aria-controls="collapseEvent">
       <i class="fas fa-fw fa-calendar-alt"></i>
       <span th:text="#{event}">Event</span>
@@ -90,7 +83,7 @@
   </li>
 
   <!-- Nav Item - Comments -->
-  <li class="nav-item">
+  <li class="nav-item" th:if="${session.role.name() != 'USER'}">
     <a class="nav-link" href="/comments">
       <i class="fas fa-fw fa-comments"></i>
       <span th:text="#{comments}">Comments</span>
@@ -100,14 +93,21 @@
 
   <!-- Nav Item - Users -->
   <li class="nav-item" th:if="${session.role.name() == 'ADMIN'}">
-    <a class="nav-link" href="/users">
-      <i class="fas fa-fw fa-users"></i>
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUser" aria-expanded="true" aria-controls="collapseUser">
+      <i class="fas fa-fw fa-file-alt"></i>
       <span th:text="#{users}">Users</span>
     </a>
+    <div id="collapseUser" class="collapse" aria-labelledby="headingUser" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <h6 th:text="#{user.features}" class="collapse-header">Page Features:</h6>
+        <a th:text="#{list.users}" class="collapse-item" href="/users">List of Users</a>
+        <a th:text="#{create.user}" class="collapse-item" href="/users/create">Create User</a>
+      </div>
+    </div>
   </li>
 
   <!-- Nav Item - Setting -->
-  <li class="nav-item">
+  <li class="nav-item" th:if="${session.role.name() != 'USER'}">
     <a class="nav-link" href="/setting">
       <i class="fas fa-fw fa-cogs"></i>
       <span th:text="#{setting}">Setting</span>

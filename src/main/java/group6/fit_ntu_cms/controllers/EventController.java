@@ -1,5 +1,6 @@
 package group6.fit_ntu_cms.controllers;
 import group6.fit_ntu_cms.models.EventModel;
+import group6.fit_ntu_cms.models.Role;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.services.EventService;
 import jakarta.servlet.http.HttpSession;
@@ -18,6 +19,11 @@ import java.util.UUID;
 
 @Controller
 public class EventController {
+  private final HttpSession httpSession;
+
+  public EventController(HttpSession httpSession) {
+      this.httpSession = httpSession;
+  }
 
   @Autowired
   private EventService eventService;
@@ -26,6 +32,10 @@ public class EventController {
   public String getAllEvents(Model model, HttpSession session) {
     UsersModel user = (UsersModel) session.getAttribute("user");
     if (user == null) {
+      return "redirect:/access-denied";
+    }
+    Role role = (Role) httpSession.getAttribute("role");
+    if (role == Role.USER) {
       return "redirect:/login";
     }
     model.addAttribute("events", eventService.getAllEvents());
@@ -49,7 +59,6 @@ public class EventController {
       model.addAttribute("errorMessage", "Vui lòng đăng nhập để thêm sự kiện.");
       return "event/events";
     }
-
     // Kiểm tra lỗi xác thực
     if (result.hasErrors()) {
       model.addAttribute("events", eventService.getAllEvents());

@@ -31,6 +31,11 @@ public class GlobalController {
     return "index";
   }
 
+  @GetMapping("/access-denied")
+  public String accessDenied() {
+    return "access-denied";
+  }
+
   @ModelAttribute("menus")
   public List<MenuModel> addMenusToModel() {
     return menuService.getAllMenus();

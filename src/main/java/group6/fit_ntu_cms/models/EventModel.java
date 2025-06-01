@@ -40,8 +40,10 @@ public class EventModel {
   private LocalDateTime createDate; // Remove @NotNull
 
   @NotNull(message = "Thời gian bắt đầu không được để trống")
+  @Column(name = "begin_date")
   private LocalDateTime beginDate;
 
   @NotNull(message = "Thời gian kết thúc không được để trống")
+  @Column(name = "finish_date")
   private LocalDateTime finishDate;
 }

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/head "></div>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+  <!-- Sidebar -->
+  <div th:replace="fragments/sidebar"></div>
+  <!-- End of Sidebar -->
+
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+
+    <!-- Main Content -->
+    <div id="content">
+
+      <!-- Topbar -->
+      <div th:replace="fragments/topbar"></div>
+      <!-- End of Topbar -->
+
+      <!-- Begin Page Content -->
+      <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-4 text-gray-800">Danh sách người dùng</h1>
+
+        <!-- Pages Table -->
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tên người dùng</th>
+            <th>Email</th>
+            <th>Vai trò</th>
+            <th>Ngày tạo</th>
+            <th>Hành động</th>
+          </thead>
+          <tbody>
+          <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.role}"></td>
+            <td th:text="${#temporals.format(user.createdDate, 'HH:mm:ss dd/MM/yyyy')}"></td>
+            <td>
+              <a th:href="@{/users/view/{id}(id=${user.id})}" class="btn btn-primary btn-sm">Xem</a>
+              <a th:href="@{/users/edit/{id}(id=${user.id})}" class="btn btn-primary btn-sm">Sửa</a>
+              <a th:href="@{/users/delete/{id}(id=${user.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa trang này?');">Xóa</a>
+            </td>
+          </tr>
+          </tbody>
+
+        </table>
+        <div >
+          <ul class="pagination justify-content-center">
+            <li th:if="${currentPage > 0}">
+              <a class="page-link" th:href="@{'/users'(page=${currentPage - 1}, size=7)}"><</a>
+            </li>
+
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${i == currentPage} ? 'active'">
+              <a class="page-link" th:href="@{'/users'(page=${i}, size=7)}" th:text="${i + 1}"></a>
+            </li>
+
+            <li th:if="${currentPage < totalPages - 1}">
+              <a class="page-link" th:href="@{'/users'(page=${currentPage + 1}, size=7)}">></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- /.container-fluid -->
+
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <div th:replace="fragments/footer"></div>
+    <!-- End of Footer -->
+
+  </div>
+  <!-- End of Content Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
+<div th:if="${success}"
+     class="alert alert-success"
+     style="position: fixed; top: 100px; right: 20px; z-index: 1050; min-width: 250px; box-shadow: 0 0 10px rgba(0,0,0,0.3);"
+     th:text="${success}">
+</div>
+<div th:if="${error}"
+     class="alert alert-danger"
+     style="position: fixed; top: 100px; right: 20px; z-index: 1050; min-width: 250px; box-shadow: 0 0 10px rgba(0,0,0,0.3);"
+     th:text="${error}">
+</div>
+<script>
+  setTimeout(() => {
+    const alert = document.querySelector('.alert');
+    if(alert) alert.style.display = 'none';
+  }, 3000);
+</script>
+
+</body>
+
+</html>
