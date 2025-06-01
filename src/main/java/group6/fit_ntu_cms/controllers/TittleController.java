@@ -2,6 +2,7 @@ package group6.fit_ntu_cms.controllers;
 
 import group6.fit_ntu_cms.models.Role;
 import group6.fit_ntu_cms.models.TittleModel;
+import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.services.TittleService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,11 @@ public class TittleController {
 
     private final HttpSession httpSession;
 
-    public TittleController(HttpSession httpSession) {
+    private final GlobalController globalController;
+
+    public TittleController(HttpSession httpSession, GlobalController globalController) {
         this.httpSession = httpSession;
+        this.globalController = globalController;
     }
 
     @Autowired
@@ -30,9 +34,12 @@ public class TittleController {
                                 @RequestParam(value = "page", defaultValue = "1") int page,
                                 HttpSession session) {
 
-        Role role = (Role) httpSession.getAttribute("role");
-        if (role == Role.USER) {
+        if (globalController.isUserRole()) {
             return "redirect:/access-denied";
+        }
+        UsersModel user = (UsersModel) httpSession.getAttribute("user");
+        if (user != null) {
+            model.addAttribute("user", user);
         }
         int pageSize = 20; // Số mục trên mỗi trang, tương tự WordPress
         List<TittleModel> tittles = tittleService.getTittles(search, page, pageSize);

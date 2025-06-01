@@ -1,7 +1,10 @@
 package group6.fit_ntu_cms.controllers.pagecontrollers;
 
+import group6.fit_ntu_cms.controllers.GlobalController;
 import group6.fit_ntu_cms.models.PageModel;
+import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.services.PageService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,11 +15,26 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/pages")
 public class PageController {
 
+  private final HttpSession httpSession;
+  private final GlobalController globalController;
+
+  public PageController(HttpSession httpSession, GlobalController globalController) {
+    this.httpSession = httpSession;
+    this.globalController = globalController;
+  }
+
   @Autowired
   private PageService pageService;
 
   @GetMapping
   public String listPages(Model model) {
+    if (globalController.isUserRole()) {
+      return "redirect:/access-denied";
+    }
+    UsersModel user = (UsersModel) httpSession.getAttribute("user");
+    if (user != null) {
+      model.addAttribute("user", user);
+    }
     model.addAttribute("pages", pageService.getAllPages());
     return "page/pages";
   }
