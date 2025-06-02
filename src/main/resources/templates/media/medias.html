@@ -100,7 +100,7 @@
 
         <!-- Drag and Drop Area -->
         <div class="dropzone" id="dropzone">
-          <p>Drag and drop files here or click to upload</p>
+            <p th:text="#{dropfile.message}">Drag and drop files here or click to upload</p>
           <form id="dropzoneForm" th:action="@{/media/add}" method="post" enctype="multipart/form-data" style="display: none;">
             <input type="file" id="dropzoneInput" name="file" accept="image/*,.pdf,.doc,.docx" multiple>
           </form>

@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
@@ -241,5 +242,52 @@ public class PostController {
             e.printStackTrace();
             return ResponseEntity.status(500).body(null);
         }
+    }
+    @GetMapping("/postsDetail/{id}")
+    public String showPostDetail(@PathVariable Long id, Model model, HttpSession session) {
+        PostModel post = postService.getPostById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + id));
+
+        // Retrieve the logged-in user from the session
+        UsersModel user = (UsersModel) session.getAttribute("user");
+        if (user == null) {
+            user = new UsersModel(); // Fallback: create a new user object if not logged in
+            // Alternatively, redirect to login page: return "redirect:/login";
+        }
+
+        model.addAttribute("post", post);
+        model.addAttribute("user", user); // Add user to the model
+        return "post/post-detail";
+    }
+    @PostMapping("/{id}/approve")
+    public String approvePost(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            PostModel post = postService.getPostById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + id));
+            post.setStatus("Approved");
+            UsersModel user = post.getUser();
+            postService.savePost(post,user);
+            redirectAttributes.addFlashAttribute("message", "Post approved successfully.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to approve post: " + e.getMessage());
+        }
+        return "redirect:/posts";
+    }
+
+    // Deny a post
+    @PostMapping("/{id}/deny")
+    public String denyPost(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            PostModel post = postService.getPostById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + id));
+            post.setStatus("Denied");
+            UsersModel user = post.getUser();
+            postService.savePost(post,user);
+            postService.savePost(post,user);
+            redirectAttributes.addFlashAttribute("message", "Post denied successfully.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to deny post: " + e.getMessage());
+        }
+        return "redirect:/posts" ;
     }
 }

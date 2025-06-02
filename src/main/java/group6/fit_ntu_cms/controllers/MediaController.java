@@ -32,9 +32,8 @@ public class MediaController {
     private EventRepository eventRepository;
 
     @GetMapping
-    public String showMedia(Model model, @RequestParam(value = "search", required = false) String search) {
+    public String showMedia(Model model, @RequestParam(value = "search", required = false) String search, HttpSession session) {
         List<MediaModel> mediaFiles = mediaService.getAllMedia(search != null ? search : "");
-        // Add file existence information to the model
         List<Map<String, Object>> mediaFilesWithStatus = mediaFiles.stream().map(media -> {
             Map<String, Object> mediaData = new HashMap<>();
             mediaData.put("media", media);
@@ -43,6 +42,13 @@ public class MediaController {
             return mediaData;
         }).collect(Collectors.toList());
 
+        // Retrieve the logged-in user from the session
+        UsersModel user = (UsersModel) session.getAttribute("user");
+        if (user == null) {
+            user = new UsersModel(); // Or redirect to login page if user is not logged in
+        }
+
+        model.addAttribute("user", user); // Add user to the model
         model.addAttribute("mediaFilesWithStatus", mediaFilesWithStatus);
         model.addAttribute("search", search != null ? search : "");
         return "media/medias";
@@ -71,7 +77,7 @@ public class MediaController {
                 destFile.getParentFile().mkdirs();
                 file.transferTo(destFile);
 
-                savedFilePath = "/uploads/files" + fileName;
+                savedFilePath = "/uploads/files/" + fileName;
 
                 MediaModel media = new MediaModel();
                 mediaService.saveMedia(media,user,savedFilePath);
