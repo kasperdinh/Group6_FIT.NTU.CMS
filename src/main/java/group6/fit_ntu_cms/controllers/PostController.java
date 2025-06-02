@@ -10,6 +10,7 @@ import group6.fit_ntu_cms.services.PageService;
 import group6.fit_ntu_cms.services.PostService;
 import group6.fit_ntu_cms.services.CategoryService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -134,47 +135,62 @@ public class PostController {
         return "redirect:/posts";
     }
     @PostMapping("/deletePost")
-    public String removePost(@RequestParam(value = "postId", required = false) Long postId, Model model) {
+    @Transactional
+    public String removePost(@RequestParam(value = "postId", required = false) Long postId, Model model, RedirectAttributes redirectAttributes) {
         if (postId == null) {
-            model.addAttribute("errorMessage", "Post ID is missing. Unable to delete the post.");
-            return "redirect:/posts"; // Redirect back to posts page with an error
+            redirectAttributes.addFlashAttribute("errorMessage", "Post ID is missing. Unable to delete the post.");
+            return "redirect:/posts";
         }
 
         PostModel post = postService.getPostById(postId).orElse(null);
         if (post == null) {
-            model.addAttribute("errorMessage", "Post not found with ID: " + postId);
+            redirectAttributes.addFlashAttribute("errorMessage", "Post not found with ID: " + postId);
             return "redirect:/posts";
         }
 
         try {
             // Delete associated image file
             if (post.getPostImage() != null) {
-                String imagePath = new File("src/main/resources/static" + post.getPostImage()).getAbsolutePath();
+                String imagePath = new File("src/main/resources/static" + post.getPostImage().replaceFirst("^/", "")).getAbsolutePath();
                 File imageFile = new File(imagePath);
                 if (imageFile.exists()) {
-                    imageFile.delete();
+                    if (imageFile.delete()) {
+                        System.out.println("Deleted image file: " + imagePath);
+                    } else {
+                        System.out.println("Failed to delete image file: " + imagePath);
+                    }
+                } else {
+                    System.out.println("Image file does not exist: " + imagePath);
                 }
                 mediaService.deleteMedia(post.getPostImage());
             }
 
             // Delete associated document file
             if (post.getFilePath() != null) {
-                String filePath = new File("src/main/resources/static" + post.getFilePath()).getAbsolutePath();
+                String filePath = new File("src/main/resources/static" + post.getFilePath().replaceFirst("^/", "")).getAbsolutePath();
                 File file = new File(filePath);
                 if (file.exists()) {
-                    file.delete();
+                    if (file.delete()) {
+                        System.out.println("Deleted file: " + filePath);
+                    } else {
+                        System.out.println("Failed to delete file: " + filePath);
+                    }
+                } else {
+                    System.out.println("File does not exist: " + filePath);
                 }
                 mediaService.deleteMedia(post.getFilePath());
             }
 
             // Delete the post from the database
             postService.deletePost(postId);
+            redirectAttributes.addFlashAttribute("successMessage", "Post deleted successfully.");
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error deleting post: " + e.getMessage());
-            return "redirect:/posts";
+            System.err.println("Error deleting post with ID " + postId + ": " + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting post: " + e.getMessage());
         }
 
-        return "redirect:/posts"; // Redirect to /posts, not /events
+        return "redirect:/posts";
     }
     @PostMapping("/editPosts")
     public String editPost(

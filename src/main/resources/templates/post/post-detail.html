@@ -119,7 +119,7 @@
                 </p>
               </div>
               <!-- Action Buttons for Approve and Deny -->
-              <div th:if="${post.status == 'Pending'} " class="action-buttons">
+              <div th:if="${post.status == 'Pending' &&(user.role== 'ADMIN'|| user.role=='MODERATOR')} " class="action-buttons">
                 <form th:action="@{/{id}/approve(id=${post.postId})}" method="post" style="display: inline;">
                   <button type="submit" class="btn btn-success"
                           th:disabled="${post.status == 'Approved'}"
