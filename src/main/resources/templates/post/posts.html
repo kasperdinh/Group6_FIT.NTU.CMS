@@ -77,10 +77,20 @@
                     <div class="mb-3 flex-item">
                       <label class="form-label" th:text="#{post.category}">Category</label>
                       <select class="form-control" th:field="*{category}">
-                        <option value="">-- Select a category (optional) --</option>
+                        <option value="" th:text="#{select.category}"></option>
                         <option th:each="category : ${allCategories}"
                                 th:value="${category.tittleId}"
                                 th:text="${category.titleName}"></option>
+                      </select>
+                      <div th:errors="*{category}" class="text-danger"></div>
+                    </div>
+                    <div class="mb-3 flex-item">
+                      <label class="form-label" th:text="#{post.page}">Category</label>
+                      <select class="form-control" th:field="*{page}">
+                        <option th:text="#{select.page}" value=""></option>
+                        <option th:each="page : ${allPages}"
+                                th:value="${page.id}"
+                                th:text="${page.title}"></option>
                       </select>
                       <div th:errors="*{category}" class="text-danger"></div>
                     </div>

@@ -6,6 +6,7 @@ import group6.fit_ntu_cms.models.Role;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.repositories.MediaRePository;
 import group6.fit_ntu_cms.services.MediaService;
+import group6.fit_ntu_cms.services.PageService;
 import group6.fit_ntu_cms.services.PostService;
 import group6.fit_ntu_cms.services.CategoryService;
 import jakarta.servlet.http.HttpSession;
@@ -42,6 +43,8 @@ public class PostController {
     private CategoryService categoryService;
     @Autowired
     private MediaService mediaService;
+    @Autowired
+    private PageService pageService;
     @GetMapping("/posts")
     public String showPosts(@RequestParam(required = false) String status,
                             @RequestParam(required = false) Long category,
@@ -58,6 +61,7 @@ public class PostController {
         model.addAttribute("posts", posts);
         model.addAttribute("post", new PostModel());
         model.addAttribute("allCategories", categoryService.getAllTittles());
+        model.addAttribute("allPages",pageService.getAllPages());
         return "/post/posts";
     }
     @PostMapping("/post-add")
