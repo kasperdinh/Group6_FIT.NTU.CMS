@@ -28,11 +28,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         document.getElementById('editFilePathLink').textContent = post.filePath || 'No file';
                         document.getElementById('editFilePathLink').style.display = post.filePath ? 'block' : 'none';
                         document.getElementById('editExistingFilePath').value = post.filePath || '';
-                        document.getElementById('editStatus').value = post.status || 'draft';
+                        document.getElementById('editStatus').value = post.status || 'Pending';
                         // Giả sử category là một trường select, bạn cần điền giá trị
                         const editCategory = document.getElementById('editCategory');
-                        if (editCategory) {
+                        const editPage=document.getElementById('editPage');
+                        if (editCategory && editPage) {
                             editCategory.value = post.category ? post.category.tittleId : '';
+                            editPage.value = post.page ? post.page.pageId : '';
                         }
                     })
                     .catch(error => console.error('Error fetching post:', error));

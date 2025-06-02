@@ -92,7 +92,6 @@
                                 th:value="${page.id}"
                                 th:text="${page.title}"></option>
                       </select>
-                      <div th:errors="*{category}" class="text-danger"></div>
                     </div>
                   </div>
                   <div class="mb-3">
@@ -150,6 +149,15 @@
                         <option th:each="category : ${allCategories}"
                                 th:value="${category.tittleId}"
                                 th:text="${category.titleName}"></option>
+                      </select>
+                    </div>
+                    <div class="mb-3 flex-item">
+                      <label class="form-label" th:text="#{post.page}">Category</label>
+                      <select class="form-control" id="editPage" name="page">
+                        <option th:text="#{select.page}" value=""></option>
+                        <option th:each="page : ${allPages}"
+                                th:value="${page.id}"
+                                th:text="${page.title}"></option>
                       </select>
                     </div>
                   </div>
