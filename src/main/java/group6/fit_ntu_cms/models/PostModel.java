@@ -60,4 +60,9 @@ public class PostModel {
     @Size(max = 100, message = "Status must be less than 100 characters")
     @Column(name = "TrangThai", length = 100)
     private String status;
+
+    @ManyToOne
+    @JoinColumn(name = "page_id")
+    @JsonBackReference
+    private PageModel page;
 }

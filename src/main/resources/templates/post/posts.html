@@ -32,9 +32,10 @@
         <div class="d-flex mb-3">
           <form th:action="@{/posts}" method="get" class="d-flex">
             <select name="status" class="form-select me-2" style="width: auto;">
-              <option value="">All Statuses</option>
-              <option value="published">Published</option>
-              <option value="draft">Draft</option>
+              <option value="" th:text="#{post.status}">All Statuses</option>
+              <option value="Published" th:text="#{post.approved}">Approved</option>
+              <option value="Denied" th:text="#{post.denied}">Denied</option>
+              <option value="Pending" th:text="#{post.pending}">Pending</option>
             </select>
             <select name="category" class="form-select me-2" style="width: auto;">
               <option value="">All Categories</option>
@@ -76,10 +77,20 @@
                     <div class="mb-3 flex-item">
                       <label class="form-label" th:text="#{post.category}">Category</label>
                       <select class="form-control" th:field="*{category}">
-                        <option value="">-- Select a category (optional) --</option>
+                        <option value="" th:text="#{select.category}"></option>
                         <option th:each="category : ${allCategories}"
                                 th:value="${category.tittleId}"
                                 th:text="${category.titleName}"></option>
+                      </select>
+                      <div th:errors="*{category}" class="text-danger"></div>
+                    </div>
+                    <div class="mb-3 flex-item">
+                      <label class="form-label" th:text="#{post.page}">Category</label>
+                      <select class="form-control" th:field="*{page}">
+                        <option th:text="#{select.page}" value=""></option>
+                        <option th:each="page : ${allPages}"
+                                th:value="${page.id}"
+                                th:text="${page.title}"></option>
                       </select>
                       <div th:errors="*{category}" class="text-danger"></div>
                     </div>
@@ -90,16 +101,6 @@
                     <div th:errors="*{content}" class="text-danger"></div>
                   </div>
                   <div class="input-row">
-                    <div class="mb-3 flex-item">
-                      <label class="form-label" th:text="#{post.creationDate}">Creation Date</label>
-                      <input type="datetime-local" class="form-control" th:field="*{creationDate}" required>
-                      <div th:errors="*{creationDate}" class="text-danger"></div>
-                    </div>
-                    <div class="mb-3 flex-item">
-                      <label class="form-label" th:text="#{post.updateDate}">Update Date</label>
-                      <input type="datetime-local" class="form-control" th:field="*{updateDate}" required>
-                      <div th:errors="*{updateDate}" class="text-danger"></div>
-                    </div>
                     <div class="mb-3">
                       <label class="form-label" th:text="#{post.file}">File</label>
                       <input type="file" class="form-control" name="file" accept=".pdf,.doc,.docx,.png">
@@ -108,14 +109,6 @@
                       <label class="form-label" th:text="#{event.image}">File</label>
                       <input type="file" class="form-control" name="imgFile" accept="image/*">
                     </div>
-                  </div>
-                  <div class="mb-3">
-                    <label class="form-label" th:text="#{post.status}">Status</label>
-                    <select class="form-control" th:field="*{status}" required>
-                      <option value="draft">Draft</option>
-                      <option value="published">Published</option>
-                    </select>
-                    <div th:errors="*{status}" class="text-danger"></div>
                   </div>
                 </div>
                 <div class="modal-footer">
@@ -167,11 +160,11 @@
                   <div class="input-row">
                     <div class="mb-3 flex-item">
                       <label class="form-label" th:text="#{post.creationDate}">Creation Date</label>
-                      <input type="datetime-local" class="form-control" id="editCreationDate" name="creationDate" required />
+                      <input type="datetime-local" class="form-control" id="editCreationDate" name="creationDate" readonly />
                     </div>
                     <div class="mb-3 flex-item">
                       <label class="form-label" th:text="#{post.updateDate}">Update Date</label>
-                      <input type="datetime-local" class="form-control" id="editUpdateDate" name="updateDate" required />
+                      <input type="datetime-local" class="form-control" id="editUpdateDate" name="updateDate" readonly />
                     </div>
                   </div>
                   <div class="mb-3">
@@ -194,7 +187,7 @@
                   </div>
                   <div class="mb-3">
                     <label class="form-label" th:text="#{post.status}">Status</label>
-                    <select class="form-control" id="editStatus" name="status" required>
+                    <select class="form-control" id="editStatus" name="status" readonly>
                       <option value="draft">Draft</option>
                       <option value="published">Published</option>
                     </select>
@@ -241,15 +234,15 @@
               <th scope="col" th:text="#{post.category}">Category</th>
               <th scope="col" th:text="#{post.status}">Status</th>
               <th scope="col" th:text="#{post.creationDate}">Date</th>
-              <th scope="col" th:text="#{actions}">Actions</th>
+              <th scope="col" th:text="#{post.updateDate}">Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="post : ${posts}">
               <td>
-                <a th:href="@{/posts/{id}(id=${post.postId})}" th:text="${post.postTitle}"></a>
-                <div class="post-actions small">
-                  <a href="#" class="edit-btn me-1"
+                <a th:href="@{/postsDetail/{id}(id=${post.postId})}" th:text="${post.postTitle}"></a>
+                <div class="post-actions small ">
+                  <a href="#" class="edit-btn me-1 text-warning"
                      data-bs-toggle="modal"
                      data-bs-target="#editPostModal"
                      th:data-post-id="${post.postId}"
@@ -263,22 +256,13 @@
               </td>
               <td th:text="${post.user.username}">Author</td>
               <td th:text="${post.category != null ? post.category.titleName : 'Uncategorized'}">Category</td>
-              <td th:text="${post.status}">Status</td>
-              <td th:text="${#temporals.format(post.creationDate, 'dd/MM/yyyy HH:mm')}">Date</td>
               <td>
-                <button class="btn btn-sm btn-outline-warning edit-btn me-1"
-                        data-bs-toggle="modal"
-                        data-bs-target="#editPostModal"
-                        th:data-post-id="${post.postId}">
-                  <i class="bi bi-pencil-square"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger delete-btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#deleteConfirmModal"
-                        th:data-post-id="${post.postId}">
-                  <i class="bi bi-trash"></i>
-                </button>
+                <span th:if="${post.status == 'Approved'}" class="text-success" th:text="#{post.approved}"></span>
+                <span th:if="${post.status == 'Denied'}" class="text-danger" th:text="#{post.denied}"></span>
+                <span th:if="${post.status == 'Pending'}" class="text-warning" th:text="#{post.pending}"></span>
               </td>
+              <td th:text="${#temporals.format(post.creationDate, 'dd/MM/yyyy HH:mm')}">Date</td>
+              <td th:text="${#temporals.format(post.updateDate, 'dd/MM/yyyy HH:mm')}">Date</td>
             </tr>
             </tbody>
           </table>

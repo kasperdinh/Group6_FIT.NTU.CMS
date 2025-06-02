@@ -32,17 +32,22 @@
       <div class="bg-white py-2 collapse-inner rounded">
         <h6 class="collapse-header">Post Features:</h6>
         <a th:text="#{list.posts}" class="collapse-item" th:href="@{/posts}">List of Posts</a>
-        <a th:text="#{list.tittle}" class="collapse-item" th:href="@{/tittles}">Create Post</a>
+        <a th:text="#{post.category}" class="collapse-item" th:href="@{/tittles}">Create Post</a>
       </div>
     </div>
   </li>
 
   <!-- Nav Item - Media -->
   <li class="nav-item" th:if="${session.role.name() != 'USER'}">
-    <a class="nav-link" href="/media">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMedia" aria-expanded="true" aria-controls="collapseMedia">
       <i class="fas fa-fw fa-photo-video"></i>
       <span th:text="#{media}">Media</span>
     </a>
+    <div id="collapseMedia" class="collapse" aria-labelledby="headingMedia" data-parent="#accordionSidebar" >
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a th:text="#{list.media}" class="collapse-item" th:href="@{/media}"></a>
+      </div>
+    </div>
   </li>
 
   <!-- Nav Item - Pages -->
@@ -55,7 +60,7 @@
       <div class="bg-white py-2 collapse-inner rounded">
         <h6 th:text="#{page.features}" class="collapse-header">Page Features:</h6>
         <a th:text="#{list.pages}" class="collapse-item" href="/pages">List of Pages</a>
-        <a th:text="#{create.page}" class="collapse-item" href="/pages/create">Create Page</a>
+        <a th:text="#{create.page}" class="collapse-item" href="/page/create">Create Page</a>
       </div>
     </div>
   </li>

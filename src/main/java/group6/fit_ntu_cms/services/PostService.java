@@ -23,7 +23,8 @@ public class PostService {
     public PostModel savePost(PostModel post, UsersModel user) {
         if (post.getPostId() == null) { // New post
             post.setCreationDate(LocalDateTime.now());
-            post.setStatus("draft"); // Default status for new posts
+            post.setUpdateDate(LocalDateTime.now());
+            post.setStatus("Pending"); // Default status for new posts
         }
         post.setUpdateDate(LocalDateTime.now());
         post.setUser(user); // Set the user who created/updated the post
