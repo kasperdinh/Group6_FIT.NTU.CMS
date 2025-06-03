@@ -3,6 +3,7 @@ package group6.fit_ntu_cms.controllers;
 import group6.fit_ntu_cms.models.Role;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.repositories.UsersRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -136,7 +137,7 @@ public class UserController {
     }
 
     @PostMapping("/profile/update")
-    public String updateProfile(@ModelAttribute UsersModel updatedUser, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String updateProfile(@ModelAttribute UsersModel updatedUser, HttpSession session, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         UsersModel currentUser = (UsersModel) session.getAttribute("user");
         boolean changed = false;
         if (!currentUser.getEmail().equals(updatedUser.getEmail())) {
@@ -159,7 +160,12 @@ public class UserController {
         else {
             redirectAttributes.addFlashAttribute("warning", "Bạn chưa thay đổi thông tin nào.");
         }
-        return "redirect:/dashboard";
+        String referer = request.getHeader("Referer");
+        if (referer == null || referer.isBlank()) {
+            referer = "/dashboard";
+        }
+
+        return "redirect:" + referer;
     }
 }
 

@@ -3,6 +3,7 @@ package group6.fit_ntu_cms.controllers;
 import group6.fit_ntu_cms.models.MenuModel;
 import group6.fit_ntu_cms.models.PageModel;
 import group6.fit_ntu_cms.models.Role;
+import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.services.MenuService;
 import group6.fit_ntu_cms.services.PageService;
 import jakarta.servlet.http.HttpSession;
@@ -39,6 +40,8 @@ public class GlobalController {
   public String home(Model model) {
     PageModel defaultPage = pageService.getDefaultPage();
     if (defaultPage != null) {
+      UsersModel user = (UsersModel) httpSession.getAttribute("user");
+      model.addAttribute("user", user);
       model.addAttribute("page", defaultPage);
       return "page/public";
     }

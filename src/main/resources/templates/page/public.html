@@ -3,5 +3,21 @@
 <div th:replace="fragments/head"></div>
 <body>
 <div th:replace="fragments/public-navbar"></div>
+<div th:if="${success}"
+     class="alert alert-success"
+     style="position: fixed; top: 100px; right: 20px; z-index: 1050; min-width: 250px; box-shadow: 0 0 10px rgba(0,0,0,0.3);"
+     th:text="${success}">
+</div>
+<div th:if="${warning}"
+     class="alert alert-warning"
+     style="position: fixed; top: 100px; right: 20px; z-index: 1050; min-width: 250px; box-shadow: 0 0 10px rgba(0,0,0,0.3);"
+     th:text="${warning}">
+</div>
+<script>
+    setTimeout(() => {
+        const alert = document.querySelector('.alert');
+        if(alert) alert.style.display = 'none';
+    }, 3000);
+</script>
 </body>
 </html>
