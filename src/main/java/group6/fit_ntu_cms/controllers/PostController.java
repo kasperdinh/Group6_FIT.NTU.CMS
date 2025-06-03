@@ -270,13 +270,15 @@ public class PostController {
 
         // Retrieve the logged-in user from the session
         UsersModel user = (UsersModel) session.getAttribute("user");
+        String userRole = user.getRole().name();
         if (user == null) {
             user = new UsersModel(); // Fallback: create a new user object if not logged in
             // Alternatively, redirect to login page: return "redirect:/login";
         }
 
         model.addAttribute("post", post);
-        model.addAttribute("user", user); // Add user to the model
+        model.addAttribute("user", user);
+        model.addAttribute("userRole",userRole);
         return "post/post-detail";
     }
     @PostMapping("/{id}/approve")
