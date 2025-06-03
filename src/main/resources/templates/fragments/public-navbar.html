@@ -18,13 +18,14 @@
       </div>
     </li>
 
-    <!-- Nav Item - Dashboard -->
-    <li class="nav-item" th:if="${session.role.name() != 'USER'}">
-      <button style="margin-top: 14px" class="btn btn-primary btn-dashboard" onclick="window.location.href='/dashboard'">
-        <i class="fas fa-fw fa-tachometer-alt"></i>
-        <span th:text="#{dashboard}">Dashboard</span>
-      </button>
-    </li>
+<!--    &lt;!&ndash; Nav Item - Dashboard &ndash;&gt;-->
+<!--    <li class="nav-item"-->
+<!--      th:if="${session.user != null and session.user.role != null and session.user.role.name() != 'USER'}">-->
+<!--      <button style="margin-top: 14px" class="btn btn-primary btn-dashboard" onclick="window.location.href='/dashboard'">-->
+<!--        <i class="fas fa-fw fa-tachometer-alt"></i>-->
+<!--        <span th:text="#{dashboard}">Dashboard</span>-->
+<!--      </button>-->
+<!--    </li>-->
 
     <!-- Nav Item - User Information -->
     <li class="nav-item dropdown no-arrow">
