@@ -1,14 +1,9 @@
-<nav th:fragment="topbar" id="topbar" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+<nav th:fragment="topbar" id="topbar" class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
   <!-- Sidebar Toggle (Topbar) -->
-  <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-    <i class="fa fa-bars"></i>
-  </button>
+  <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+    <img src="/img/logo.png" alt="Logo" style="height: 40px;">
+  </a>
 
-  <ul class="navbar-nav mr-auto">
-    <li th:each="menu : ${menus}" class="nav-item">
-      <a style="color: black" class="nav-link" th:href="@{${menu.url}}" th:text="${menu.name}">Menu Name</a>
-    </li>
-  </ul>
 
   <!-- Topbar Navbar -->
   <ul class="navbar-nav ml-auto">

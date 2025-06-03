@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"></head>
+<body class="bg-light">
+
+<!-- Navbar -->
+<div th:replace="fragments/public-navbar"></div>
+
+<!-- Page Layout -->
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Sidebar -->
+        <nav class="col-md-2 d-none d-md-block bg-white border-end vh-100"
+             th:replace="fragments/public-sidebar"></nav>
+
+        <!-- Main Content -->
+        <main class="col-md-10 px-md-5 py-4">
+            <div class="bg-white rounded shadow-sm p-4">
+
+                <!-- Nếu bài viết tồn tại -->
+                <div th:if="${post != null}">
+                    <!-- Tiêu đề -->
+                    <h2 class="text-primary fw-bold mb-4" th:text="${post.postTitle}"></h2>
+
+                    <!-- Hình ảnh bài viết -->
+                    <div class="text-center mb-4">
+                        <img th:src="@{${post.postImage}}" alt="Hình ảnh bài viết"
+                             class="img-fluid rounded shadow border"
+                             style="max-height: 450px; object-fit: cover;">
+                    </div>
+
+                    <!-- Nội dung bài viết -->
+                    <div class="post-content" th:utext="${post.content}"
+                         style="font-size: 1.1rem; line-height: 1.8; color: #333;"></div>
+                </div>
+
+                <!-- Nếu không có bài viết -->
+                <div th:if="${post == null}">
+                    <div class="alert alert-warning mt-4">
+                        <strong>404:</strong> Bài viết không tồn tại.
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Footer -->
+<div th:replace="fragments/footer"></div>
+</body>
+</html>

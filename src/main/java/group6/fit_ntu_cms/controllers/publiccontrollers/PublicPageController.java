@@ -1,9 +1,10 @@
-package group6.fit_ntu_cms.controllers.pagecontrollers;
+package group6.fit_ntu_cms.controllers.publiccontrollers;
 
 import group6.fit_ntu_cms.models.PageModel;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.services.MenuService;
 import group6.fit_ntu_cms.services.PageService;
+import group6.fit_ntu_cms.services.PostService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,9 @@ public class PublicPageController {
     @Autowired
     private MenuService menuService;
 
+    @Autowired
+    private PostService postService;
+
     @GetMapping("/{slug}")
     public String viewPage(@PathVariable String slug, Model model) {
         Optional<PageModel> page = pageService.getPageBySlug(slug);
@@ -39,6 +43,7 @@ public class PublicPageController {
         model.addAttribute("user", user);
         model.addAttribute("page", page.get());
         model.addAttribute("menus", menuService.getAllMenus());
-        return "page/public";
+        model.addAttribute("posts", postService.getPostsByPageId(page.get().getId()));
+        return "public/public";
     }
 }
