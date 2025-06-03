@@ -1,6 +1,5 @@
-package group6.fit_ntu_cms.controllers.pagecontrollers;
+package group6.fit_ntu_cms.controllers;
 
-import group6.fit_ntu_cms.controllers.GlobalController;
 import group6.fit_ntu_cms.models.PageModel;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.services.PageService;

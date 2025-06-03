@@ -43,7 +43,7 @@ public class GlobalController {
       UsersModel user = (UsersModel) httpSession.getAttribute("user");
       model.addAttribute("user", user);
       model.addAttribute("page", defaultPage);
-      return "page/public";
+      return "public/public";
     }
     return "index";
   }
