@@ -26,33 +26,49 @@
     <!-- Nav Item - User Information -->
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="mr-2 d-none d-lg-inline text-gray-600 small"
-              th:text="${session.role == 'ADMIN'} ? #{user.admin} : #{user.user}">
-        </span>
+          <span th:if="${session.role != null}" th:switch="${session.role.name()}" class="mr-2 d-none d-lg-inline text-gray-600 small">
+            <span th:case="'ADMIN'" th:text="#{user.admin}">Quản trị viên</span>
+            <span th:case="'WRITER'" th:text="#{user.writer}">Người viết</span>
+            <span th:case="'MODERATOR'" th:text="#{user.moderator}">Người kiểm duyệt</span>
+            <span th:case="'USER'" th:text="#{user.user}">Người dùng</span>
+          </span>
         <img class="img-profile rounded-circle" src="/img/undraw_profile.svg" alt="">
       </a>
       <!-- Dropdown - User Information -->
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-        <a class="dropdown-item" href="#">
-          <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-          <span th:text="#{user.profile}">Profile</span>
-        </a>
-        <a class="dropdown-item" href="#">
-          <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-          <span th:text="#{user.settings}">Settings</span>
-        </a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-          <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-          <span th:href="@{/logout}" th:text="#{user.logout}">Logout</span>
-        </a>
+        <div th:if="${session.role != null}">
+          <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#profileModal">
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            <span th:text="#{user.profile}">Profile</span>
+          </a>
+          <a class="dropdown-item" href="#">
+            <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+            <span th:text="#{user.settings}">Settings</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+            <span th:text="#{user.logout}">Logout</span>
+          </a>
+        </div>
+
+        <div th:unless="${session.role != null}">
+          <a class="dropdown-item" th:href="@{/login}">
+            <i class="fas fa-sign-in-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+            <span th:text="#{user.login}">Đăng nhập</span>
+          </a>
+          <a class="dropdown-item" th:href="@{/register}">
+            <i class="fas fa-user-plus fa-sm fa-fw mr-2 text-gray-400"></i>
+            <span th:text="#{user.register}">Đăng ký</span>
+          </a>
+        </div>
       </div>
     </li>
   </ul>
 
   <!-- Logout Modal -->
-  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+  <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel" th:text="#{logout.title}">Ready to Leave?</h5>
@@ -62,7 +78,7 @@
         </div>
         <div class="modal-body" th:text="#{logout.message}">Select "Logout" below if you are ready to end your current session.</div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal" th:text="#{cancel}">Cancel</button>
           <a class="btn btn-primary" th:href="@{/logout}" th:text="#{user.logout}">Logout</a>
         </div>
       </div>
@@ -73,4 +89,90 @@
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
+  <div th:if="${session.user != null}">
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="profileModalLabel" th:text="#{user.profile}">Thông tin người dùng</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p><strong th:text="#{user.username}">Tên đăng nhập:</strong> <span th:text="${session.user.username}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${session.user.email}"></span></p>
+            <p><strong  th:text="#{user.role}">Vai trò:</strong>
+              <span th:switch="${session.role.name()}">
+                <span th:case="'ADMIN'" th:text="#{user.admin}">Quản trị viên</span>
+                <span th:case="'WRITER'" th:text="#{user.writer}">Người viết</span>
+                <span th:case="'MODERATOR'" th:text="#{user.moderator}">Người kiểm duyệt</span>
+                <span th:case="*" th:text="#{user.user}">Người dùng</span>
+              </span>
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{profile.closeBtn}">Đóng</button>
+            <button type="button" class="btn btn-primary" id="editProfileBtn" th:text="#{profile.editBtn}">Chỉnh sửa</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editProfileModal"
+         tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <form th:action="@{/users/profile/update}" th:object="${user}" method="post">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editProfileModalLabel" th:text="#{edit.editHead}">Cập nhật thông tin</h5>
+              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="username" th:text="#{edit.username}">Tên đăng nhập</label>
+                <input id="username" type="text" class="form-control" th:value="${session.user.username}" readonly/>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input id="email" type="email" class="form-control" th:field="*{email}" required/>
+              </div>
+
+              <div class="form-group">
+                <label for="password" th:text="#{edit.password}">Mật khẩu mới</label>
+                <input id="password" type="password" class="form-control" th:field="*{password}" th:placeholder="#{edit.placeHolder}"/>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{edit.cancel}">Hủy</button>
+              <button type="submit" class="btn btn-success" th:text="#{edit.save}">Lưu thay đổi</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const editBtn = document.getElementById('editProfileBtn');
+      const profileModal = document.getElementById('profileModal');
+      const editProfileModal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+
+      editBtn.addEventListener('click', function () {
+        const bsProfileModal = bootstrap.Modal.getInstance(profileModal);
+        bsProfileModal.hide();
+
+        profileModal.addEventListener('hidden.bs.modal', function () {
+          editProfileModal.show();
+        }, { once: true });
+      });
+    });
+  </script>
+
 </nav>

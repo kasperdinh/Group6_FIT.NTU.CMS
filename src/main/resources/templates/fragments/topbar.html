@@ -86,11 +86,11 @@
           <p><strong>Email:</strong> <span th:text="${session.user.email}"></span></p>
           <p><strong  th:text="#{user.role}">Vai trò:</strong>
             <span th:switch="${session.role.name()}">
-            <span th:case="'ADMIN'" th:text="#{user.admin}">Quản trị viên</span>
-            <span th:case="'WRITER'" th:text="#{user.writer}">Người viết</span>
-            <span th:case="'MODERATOR'" th:text="#{user.moderator}">Người kiểm duyệt</span>
-            <span th:case="*" th:text="#{user.user}">Người dùng</span>
-          </span>
+              <span th:case="'ADMIN'" th:text="#{user.admin}">Quản trị viên</span>
+              <span th:case="'WRITER'" th:text="#{user.writer}">Người viết</span>
+              <span th:case="'MODERATOR'" th:text="#{user.moderator}">Người kiểm duyệt</span>
+              <span th:case="*" th:text="#{user.user}">Người dùng</span>
+            </span>
           </p>
         </div>
         <div class="modal-footer">
