@@ -71,6 +71,14 @@ public class PostService {
         return postRepository.findByPageId(pageId);
     }
 
+    public List<PostModel> getLatestNews() {
+        return postRepository.findAll().stream()
+                .filter(post -> post.getStatus() != null && post.getStatus().equalsIgnoreCase("Approved"))
+                .sorted((p1, p2) -> p2.getCreationDate().compareTo(p1.getCreationDate()))
+                .limit(5)
+                .collect(Collectors.toList());
+    }
+
     // Delete a Post by ID
     @Transactional
     public void deletePost(Long id) {

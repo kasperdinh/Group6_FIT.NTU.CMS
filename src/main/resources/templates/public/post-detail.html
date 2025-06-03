@@ -1,45 +1,70 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head"></head>
+<style>
+    .post-content img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+</style>
 <body class="bg-light">
 
 <!-- Navbar -->
 <div th:replace="fragments/public-navbar"></div>
 
 <!-- Page Layout -->
-<div class="container-fluid">
+<div class="container-fluid pl-0">
     <div class="row">
 
         <!-- Sidebar -->
-        <nav class="col-md-2 d-none d-md-block bg-white border-end vh-100"
-             th:replace="fragments/public-sidebar"></nav>
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar" th:replace="fragments/public-sidebar"></nav>
 
         <!-- Main Content -->
         <main class="col-md-10 px-md-5 py-4">
             <div class="bg-white rounded shadow-sm p-4">
 
-                <!-- Nếu bài viết tồn tại -->
                 <div th:if="${post != null}">
-                    <!-- Tiêu đề -->
-                    <h2 class="text-primary fw-bold mb-4" th:text="${post.postTitle}"></h2>
+                    <h2 class="text-left fw-bold mb-3" th:text="${post.postTitle}"></h2>
 
-                    <!-- Hình ảnh bài viết -->
-                    <div class="text-center mb-4">
+                    <p class="text-muted mb-2">
+                        <strong>Tác giả:</strong> <span th:text="${post.user.username}"></span> |
+                        <strong>Chuyên mục:</strong> <span th:text="${post.category.titleName}"></span> |
+                        <strong>Ngày tạo:</strong> <span th:text="${#temporals.format(post.creationDate, 'dd/MM/yyyy HH:mm')}"></span>
+                    </p>
+
+                    <p class="text-muted mb-3" th:if="${post.updateDate != null}">
+                        <strong>Cập nhật:</strong> <span th:text="${#temporals.format(post.updateDate, 'dd/MM/yyyy HH:mm')}"></span>
+                    </p>
+
+                    <div class="text-center mb-4" th:if="${post.postImage != null}">
                         <img th:src="@{${post.postImage}}" alt="Hình ảnh bài viết"
                              class="img-fluid rounded shadow border"
-                             style="max-height: 450px; object-fit: cover;">
+                             style="max-height: 400px; object-fit: cover;">
                     </div>
 
-                    <!-- Nội dung bài viết -->
-                    <div class="post-content" th:utext="${post.content}"
+                    <div class="alert alert-secondary" th:if="${post.summary != null}" th:text="${post.summary}"></div>
+
+                    <div class="post-content"
+                         th:utext="${post.content}"
                          style="font-size: 1.1rem; line-height: 1.8; color: #333;"></div>
+
+                    <div class="mt-4" th:if="${post.filePath != null}">
+                        <a th:href="@{${post.filePath}}" class="btn btn-outline-primary" target="_blank">
+                            <i class="bi bi-paperclip"></i> Xem tệp đính kèm
+                        </a>
+                    </div>
+
+<!--                    &lt;!&ndash; Trạng thái &ndash;&gt;-->
+<!--                    <div class="mt-3">-->
+<!--                        <span class="badge bg-info text-dark" th:text="'Trạng thái: ' + ${post.status}"></span>-->
+<!--                    </div>-->
                 </div>
 
-                <!-- Nếu không có bài viết -->
+                <!-- Nếu không tìm thấy bài viết -->
                 <div th:if="${post == null}">
-                    <div class="alert alert-warning mt-4">
-                        <strong>404:</strong> Bài viết không tồn tại.
-                    </div>
+                    <p class="text-danger">Không tìm thấy bài viết.</p>
                 </div>
 
             </div>

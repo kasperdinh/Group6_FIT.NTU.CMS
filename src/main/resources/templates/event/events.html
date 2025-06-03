@@ -53,8 +53,8 @@
                     </div>
                   </div>
                   <div class="mb-3">
-                    <label class="form-label" th:text="#{event.description}">Event Description</label>
-                    <textarea class="form-control" th:field="*{eventDescription}" rows="2"></textarea>
+                    <label class="form-label" th:text="#{event.description}">Content</label>
+                    <textarea id="ckeditor-content" class="form-control" th:field="*{eventDescription}" rows="5"></textarea>
                     <div th:errors="*{eventDescription}" class="text-danger"></div>
                   </div>
                   <div class="input-row">
@@ -226,6 +226,16 @@
   </div>
 
   <script src="/js/eventJs/script.js"></script>
+  <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      ClassicEditor
+              .create(document.querySelector('#ckeditor-content'))
+              .catch(error => {
+                console.error(error);
+              });
+    });
+  </script>
 </div>
 </body>
 </html>

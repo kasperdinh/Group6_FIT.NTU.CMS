@@ -199,7 +199,7 @@ public class PostController {
             @RequestParam("imgFile") MultipartFile imageFile,
             @RequestParam(value = "existingImagePath", required = false) String existingImage,
             @RequestParam(value = "existingFilePath", required = false) String existingFilePath,
-            @RequestParam("file") MultipartFile filePath) throws IOException {
+            @RequestParam("file") MultipartFile filePath, Model model) throws IOException {
         UsersModel user = (UsersModel) session.getAttribute("user");
         if (imageFile != null && !imageFile.isEmpty()) {
             String uploadDir = new File("src/main/resources/static/uploads/img/").getAbsolutePath();
@@ -246,6 +246,7 @@ public class PostController {
             post.setFilePath(existingFilePath);
         }
 
+        model.addAttribute("post", post);
         postService.savePost(post, user);
         return "redirect:/posts";
     }
