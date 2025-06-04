@@ -62,6 +62,8 @@ public String showCreateForm(Model model) {
     PageModel page = pageService.getAllPages()
         .stream().filter(p -> p.getId().equals(id)).findFirst().orElse(null);
     if (page == null) return "redirect:/pages";
+    UsersModel user = (UsersModel) httpSession.getAttribute("user");
+    model.addAttribute("user", user);
     model.addAttribute("page", page);
     return "page/edit";
   }

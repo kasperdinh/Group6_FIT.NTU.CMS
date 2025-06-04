@@ -2,6 +2,7 @@ package group6.fit_ntu_cms.controllers.publiccontrollers;
 
 import group6.fit_ntu_cms.models.PageModel;
 import group6.fit_ntu_cms.models.UsersModel;
+import group6.fit_ntu_cms.services.EventService;
 import group6.fit_ntu_cms.services.MenuService;
 import group6.fit_ntu_cms.services.PageService;
 import group6.fit_ntu_cms.services.PostService;
@@ -31,6 +32,9 @@ public class PublicPageController {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private EventService eventService;
+
     @GetMapping("/{slug}")
     public String viewPage(@PathVariable String slug, Model model) {
         Optional<PageModel> page = pageService.getPageBySlug(slug);
@@ -43,6 +47,7 @@ public class PublicPageController {
         model.addAttribute("user", user);
         model.addAttribute("page", page.get());
         model.addAttribute("menus", menuService.getAllMenus());
+        model.addAttribute("events", eventService.getAllEvents());
         model.addAttribute("posts", postService.getPostsByPageId(page.get().getId()));
         return "public/public";
     }

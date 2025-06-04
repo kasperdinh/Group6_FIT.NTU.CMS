@@ -33,46 +33,63 @@
 
 <body id="page-top">
 
-<!-- Navbar (Topbar) -->
 <div th:replace="fragments/public-navbar"></div>
 
-<!-- Page Content Layout -->
 <div class="container-fluid pl-0">
     <div class="row">
-        <!-- Sidebar (Left) -->
         <nav class="col-md-2 d-none d-md-block bg-light sidebar" th:replace="fragments/public-sidebar"></nav>
 
-        <!-- Main Content (Right) -->
-        <main class="col-md-10 ml-sm-auto px-4" id="content">
-            <div class="pt-4">
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    <!-- Page Heading -->
-                    <div style="height: 75vh">
-                        <div th:if="${posts != null}">
-                            <h4>Danh sách bài viết:</h4>
-                            <div class="post-list" th:each="post : ${posts}">
-                                <a class="post-item d-flex mb-3" th:href="@{/post/{id}(id=${post.postId})}">
-                                    <img class="post-thumbnail mr-3" th:src="@{${post.postImage}}" alt="Thumbnail">
-                                    <div class="post-content">
-                                        <h6 class="post-title mb-1" th:text="${post.postTitle}">Tiêu đề bài viết</h6>
-                                        <p class="post-summary text-muted mb-0" th:text="${post.summary}">Tóm tắt nội dung</p>
+        <main class="col-md-10 px-md-5 py-4">
+            <div class="row">
+
+                <div class="col-md-7">
+                    <div class="bg-white rounded shadow-sm p-4">
+                        <h4>Danh sách bài viết</h4>
+                        <div class="post-list mt-4" th:each="post : ${posts}" th:if="${post.status != 'Pending'}">
+                            <a class="post-item d-flex mb-3" th:href="@{/post/{id}(id=${post.postId})}">
+                                <img class="post-thumbnail mr-3" th:src="@{${post.postImage}}" alt="Thumbnail">
+                                <div class="post-content">
+                                    <h6 class="post-title mb-1" th:text="${post.postTitle}">Tiêu đề bài viết</h6>
+                                    <p class="post-summary text-muted mb-0" th:text="${post.summary}">Tóm tắt nội dung</p>
+                                    <p class="post-summary text-muted mb-0" th:text="${'Tác giả: ' + post.getUser().username}"></p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="bg-white rounded shadow-sm p-3">
+                        <h4 class="mb-3">Sự kiện sắp tới</h4>
+                        <div th:if="${events != null}">
+                            <div th:each="event : ${events}" class="mb-3 border-bottom pb-2">
+                                <a class="post-item d-flex mb-3" th:href="@{/event/{id}(id=${event.eventId})}">
+                                    <div class="d-flex align-items-start">
+                                        <div class="p-3">
+                                            <img th:src="@{${event.eventImage}}" alt="Event"
+                                                 class="me-2 rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                                        </div>
+                                        <div>
+                                            <strong th:text="${event.eventName}">Tên sự kiện</strong>
+                                            <div class="text-muted" th:text="${event.summary}">Tóm tắt</div>
+                                            <small class="text-muted">
+                                                <span th:text="${#temporals.format(event.beginDate, 'dd/MM/yyyy')}"></span>
+                                                -
+                                                <span th:text="${#temporals.format(event.finishDate, 'dd/MM/yyyy')}"></span>
+                                            </small>
+                                        </div>
                                     </div>
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- /.container-fluid -->
 
-                <!-- Footer -->
-                <div th:replace="fragments/footer"></div>
-                <!-- End of Footer -->
             </div>
         </main>
     </div>
 </div>
-
+<div th:replace="fragments/footer"></div>
 <!-- Alerts -->
 <div th:if="${success}"
      class="alert alert-success"

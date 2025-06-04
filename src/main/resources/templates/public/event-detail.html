@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"></head>
+<style>
+    .event-description img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+</style>
+<body class="bg-light">
+
+<div th:replace="fragments/public-navbar"></div>
+
+<div class="container-fluid pl-0">
+    <div class="row">
+
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar" th:replace="fragments/public-sidebar"></nav>
+
+        <main class="col-md-10 px-md-5 py-4">
+            <div class="bg-white rounded shadow-sm p-4">
+
+                <div th:if="${event != null}">
+                    <!-- Tiêu đề sự kiện -->
+                    <h2 class="text-left fw-bold mb-3" th:text="${event.eventName}"></h2>
+
+                    <p class="text-muted mb-1">
+                        <strong>Tác giả:</strong>
+                        <span th:text="${event.user.username}">Người tạo</span> |
+                        <strong>Thời gian:</strong>
+                        <span th:text="${#temporals.format(event.beginDate, 'dd/MM/yyyy HH:mm')}"></span>
+                        -
+                        <span th:text="${#temporals.format(event.finishDate, 'dd/MM/yyyy HH:mm')}"></span>
+                    </p>
+
+                    <p class="text-muted mb-3">
+                        <strong>Địa điểm:</strong>
+                        <span th:text="${event.eventLocation}"></span>
+                    </p>
+
+                    <div class="text-center mb-4">
+                        <img th:src="@{${event.eventImage}}" alt="Hình ảnh sự kiện"
+                             class="img-fluid rounded shadow border"
+                             style="max-height: 400px; object-fit: cover;">
+                    </div>
+
+                    <!-- Mô tả chi tiết -->
+                    <div class="event-description"
+                         th:utext="${event.eventDescription}"
+                         style="font-size: 1.1rem; line-height: 1.8; color: #333;"></div>
+
+                    <div th:if="${event.filePath != null}" class="mt-4">
+                        <a th:href="@{${event.filePath}}" class="btn btn-outline-primary" target="_blank">
+                            <i class="bi bi-paperclip"></i> Xem tệp đính kèm
+                        </a>
+                    </div>
+                </div>
+
+                <div th:if="${event == null}">
+                    <p class="text-danger">Không tìm thấy sự kiện.</p>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Footer -->
+<div th:replace="fragments/footer"></div>
+</body>
+</html>
