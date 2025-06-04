@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "BaiViet")
+@Table(name = "posts")
 public class PostModel {
 
     @Id
