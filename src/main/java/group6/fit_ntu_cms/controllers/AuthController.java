@@ -1,7 +1,9 @@
 package group6.fit_ntu_cms.controllers;
+import group6.fit_ntu_cms.models.NotifyModel;
 import group6.fit_ntu_cms.models.Role;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.repositories.UsersRepository;
+import group6.fit_ntu_cms.services.NotifyService;
 import group6.fit_ntu_cms.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class AuthController {
@@ -28,6 +32,7 @@ public class AuthController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
 
     @GetMapping({"/login", "/signin"})
     public String loginPage() {

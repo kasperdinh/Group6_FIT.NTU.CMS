@@ -1,14 +1,9 @@
 package group6.fit_ntu_cms.controllers;
 
-import group6.fit_ntu_cms.models.MediaModel;
-import group6.fit_ntu_cms.models.PostModel;
-import group6.fit_ntu_cms.models.Role;
-import group6.fit_ntu_cms.models.UsersModel;
+import group6.fit_ntu_cms.models.*;
 import group6.fit_ntu_cms.repositories.MediaRePository;
-import group6.fit_ntu_cms.services.MediaService;
-import group6.fit_ntu_cms.services.PageService;
-import group6.fit_ntu_cms.services.PostService;
-import group6.fit_ntu_cms.services.CategoryService;
+import group6.fit_ntu_cms.repositories.UsersRepository;
+import group6.fit_ntu_cms.services.*;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -46,6 +41,10 @@ public class PostController {
     private MediaService mediaService;
     @Autowired
     private PageService pageService;
+    @Autowired
+    private NotifyService notifyService;
+    @Autowired
+    private UsersRepository usersRepository;
     @GetMapping("/posts")
     public String showPosts(@RequestParam(required = false) String status,
                             @RequestParam(required = false) Long category,
@@ -124,6 +123,14 @@ public class PostController {
         // Lưu sự kiện
         try {
             postService.savePost(post, user);
+            String postName = post.getPostTitle();
+            NotifyModel notify = new NotifyModel();
+            notifyService.saveNotify(notify,user,"Bài viết vừa thêm của bạn: "+postName+" đang được phê duyệt");
+            // Gửi thông báo cho tất cả ADMIN và MODERATOR
+            List<UsersModel> admins = usersRepository.findByRole(Role.ADMIN);
+            List<UsersModel> moderators = usersRepository.findByRole(Role.MODERATOR);
+            admins.addAll(moderators); // Gộp danh sách ADMIN và MODERATOR
+            notifyService.saveNotifyForUsers(admins, "Bạn có bài viết:" + postName + " cần được kiểm duyệt");
             model.addAttribute("successMessage", "Sự kiện đã được thêm thành công!");
         } catch (IllegalStateException e) {
             model.addAttribute("posts", postService.getAllPosts());
@@ -136,7 +143,7 @@ public class PostController {
     }
     @PostMapping("/deletePost")
     @Transactional
-    public String removePost(@RequestParam(value = "postId", required = false) Long postId, Model model, RedirectAttributes redirectAttributes) {
+    public String removePost(@RequestParam(value = "postId", required = false) Long postId, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
         if (postId == null) {
             redirectAttributes.addFlashAttribute("errorMessage", "Post ID is missing. Unable to delete the post.");
             return "redirect:/posts";
@@ -182,6 +189,9 @@ public class PostController {
             }
 
             // Delete the post from the database
+            UsersModel user = (UsersModel) session.getAttribute("user");
+            NotifyModel notify = new NotifyModel();
+            notifyService.saveNotify(notify,user,"Bạn đã xóa bài viết: "+post.getPostTitle()+" thành công");
             postService.deletePost(postId);
             redirectAttributes.addFlashAttribute("successMessage", "Post deleted successfully.");
         } catch (Exception e) {
@@ -288,6 +298,8 @@ public class PostController {
                     .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + id));
             post.setStatus("Approved");
             UsersModel user = post.getUser();
+            NotifyModel notify = new NotifyModel();
+            notifyService.saveNotify(notify,user,"Bài viết của bạn: " +post.getPostTitle()+" đã được duyệt");
             postService.savePost(post,user);
             redirectAttributes.addFlashAttribute("message", "Post approved successfully.");
         } catch (Exception e) {
@@ -304,7 +316,8 @@ public class PostController {
                     .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + id));
             post.setStatus("Denied");
             UsersModel user = post.getUser();
-            postService.savePost(post,user);
+            NotifyModel notify = new NotifyModel();
+            notifyService.saveNotify(notify,user,"Bài viết của bạn: " +post.getPostTitle()+" không được phê duệt");
             postService.savePost(post,user);
             redirectAttributes.addFlashAttribute("message", "Post denied successfully.");
         } catch (Exception e) {
