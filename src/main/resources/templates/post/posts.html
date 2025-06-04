@@ -302,27 +302,6 @@
                 console.error(error);
               });
     });
-
-    function openEditModal(post) {
-      $('#editModal').modal('show');
-
-      // Gán dữ liệu cho các input
-      $('#editId').val(post.id);
-      $('#editTitle').val(post.title);
-      $('#editCategory').val(post.category.id);
-      $('#editStatus').val(post.status);
-      $('#hiddenStatus').val(post.status);
-
-      // Gán content cho CKEditor
-      if (CKEDITOR.instances['editContent']) {
-        CKEDITOR.instances['editContent'].setData(post, post.content );
-      }
-
-      // Nếu bạn có ảnh/file hiện tại, cũng nên fill vào preview
-      $('#previewImg').attr('src', post.postImage || '');
-      $('#existingImagePath').val(post.postImage || '');
-      $('#existingFilePath').val(post.filePath || '');
-    }
   </script>
 </div>
 </body>

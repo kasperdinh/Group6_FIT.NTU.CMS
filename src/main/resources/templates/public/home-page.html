@@ -14,7 +14,7 @@
                 <div class="col-md-3">
                     <h4 class="mb-3 fw-bold">Bài viết khác</h4>
                     <div th:if="${subNewsList != null}">
-                        <div class="d-flex flex-column" th:each="news : ${subNewsList}">
+                        <div class="d-flex flex-column" th:each="news : ${subNewsList}" th:if="${news.status == 'Approved'}">
                             <div class="d-flex p-2">
                                 <img th:src="@{${news.postImage}}" style="width: 70px; height: 50px; object-fit: cover;" class="rounded me-2" alt="Ảnh nhỏ">
                                 <a th:href="@{/post/{id}(id=${news.postId})}" class="text-dark fw-medium small flex-grow-1 pl-2 pt-1"
@@ -41,14 +41,12 @@
                 <div class="col-md-3">
                     <h4 class="mb-3 fw-bold">Thông báo</h4>
                     <ul class="list-group list-group-flush">
-                        <!--
                         <li class="list-group-item px-0 py-2" th:each="noti : ${notificationList}">
-                            <a th:href="@{/thong-bao/{id}(id=${noti.id})}" class="d-flex justify-content-between align-items-start text-dark small">
+                            <a th:href="@{/notice/{id}(id=${noti.id})}" class="d-flex justify-content-between align-items-start text-dark small">
                                 <span th:text="${noti.title}">Tiêu đề TB</span>
                                 <span class="text-danger ms-2" th:text="${#temporals.format(noti.date, 'dd/MM/yyyy')}">[dd/MM/yyyy]</span>
                             </a>
                         </li>
-                        -->
                     </ul>
                 </div>
 
