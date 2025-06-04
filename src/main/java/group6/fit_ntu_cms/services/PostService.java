@@ -26,6 +26,7 @@ public class PostService {
             post.setUpdateDate(LocalDateTime.now());
             post.setStatus("Pending"); // Default status for new posts
         }
+        post.setStatus(post.getStatus());
         post.setUpdateDate(LocalDateTime.now());
         post.setUser(user); // Set the user who created/updated the post
         return postRepository.save(post);

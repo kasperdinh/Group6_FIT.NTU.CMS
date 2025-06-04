@@ -6,6 +6,43 @@
 
   <!-- Topbar Navbar -->
   <ul class="navbar-nav ml-auto">
+    <!-- Notification Bell -->
+    <li class="nav-item no-arrow">
+      <a class="nav-link" href="#notificationCollapse" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="notificationCollapse" id="notificationBell">
+        <i class="bi bi-bell-fill text-gray-600" style="color: black"></i>
+        <span th:if="${notifications != null and !#lists.isEmpty(notifications)}"
+              class="badge badge-danger badge-counter"
+              th:text="${#lists.size(notifications)}">0</span>
+      </a>
+      <!-- Collapsible Notification List -->
+      <div class="collapse position-absolute" id="notificationCollapse" style="right: 150px; top: 60px; z-index: 1000; width: 300px;">
+        <div class="card shadow animated--grow-in">
+          <div class="card-header py-2 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary" th:text="#{notify.title}">Notifications</h6>
+            <button class="btn btn-sm btn-danger" id="clearAllNotifications" th:if="${notifications != null and !#lists.isEmpty(notifications)}" th:text="#{notify.clearAll}">Clear All</button>
+          </div>
+          <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
+            <div th:if="${notifications == null or #lists.isEmpty(notifications)}" class="text-center p-3">
+              <span th:if="${session.user != null}" th:text="#{welcome.message}">Chào mừng đến với NTU CMS</span>
+              <span th:unless="${session.user != null}" th:text="#{notify.empty}">No notifications</span>
+            </div>
+            <div th:unless="${notifications == null or #lists.isEmpty(notifications)}">
+              <div th:each="notify : ${notifications}"
+                   class="dropdown-item d-flex align-items-center notification-item">
+                <div class="mr-3">
+                  <i class="bi bi-info-circle text-primary"></i>
+                </div>
+                <div style="flex: 1;">
+                  <div class="small text-gray-500" th:text="${#temporals.format(notify.createdAt, 'dd/MM/yyyy HH:mm')}"></div>
+                  <span th:text="${notify.content}" style="word-wrap: break-word; white-space: normal; display: block;"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+
     <!-- Language Switcher -->
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -32,7 +69,7 @@
       <!-- Dropdown - User Information -->
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#profileModal">
-        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+          <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
           <span th:text="#{user.profile}">Profile</span>
         </a>
         <a class="dropdown-item" href="#">
@@ -84,13 +121,13 @@
         <div class="modal-body">
           <p><strong th:text="#{user.username}">Tên đăng nhập:</strong> <span th:text="${session.user.username}"></span></p>
           <p><strong>Email:</strong> <span th:text="${session.user.email}"></span></p>
-          <p><strong  th:text="#{user.role}">Vai trò:</strong>
+          <p><strong th:text="#{user.role}">Vai trò:</strong>
             <span th:switch="${session.role.name()}">
-            <span th:case="'ADMIN'" th:text="#{user.admin}">Quản trị viên</span>
-            <span th:case="'WRITER'" th:text="#{user.writer}">Người viết</span>
-            <span th:case="'MODERATOR'" th:text="#{user.moderator}">Người kiểm duyệt</span>
-            <span th:case="*" th:text="#{user.user}">Người dùng</span>
-          </span>
+              <span th:case="'ADMIN'" th:text="#{user.admin}">Quản trị viên</span>
+              <span th:case="'WRITER'" th:text="#{user.writer}">Người viết</span>
+              <span th:case="'MODERATOR'" th:text="#{user.moderator}">Người kiểm duyệt</span>
+              <span th:case="*" th:text="#{user.user}">Người dùng</span>
+            </span>
           </p>
         </div>
         <div class="modal-footer">
@@ -149,7 +186,9 @@
       const editBtn = document.getElementById('editProfileBtn');
       const profileModal = document.getElementById('profileModal');
       const editProfileModal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+      const clearAllButton = document.getElementById('clearAllNotifications');
 
+      // Handle edit profile button
       editBtn.addEventListener('click', function () {
         const bsProfileModal = bootstrap.Modal.getInstance(profileModal);
         bsProfileModal.hide();
@@ -158,7 +197,45 @@
           editProfileModal.show();
         }, { once: true });
       });
+
+      // Clear all notifications
+      if (clearAllButton) {
+        clearAllButton.addEventListener('click', function () {
+          fetch('/notifications/clearAll', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+                  .then(response => {
+                    if (response.ok) {
+                      // Xóa tất cả thông báo trên giao diện
+                      document.querySelectorAll('.notification-item').forEach(item => item.remove());
+                      // Xóa badge
+                      const badge = document.querySelector('.badge-counter');
+                      if (badge) {
+                        badge.remove();
+                      }
+                      // Hiển thị thông báo "No notifications"
+                      const emptyMessage = document.createElement('div');
+                      emptyMessage.className = 'text-center p-3';
+                      emptyMessage.innerHTML = '<span th:text="#{notify.empty}">No notifications</span>';
+                      document.querySelector('.card-body').appendChild(emptyMessage);
+                      // Xóa nút "Clear All"
+                      clearAllButton.remove();
+                      // Đóng dropdown thông báo
+                      const notificationCollapse = document.getElementById('notificationCollapse');
+                      const bsCollapse = bootstrap.Collapse.getInstance(notificationCollapse);
+                      if (bsCollapse) {
+                        bsCollapse.hide();
+                      }
+                    } else {
+                      console.error('Failed to clear notifications:', response.status);
+                    }
+                  })
+                  .catch(error => console.error('Error clearing all notifications:', error));
+        });
+      }
     });
   </script>
-
 </nav>

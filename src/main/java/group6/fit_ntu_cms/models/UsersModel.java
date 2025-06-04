@@ -1,12 +1,13 @@
 package group6.fit_ntu_cms.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jdk.jfr.Name;
+
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -35,4 +36,8 @@ public class UsersModel {
     @Column(name = "role")
     private Role role;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    @OrderBy("createdAt DESC")
+    private List<NotifyModel> notifies;
 }
