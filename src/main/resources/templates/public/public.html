@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/head"></div>
+<style>
+    .post-item {
+        text-decoration: none;
+        color: inherit;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 10px;
+    }
+
+    .post-item:hover {
+        background-color: #f9f9f9;
+    }
+
+    .post-thumbnail {
+        width: 120px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+
+    .post-title {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .post-summary {
+        font-size: 0.875rem;
+        line-height: 1.4;
+    }
+</style>
+
+<body id="page-top">
+
+<!-- Navbar (Topbar) -->
+<div th:replace="fragments/public-navbar"></div>
+
+<!-- Page Content Layout -->
+<div class="container-fluid pl-0">
+    <div class="row">
+        <!-- Sidebar (Left) -->
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar" th:replace="fragments/public-sidebar"></nav>
+
+        <!-- Main Content (Right) -->
+        <main class="col-md-10 ml-sm-auto px-4" id="content">
+            <div class="pt-4">
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- Page Heading -->
+                    <div style="height: 75vh">
+                        <div th:if="${posts != null}">
+                            <h4>Danh sách bài viết:</h4>
+                            <div class="post-list" th:each="post : ${posts}">
+                                <a class="post-item d-flex mb-3" th:href="@{/post/{id}(id=${post.postId})}">
+                                    <img class="post-thumbnail mr-3" th:src="@{${post.postImage}}" alt="Thumbnail">
+                                    <div class="post-content">
+                                        <h6 class="post-title mb-1" th:text="${post.postTitle}">Tiêu đề bài viết</h6>
+                                        <p class="post-summary text-muted mb-0" th:text="${post.summary}">Tóm tắt nội dung</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+
+                <!-- Footer -->
+                <div th:replace="fragments/footer"></div>
+                <!-- End of Footer -->
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Alerts -->
+<div th:if="${success}"
+     class="alert alert-success"
+     style="position: fixed; top: 100px; right: 20px; z-index: 1050; min-width: 250px; box-shadow: 0 0 10px rgba(0,0,0,0.3);"
+     th:text="${success}">
+</div>
+<div th:if="${warning}"
+     class="alert alert-warning"
+     style="position: fixed; top: 100px; right: 20px; z-index: 1050; min-width: 250px; box-shadow: 0 0 10px rgba(0,0,0,0.3);"
+     th:text="${warning}">
+</div>
+<script>
+    setTimeout(() => {
+        const alert = document.querySelector('.alert');
+        if(alert) alert.style.display = 'none';
+    }, 3000);
+</script>
+</body>
+</html>

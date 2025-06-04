@@ -1,6 +1,5 @@
-package group6.fit_ntu_cms.controllers.pagecontrollers;
+package group6.fit_ntu_cms.controllers;
 
-import group6.fit_ntu_cms.controllers.GlobalController;
 import group6.fit_ntu_cms.models.PageModel;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.services.PageService;
@@ -39,10 +38,18 @@ public class PageController {
     return "page/pages";
   }
 
-  @GetMapping("/create")
-  public String showCreateForm() {
+@GetMapping("/create")
+public String showCreateForm(Model model) {
+    UsersModel user = (UsersModel) httpSession.getAttribute("user");
+    if (user == null) {
+        return "redirect:/access-denied";
+    } else if (globalController.isUserRole()) {
+        return "redirect:/access-denied";
+    }
+    model.addAttribute("user", user);
+    model.addAttribute("pages", pageService.getAllPages());
     return "page/create";
-  }
+}
 
   @PostMapping("/create")
   public String createPage(@RequestParam String title, @RequestParam String content) {

@@ -57,7 +57,7 @@ public class AuthController {
         model.addAttribute("success", "Đăng nhập thành công!");
 
         if (user.getRole() == Role.USER) {
-            return "index";
+            return "redirect:/";
         } else {
             return "redirect:/dashboard";
         }

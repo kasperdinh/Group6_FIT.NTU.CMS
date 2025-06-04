@@ -68,6 +68,10 @@ public class PostService {
         return postRepository.findAll();
     }
 
+    public List<PostModel> getPostsByPageId(Long pageId) {
+        return postRepository.findByPageId(pageId);
+    }
+
     // Delete a Post by ID
     @Transactional
     public void deletePost(Long id) {

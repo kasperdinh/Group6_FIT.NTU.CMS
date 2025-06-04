@@ -1,0 +1,35 @@
+<ul th:fragment="public-sidebar" class="navbar-nav bg-white text-dark sidebar accordion shadow p-3" id="accordionSidebar">
+  <!-- Sidebar - Brand -->
+  <li class="nav-item">
+    <a class="nav-link text-dark fw-bold" href="/trang-chu">
+      Trang chủ
+    </a>
+  </li>
+
+  <!-- Link: Dynamic Menus -->
+  <li class="nav-item" th:each="menu : ${menus}">
+    <a class="nav-link text-dark" th:href="@{${menu.url}}" th:text="${menu.name}">
+      Menu Name
+    </a>
+  </li>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider my-0">
+
+<!--  <li class="nav-item" th:each="p : ${pages}">-->
+<!--    <a class="nav-link" th:href="@{'/' + ${p.slug}}">-->
+<!--      <i class="fas fa-fw fa-file-alt"></i>-->
+<!--      <span th:text="${p.title}">Page Title</span>-->
+<!--    </a>-->
+<!--  </li>-->
+
+
+  <!-- Divider -->
+  <hr class="sidebar-divider d-none d-md-block">
+
+  <!-- Sidebar Toggler -->
+  <div class="text-center d-none d-md-inline">
+    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+  </div>
+
+</ul>
