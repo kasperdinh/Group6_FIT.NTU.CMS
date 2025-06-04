@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/notifications")
+    @RequestMapping("/notifications")
 public class NotifyController {
 
     @Autowired

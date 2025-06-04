@@ -1,4 +1,4 @@
-<ul th:fragment="sidebar" class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul th:fragment="sidebar" class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" style="height: 100vh">
 
   <!-- Sidebar - Brand -->
   <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
@@ -87,27 +87,27 @@
     </div>
   </li>
 
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNotice" aria-expanded="true" aria-controls="collapseNotice">
-      <i class="fas fa-fw fa-bell"></i>
-      <span th:text="#{notice}">Notice</span>
-    </a>
-    <div id="collapseNotice" class="collapse" aria-labelledby="headingNotice" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <h6 th:text="#{notice.features}" class="collapse-header">Notice Features:</h6>
-        <a class="collapse-item" th:text="#{list.notice}" href="/notices">List of Events</a>
-        <a class="collapse-item" th:text="#{create.notice}" href="/notices/create">List of Events</a>
-      </div>
-    </div>
-  </li>
+<!--  <li class="nav-item">-->
+<!--    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNotice" aria-expanded="true" aria-controls="collapseNotice">-->
+<!--      <i class="fas fa-fw fa-bell"></i>-->
+<!--      <span th:text="#{notice}">Notice</span>-->
+<!--    </a>-->
+<!--    <div id="collapseNotice" class="collapse" aria-labelledby="headingNotice" data-parent="#accordionSidebar">-->
+<!--      <div class="bg-white py-2 collapse-inner rounded">-->
+<!--        <h6 th:text="#{notice.features}" class="collapse-header">Notice Features:</h6>-->
+<!--        <a class="collapse-item" th:text="#{list.notice}" href="/notices">List of Events</a>-->
+<!--        <a class="collapse-item" th:text="#{create.notice}" href="/notices/create">List of Events</a>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </li>-->
 
-  <!-- Nav Item - Comments -->
-  <li class="nav-item">
-    <a class="nav-link" href="/comments">
-      <i class="fas fa-fw fa-comments"></i>
-      <span th:text="#{comments}">Comments</span>
-    </a>
-  </li>
+<!--  &lt;!&ndash; Nav Item - Comments &ndash;&gt;-->
+<!--  <li class="nav-item">-->
+<!--    <a class="nav-link" href="/comments">-->
+<!--      <i class="fas fa-fw fa-comments"></i>-->
+<!--      <span th:text="#{comments}">Comments</span>-->
+<!--    </a>-->
+<!--  </li>-->
 
 
   <!-- Nav Item - Users -->
