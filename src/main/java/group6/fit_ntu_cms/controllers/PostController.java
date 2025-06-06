@@ -24,6 +24,7 @@ import java.util.UUID;
 @Controller
 public class PostController {
 
+
     private final HttpSession httpSession;
 
     private final GlobalController globalController;

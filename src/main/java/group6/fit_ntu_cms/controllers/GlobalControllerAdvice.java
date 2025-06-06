@@ -32,8 +32,6 @@ public class GlobalControllerAdvice {
             }
             model.addAttribute("notifications", notifications != null ? notifications : new ArrayList<>());
             model.addAttribute("unreadNotifications", unreadNotifications != null ? unreadNotifications : new ArrayList<>());
-            System.out.println("Notifications added to model: " + notifications.size());
-            System.out.println("Unread notifications added to model: " + unreadNotifications.size());
         } else {
             model.addAttribute("notifications", new ArrayList<>());
             model.addAttribute("unreadNotifications", new ArrayList<>());
