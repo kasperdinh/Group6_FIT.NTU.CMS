@@ -3,7 +3,7 @@
   <!-- Sidebar - Brand -->
   <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
     <div class="sidebar-brand-icon rotate-n-15">
-      <img th:src="${setting.logoUrl != null ? setting.logoUrl : '/uploads/img/logoCms.png'}" alt="Logo" style="width: 24px; height: 24px; object-fit: contain;">
+      <img th:src="${setting.logoUrl != null ? setting.logoUrl : '/uploads/img/logoCms.png'}" alt="Logo" style="width: 80px; height: 60px; object-fit: contain;">
     </div>
     <div class="sidebar-brand-text mx-2" th:text="${setting.siteName != null ? setting.siteName : 'No Name'}">PUBLIC</div>
   </a>
@@ -104,7 +104,7 @@
 
   <!-- Nav Item - Setting -->
   <li class="nav-item">
-    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#settingModal">
+    <a class="nav-link" href="/setting">
       <i class="fas fa-fw fa-cogs"></i>
       <span th:text="#{setting}">Setting</span>
     </a>
@@ -116,35 +116,5 @@
   <!-- Sidebar Toggler -->
   <div class="text-center d-none d-md-inline">
     <button class="rounded-circle border-0" id="sidebarToggle"></button>
-  </div>
-
-  <!-- Setting Modal -->
-  <div class="modal fade" id="settingModal" tabindex="-1" aria-labelledby="settingModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" th:text="#{setting.edit}">Edit Settings</h5>
-
-        </div>
-        <div class="modal-body">
-          <form th:action="@{/setting}" method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-              <label for="siteName" th:text="#{setting.siteNameLabel}" class="form-label">Site Name</label>
-              <input type="text" id="siteName" name="siteName" class="form-control" th:value="${setting.siteName}" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label" th:text="#{current.filePath}">Current File</label>
-              <a id="existingLogo" th:href="${setting.logoUrl}" th:text="${setting.logoUrl != null ? setting.logoUrl : 'No file'}" target="_blank" th:style="${setting.logoUrl != null} ? 'display: inline-block' : 'display: inline-block'"></a>
-              <input type="hidden" id="editExistingLogo" name="existingLogo" th:value="${setting.logoUrl}"/>
-            </div>
-            <div class="mb-3">
-              <label class="form-label" th:text="#{upload.filePath}">Upload New File (optional)</label>
-              <input type="file" class="form-control" name="logo" accept="image/*" />
-            </div>
-            <button type="submit" class="btn btn-primary" th:text="#{setting.save}">Save Changes</button>
-          </form>
-        </div>
-      </div>
-    </div>
   </div>
 </ul>
