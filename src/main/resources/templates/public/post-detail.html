@@ -28,6 +28,20 @@
                 <div th:if="${post != null}">
                     <h2 class="text-left fw-bold mb-3" th:text="${post.postTitle}"></h2>
 
+                    <nav aria-label="breadcrumb" class="mb-3">
+                        <ol class="breadcrumb bg-white p-2 rounded shadow-sm">
+                            <li class="breadcrumb-item" th:if="${currentMenuName != null}">
+                                <a th:href="@{${currentMenuUrl}}" th:text="${currentMenuName}"></a>
+                            </li>
+
+                            <li class="breadcrumb-item" th:if="${post.page != null}">
+                                <a th:href="@{/{slug}(slug=${post.page.slug})}" th:text="${post.page.title}"></a>
+                            </li>
+
+                            <li class="breadcrumb-item active" aria-current="page" th:text="${post.postTitle}"></li>
+                        </ol>
+                    </nav>
+
                     <p class="text-muted mb-2">
                         <strong>Tác giả:</strong> <span th:text="${post.user.username}"></span> |
                         <strong>Chuyên mục:</strong> <span th:text="${post.category.titleName}"></span> |

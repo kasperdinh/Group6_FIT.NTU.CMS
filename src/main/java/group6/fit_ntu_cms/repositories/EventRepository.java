@@ -11,4 +11,5 @@ public interface EventRepository extends JpaRepository<EventModel, Long> {
     Optional<EventModel> findByFilePath(String filePath);
 
     Optional<EventModel> findByEventImage(String eventImage);
+
 }

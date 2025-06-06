@@ -15,40 +15,55 @@
                     <h4 class="mb-3 fw-bold">Bài viết khác</h4>
                     <div th:if="${subNewsList != null}">
                         <div class="d-flex flex-column" th:each="news : ${subNewsList}">
-                            <div class="d-flex p-2">
+                            <a th:href="@{/{slug}/post/{id}(slug=${news.page.slug}, id=${news.postId})}"
+                               class="d-flex p-2 text-decoration-none text-dark hover-zoom">
                                 <img th:src="@{${news.postImage}}" style="width: 70px; height: 50px; object-fit: cover;" class="rounded me-2" alt="Ảnh nhỏ">
-                                <a th:href="@{/post/{id}(id=${news.postId})}" class="text-dark fw-medium small flex-grow-1 pl-2 pt-1"
-                                   th:text="${news.postTitle}">Tiêu đề</a>
+                                <span class="fw-medium small flex-grow-1 pt-2 pl-2" th:text="${news.postTitle}">Tiêu đề</span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <h4 class="mb-3 fw-bold">Bài viết mới</h4>
+                    <div th:if="${firstNews != null}" class="card border-0 shadow-sm rounded p-3 bg-white">
+                        <a th:href="@{/{slug}/post/{id}(slug=${firstNews.page.slug}, id=${firstNews.postId})}"
+                           class="text-decoration-none text-dark hover-zoom">
+                            <img th:src="@{${firstNews.postImage}}" class="card-img-top rounded img-fluid"
+                                 style="width: 100%; height: 333px; object-fit: cover;" alt="Ảnh tin tức">
+                            <div class="card-body px-0">
+                                <div class="fw-semibold fs-5 text-primary mt-2" th:text="${firstNews.postTitle}">Tiêu đề</div>
+                                <p th:text="${firstNews.summary}">Tóm tắt</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <h4 class="mb-3 fw-bold">Sự kiện</h4>
+                    <ul class="list-group list-group-flush">
+                        <div th:if="${events != null}">
+                            <div th:each="event : ${events}" class="mb-3 border-bottom pb-2">
+                                <a class="post-item d-flex mb-3" th:href="@{/event/{id}(id=${event.eventId})}">
+                                    <div class="d-flex align-items-start">
+                                        <div class="p-3">
+                                            <img th:src="@{${event.eventImage}}" alt="Event"
+                                                 class="me-2 rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                                        </div>
+                                        <div>
+                                            <strong th:text="${event.eventName}">Tên sự kiện</strong>
+                                            <div class="text-muted" th:text="${event.summary}">Tóm tắt</div>
+                                            <small class="text-muted">
+                                                <span th:text="${#temporals.format(event.beginDate, 'dd/MM/yyyy')}"></span>
+                                                -
+                                                <span th:text="${#temporals.format(event.finishDate, 'dd/MM/yyyy')}"></span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </a>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <h4 class="mb-3 fw-bold">Bài viết mới</h4>
-                    <div th:if="${firstNews != null}" class="card border-0 shadow-sm rounded p-2 bg-white">
-                        <img th:src="@{${firstNews.postImage}}" class="card-img-top rounded img-fluid"
-                             style="width: 100%; height: 333px; object-fit: cover;" alt="Ảnh tin tức">
-                        <div class="card-body px-0">
-                            <a th:href="@{/post/{id}(id=${firstNews.postId})}"
-                               class="fw-semibold fs-5 text-primary d-block mt-2"
-                               th:text="${firstNews.postTitle}">Tiêu đề</a>
-                            <p th:text="${firstNews.summary}">Tóm tắt</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <h4 class="mb-3 fw-bold">Thông báo</h4>
-                    <ul class="list-group list-group-flush">
-                        <!--
-                        <li class="list-group-item px-0 py-2" th:each="noti : ${notificationList}">
-                            <a th:href="@{/thong-bao/{id}(id=${noti.id})}" class="d-flex justify-content-between align-items-start text-dark small">
-                                <span th:text="${noti.title}">Tiêu đề TB</span>
-                                <span class="text-danger ms-2" th:text="${#temporals.format(noti.date, 'dd/MM/yyyy')}">[dd/MM/yyyy]</span>
-                            </a>
-                        </li>
-                        -->
                     </ul>
                 </div>
 

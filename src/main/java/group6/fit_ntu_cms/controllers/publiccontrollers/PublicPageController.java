@@ -1,6 +1,7 @@
 package group6.fit_ntu_cms.controllers.publiccontrollers;
 
 import group6.fit_ntu_cms.models.PageModel;
+import group6.fit_ntu_cms.models.PostModel;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.services.EventService;
 import group6.fit_ntu_cms.services.MenuService;
@@ -50,5 +51,19 @@ public class PublicPageController {
         model.addAttribute("events", eventService.getAllEvents());
         model.addAttribute("posts", postService.getPostsByPageId(page.get().getId()));
         return "public/public";
+
+    }
+
+    @GetMapping("/gioi-thieu")
+    public String showGioiThieuPage(Model model) {
+        Optional<PageModel> page = pageService.getPageBySlug("gioi-thieu");
+        PostModel post = postService.getFirstPostByPage(page);
+        UsersModel user = (UsersModel) httpSession.getAttribute("user");
+
+        model.addAttribute("user", user);
+        model.addAttribute("post", post);
+        model.addAttribute("menus", menuService.getAllMenus());
+
+        return "public/introduce";
     }
 }

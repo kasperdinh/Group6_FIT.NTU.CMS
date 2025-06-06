@@ -149,7 +149,7 @@ public class PostController {
             return "redirect:/posts";
         }
 
-        PostModel post = postService.getPostById(postId).orElse(null);
+        PostModel post = postService.getPostById(postId);
         if (post == null) {
             redirectAttributes.addFlashAttribute("errorMessage", "Post not found with ID: " + postId);
             return "redirect:/posts";
@@ -265,8 +265,7 @@ public class PostController {
     public ResponseEntity<PostModel> getPostById(@PathVariable Long id) {
         System.out.println("Fetching post with ID: " + id);
         try {
-            PostModel post = postService.getPostById(id)
-                    .orElseThrow(() -> new RuntimeException("Post not found with ID: " + id));
+            PostModel post = postService.getPostById(id);
             return ResponseEntity.ok(post);
         } catch (Exception e) {
             System.err.println("Error fetching post with ID " + id + ": " + e.getMessage());
@@ -276,8 +275,7 @@ public class PostController {
     }
     @GetMapping("/postsDetail/{id}")
     public String showPostDetail(@PathVariable Long id, Model model, HttpSession session) {
-        PostModel post = postService.getPostById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + id));
+        PostModel post = postService.getPostById(id);
 
         // Retrieve the logged-in user from the session
         UsersModel user = (UsersModel) session.getAttribute("user");
@@ -295,8 +293,7 @@ public class PostController {
     @PostMapping("/{id}/approve")
     public String approvePost(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
-            PostModel post = postService.getPostById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + id));
+            PostModel post = postService.getPostById(id);
             post.setStatus("Approved");
             UsersModel user = post.getUser();
             NotifyModel notify = new NotifyModel();
@@ -313,8 +310,7 @@ public class PostController {
     @PostMapping("/{id}/deny")
     public String denyPost(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
-            PostModel post = postService.getPostById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + id));
+            PostModel post = postService.getPostById(id);
             post.setStatus("Denied");
             UsersModel user = post.getUser();
             NotifyModel notify = new NotifyModel();

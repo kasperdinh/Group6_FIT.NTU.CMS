@@ -30,11 +30,11 @@ public class EventService {
     eventRepository.save(event);
   }
 
-  public void deleteEvent(Long eventId) {
-    eventRepository.deleteById(eventId);
+  public EventModel getEventById(Long id) {
+    return eventRepository.findById(id).orElse(null);
   }
 
-  public Optional<EventModel> getEventById(Long eventId) {
-    return eventRepository.findById(eventId);
+  public void deleteEvent(Long eventId) {
+    eventRepository.deleteById(eventId);
   }
 }

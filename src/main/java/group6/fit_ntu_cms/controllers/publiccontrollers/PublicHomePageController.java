@@ -2,6 +2,7 @@ package group6.fit_ntu_cms.controllers.publiccontrollers;
 
 import group6.fit_ntu_cms.models.PostModel;
 import group6.fit_ntu_cms.models.UsersModel;
+import group6.fit_ntu_cms.services.EventService;
 import group6.fit_ntu_cms.services.MenuService;
 import group6.fit_ntu_cms.services.PostService;
 import jakarta.servlet.http.HttpSession;
@@ -26,6 +27,9 @@ public class PublicHomePageController {
     private PostService postService;
 
     @Autowired
+    private EventService eventService;
+
+    @Autowired
     private MenuService menuService;
 
     @GetMapping("/trang-chu")
@@ -34,13 +38,14 @@ public class PublicHomePageController {
         List<PostModel> subNewsList = new ArrayList<>();
 
         if (newsList.size() > 1) {
-            subNewsList = newsList.subList(1, Math.min(5, newsList.size()));
+            subNewsList = newsList.subList(1, Math.min(8, newsList.size()));
         }
 
         model.addAttribute("firstNews", newsList.get(0));
         model.addAttribute("subNewsList", subNewsList);
         UsersModel user = (UsersModel) httpSession.getAttribute("user");
         model.addAttribute("user", user);
+        model.addAttribute("events", eventService.getAllEvents());
         model.addAttribute("menus", menuService.getAllMenus());
 
         return "public/home-page";

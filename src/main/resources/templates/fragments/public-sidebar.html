@@ -6,12 +6,6 @@
     </a>
   </li>
 
-  <li class="nav-item">
-    <a class="nav-link text-dark fw-bold" href="/gioi-thieu">
-      Giới thiệu
-    </a>
-  </li>
-
   <!-- Link: Dynamic Menus -->
   <li class="nav-item" th:each="menu : ${menus}">
     <a class="nav-link text-dark" th:href="@{${menu.url}}" th:text="${menu.name}">

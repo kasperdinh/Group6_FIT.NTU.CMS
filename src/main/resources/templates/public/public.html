@@ -3,13 +3,13 @@
 <div th:replace="fragments/head"></div>
 <style>
     .post-item {
-        text-decoration: none;
         color: inherit;
         border-bottom: 1px solid #e0e0e0;
         padding-bottom: 10px;
     }
 
     .post-item:hover {
+        text-decoration: none;
         background-color: #f9f9f9;
     }
 
@@ -29,6 +29,9 @@
         font-size: 0.875rem;
         line-height: 1.4;
     }
+    .post-list:hover {
+        transform: scale(1.02);
+    }
 </style>
 
 <body id="page-top">
@@ -46,8 +49,8 @@
                     <div class="bg-white rounded shadow-sm p-4">
                         <h4>Danh sách bài viết</h4>
                         <div class="post-list mt-4" th:each="post : ${posts}" th:if="${post.status != 'Pending'}">
-                            <a class="post-item d-flex mb-3" th:href="@{/post/{id}(id=${post.postId})}">
-                                <img class="post-thumbnail mr-3" th:src="@{${post.postImage}}" alt="Thumbnail">
+                            <a class="post-item d-flex mb-3" th:href="@{/{slug}/post/{id}(slug=${slug}, id=${post.postId})}">
+                            <img class="post-thumbnail mr-3" th:src="@{${post.postImage}}" alt="Thumbnail">
                                 <div class="post-content">
                                     <h6 class="post-title mb-1" th:text="${post.postTitle}">Tiêu đề bài viết</h6>
                                     <p class="post-summary text-muted mb-0" th:text="${post.summary}">Tóm tắt nội dung</p>

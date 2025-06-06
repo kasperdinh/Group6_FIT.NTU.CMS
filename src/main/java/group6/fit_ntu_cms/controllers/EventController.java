@@ -156,7 +156,7 @@ public class EventController {
 
   @PostMapping("/deleteEvent")
   public String removeEvent(@RequestParam("eventId") Long eventId) {
-    EventModel event = eventService.getEventById(eventId).orElse(null);
+    EventModel event = eventService.getEventById(eventId);
     if (event != null) {
       if (event.getEventImage() != null) {
         String imagePath = new File("src/main/resources/static" + event.getEventImage()).getAbsolutePath();
@@ -180,6 +180,6 @@ public class EventController {
   @GetMapping("/events/{id}")
   @ResponseBody
   public EventModel getEventById(@PathVariable Long id) {
-    return eventService.getEventById(id).orElseThrow(() -> new RuntimeException("Event not found"));
+    return eventService.getEventById(id);
   }
 }
