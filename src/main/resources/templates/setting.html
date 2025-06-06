@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings</title>
+</head>
+<div th:replace="~{fragments/head}"></div>
+<body id="page-top">
+<div id="wrapper">
+  <div th:replace="~{fragments/sidebar}"></div>
+  <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content">
+      <div th:replace="~{fragments/topbar}"></div>
+      <div class="container-fluid">
+        <h1 th:text="#{setting.page}">Settings</h1>
+        <!-- Nội dung chính của trang Setting -->
+        <form th:action="@{/setting}" method="post" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="siteName" th:text="#{setting.siteNameLabel}" class="form-label">Site Name</label>
+            <input type="text" id="siteName" name="siteName" class="form-control" th:value="${setting.siteName}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" th:text="#{setting.logoLabel}">Current File</label>
+            <a id="existingLogo" th:href="${setting.logoUrl}" th:text="${setting.logoUrl != null ? setting.logoUrl : 'No file'}" target="_blank" th:style="${setting.logoUrl != null} ? 'display: inline-block' : 'display: none'"></a>
+            <input type="hidden" id="editExistingLogo" name="existingLogo" th:value="${setting.logoUrl}"/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" th:text="#{upload.filePath}">Upload New File (optional)</label>
+            <input type="file" class="form-control" name="logo" accept="image/*" />
+          </div>
+          <button type="submit" class="btn btn-primary" th:text="#{setting.save}">Save Changes</button>
+        </form>
+      </div>
+    </div>
+    <div th:replace="~{fragments/footer}"></div>
+  </div>
+</div>
+
+</body>
+</html>

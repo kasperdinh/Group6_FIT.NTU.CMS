@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 
 @Controller
-public class PublicPostController {
+public class  PublicPostController {
 
     private final HttpSession httpSession;
 
@@ -52,8 +52,4 @@ public class PublicPostController {
         model.addAttribute("currentMenuUrl", currentMenu != null ? currentMenu.getUrl() : "/" + slug);
         return "public/post-detail";
     }
-
-
-
 }
-
