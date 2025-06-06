@@ -70,57 +70,57 @@
     <div id="content">
       <div th:replace="~{fragments/topbar}"></div>
       <div class="container-fluid">
-        <h1 th:text="#{post.detail}" class="mb-4">Post Detail</h1>
+        <h1  class="mb-4">Chi tiết bài viết</h1>
         <div th:if="${post == null}">
-          <div class="alert alert-danger">Post not found.</div>
+          <div class="alert alert-danger">Không tìm thấy bài viết</div>
         </div>
         <div th:if="${post != null}">
           <div class="card">
             <div class="card-header">
-              <h2 th:text="${post.postTitle}" class="mb-0 text-dark">Post Title</h2>
+              <h2 th:text="${post.postTitle}" class="mb-0 text-dark"></h2>
             </div>
             <div class="card-body">
               <div class="post-info">
                 <p>
-                  <strong><i class="bi bi-person-fill"></i> <span th:text="#{post.author}">Author:</span></strong>
+                  <strong><i class="bi bi-person-fill"></i> <span>Tác giả:</span></strong>
                   <span th:text="${post.user.username}">Author</span>
                 </p>
                 <p>
-                  <strong><i class="bi bi-tag-fill"></i> <span th:text="#{post.category}">Category:</span></strong>
+                  <strong><i class="bi bi-tag-fill"></i> <span>Thể loại:</span></strong>
                   <span th:text="${post.category != null ? post.category.titleName : 'Uncategorized'}">Category</span>
                 </p>
                 <p>
-                  <strong><i class="bi bi-blockquote-left"></i> <span th:text="#{post.summary}">Summary:</span></strong>
+                  <strong><i class="bi bi-blockquote-left"></i> <span>Tóm tắt:</span></strong>
                   <span th:text="${post.summary}">Summary</span>
                 </p>
                 <p>
-                  <strong><i class="bi bi-file-text-fill"></i> <span th:text="#{post.content}">Content:</span></strong>
+                  <strong><i class="bi bi-file-text-fill"></i> <span>Nội dung:</span></strong>
                 </p>
                 <div class="post-content" th:utext="${post.content}"></div>
                 <p th:if="${post.postImage}">
-                  <strong><i class="bi bi-image-fill"></i> <span th:text="#{post.img}">Image:</span></strong><br>
+                  <strong><i class="bi bi-image-fill"></i> <span >Hình ảnh:</span></strong><br>
                   <img th:src="@{${post.postImage}}" alt="Post Image" style="max-width: 300px; border-radius: 10px; margin-top: 0.5rem;" />
                 </p>
                 <p th:if="${post.filePath}">
-                  <strong><i class="bi bi-file-earmark-arrow-down-fill"></i> <span th:text="#{post.file}">File:</span></strong>
+                  <strong><i class="bi bi-file-earmark-arrow-down-fill"></i> <span>File:</span></strong>
                   <a th:href="@{${post.filePath}}" target="_blank" th:text="${post.filePath}" class="text-primary"></a>
                 </p>
                 <p>
-                  <strong><i class="bi bi-check-circle-fill"></i> <span th:text="#{post.status}">Status:</span></strong>
-                  <span th:if="${post.status == 'Approved'}" class="text-success" th:text="#{post.approved}"></span>
-                  <span th:if="${post.status == 'Denied'}" class="text-danger" th:text="#{post.denied}"></span>
-                  <span th:if="${post.status == 'Pending'}" class="text-warning" th:text="#{post.pending}"></span>
+                  <strong><i class="bi bi-check-circle-fill"></i> <span >Trạng thái:</span></strong>
+                  <span th:if="${post.status == 'Approved'}" class="text-success">Đã duyệt</span>
+                  <span th:if="${post.status == 'Denied'}" class="text-danger">Từ chối</span>
+                  <span th:if="${post.status == 'Pending'}" class="text-warning">Chờ duyệt</span>
                 </p>
                 <p>
-                  <strong><i class="bi bi-calendar-date-fill"></i> <span th:text="#{post.creationDate}">Created:</span></strong>
+                  <strong><i class="bi bi-calendar-date-fill"></i> <span >Ngày tạo:</span></strong>
                   <span th:text="${#temporals.format(post.creationDate, 'dd/MM/yyyy HH:mm')}">Date</span>
                 </p>
                 <p>
-                  <strong><i class="bi bi-calendar-check-fill"></i> <span th:text="#{post.updateDate}">Updated:</span></strong>
+                  <strong><i class="bi bi-calendar-check-fill"></i> <span >Ngày cập nhật:</span></strong>
                   <span th:text="${post.updateDate != null ? #temporals.format(post.updateDate, 'dd/MM/yyyy HH:mm') : 'N/A'}">Date</span>
                 </p>
                 <p th:if="${post.page}">
-                  <strong><i class="bi bi-file-richtext-fill"></i> <span th:text="#{post.page}">Page:</span></strong>
+                  <strong><i class="bi bi-file-richtext-fill"></i> <span >Trang:</span></strong>
                   <span th:text="${post.page.title}">Page</span>
                 </p>
               </div>
@@ -131,7 +131,7 @@
                           th:disabled="${post.status == 'Approved'}"
                           th:classappend="${post.status == 'Approved'} ? 'disabled opacity-50' : ''">
                     <i class="bi bi-check-circle me-1"></i>
-                    <span th:text="#{post.approved}">Approve</span>
+                    <span >Duyệt</span>
                   </button>
                 </form>
                 <form th:action="@{/{id}/deny(id=${post.postId})}" method="post" style="display: inline;">
@@ -139,11 +139,11 @@
                           th:disabled="${post.status == 'Denied'}"
                           th:classappend="${post.status == 'Denied'} ? 'disabled opacity-50' : ''">
                     <i class="bi bi-x-circle me-1"></i>
-                    <span th:text="#{post.denied}">Deny</span>
+                    <span >Từ chối</span>
                   </button>
                 </form>
               </div>
-              <a th:href="@{/posts}" class="btn btn-primary mt-3" th:text="#{back.to.list}">Back to List</a>
+              <a th:href="@{/posts}" class="btn btn-primary mt-3" >Quay lại</a>
             </div>
           </div>
         </div>

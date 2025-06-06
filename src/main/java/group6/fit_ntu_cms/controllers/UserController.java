@@ -3,6 +3,7 @@ package group6.fit_ntu_cms.controllers;
 import group6.fit_ntu_cms.models.Role;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.repositories.UsersRepository;
+import group6.fit_ntu_cms.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,35 +36,38 @@ public class UserController {
     }
 
     @Autowired
-    private UsersRepository userRepository;
+    private UserService userService;
 
     @GetMapping
-    public String listUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "7") int size,
-            ModelMap model
-    ) {
-
+    public String listUsers(ModelMap model,
+                            @RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "7") int size,
+                            @RequestParam(required = false) String keyword) {
+        Page<UsersModel> userPage;
         UsersModel user = (UsersModel) httpSession.getAttribute("user");
         if (user == null) {
             return "redirect:/access-denied";
         } else if (globalController.isUserRole()) {
             return "redirect:/access-denied";
         }
-        model.addAttribute("user", user);
-        Pageable pageable = PageRequest.of(page, size);
-        Page<UsersModel> userPage = userRepository.findAll(pageable);
 
+        if (keyword != null && !keyword.isEmpty()) {
+            userPage = userService.searchUsers(keyword, PageRequest.of(page, size));
+        } else {
+            userPage = userService.findAllUsers(PageRequest.of(page, size));
+        }
+        model.addAttribute("user", user);
         model.addAttribute("users", userPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", userPage.getTotalPages());
+        model.addAttribute("keyword", keyword);
 
         return "user/users";
     }
 
     @GetMapping("/view/{id}")
     public String viewUser(@PathVariable Long id, ModelMap model, RedirectAttributes redirectAttributes) {
-        UsersModel user = userRepository.findById(id).orElse(null);
+        UsersModel user = userService.findById(id);
         if (user == null) {
             redirectAttributes.addFlashAttribute("error", "Không tìm thấy người dùng.");
             return "redirect:/users";
@@ -74,7 +78,7 @@ public class UserController {
 
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id, ModelMap model, RedirectAttributes redirectAttributes) {
-        UsersModel user = userRepository.findById(id).orElse(null);
+        UsersModel user = userService.findById(id);
         if (user == null) {
             redirectAttributes.addFlashAttribute("error", "Không tìm thấy người dùng.");
             return "redirect:/users";
@@ -88,7 +92,7 @@ public class UserController {
     public String updateUser(@PathVariable Long id,
                              @ModelAttribute("user") UsersModel updatedUser,
                              RedirectAttributes redirectAttributes) {
-        UsersModel user = userRepository.findById(id).orElse(null);
+        UsersModel user = userService.findById(id);
         if (user == null) {
             redirectAttributes.addFlashAttribute("error", "Người dùng không tồn tại!");
             return "redirect:/users";
@@ -97,7 +101,7 @@ public class UserController {
         user.setUsername(updatedUser.getUsername());
         user.setEmail(updatedUser.getEmail());
         user.setRole(updatedUser.getRole());
-        userRepository.save(user);
+        userService.save(user);
 
         redirectAttributes.addFlashAttribute("success", "Cập nhật người dùng thành công!");
         return "redirect:/users";
@@ -119,18 +123,18 @@ public class UserController {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));
         user.setCreatedDate(LocalDateTime.now());
-        userRepository.save(user);
+        userService.save(user);
         redirectAttributes.addFlashAttribute("success", "Tạo mới người dùng thành công!");
         return "redirect:/users";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        UsersModel user = userRepository.findById(id).orElse(null);
+        UsersModel user = userService.findById(id);
         if (user == null) {
             redirectAttributes.addFlashAttribute("error", "Người dùng không tồn tại!");
         } else {
-            userRepository.delete(user);
+            userService.delete(user);
             redirectAttributes.addFlashAttribute("success", "Đã xóa người dùng!");
         }
         return "redirect:/users";
@@ -153,7 +157,7 @@ public class UserController {
             }
         }
         if (changed) {
-            userRepository.save(currentUser);
+            userService.save(currentUser);
             session.setAttribute("user", currentUser);
             redirectAttributes.addFlashAttribute("success", "Cập nhật thành công!");
         }

@@ -34,6 +34,11 @@ public class EventService {
     return eventRepository.findById(id).orElse(null);
   }
 
+  public boolean isFileUsed(String filePath) {
+    return eventRepository.findByFilePath(filePath).isPresent()
+            || eventRepository.findByEventImage(filePath).isPresent();
+  }
+
   public void deleteEvent(Long eventId) {
     eventRepository.deleteById(eventId);
   }

@@ -65,7 +65,7 @@
                     <div class="bg-white rounded shadow-sm p-3">
                         <h4 class="mb-3">Sự kiện sắp tới</h4>
                         <div th:if="${events != null}">
-                            <div th:each="event : ${events}" class="mb-3 border-bottom pb-2">
+                            <div th:each="event : ${events}" class="post-list mb-3 border-bottom pb-2">
                                 <a class="post-item d-flex mb-3" th:href="@{/event/{id}(id=${event.eventId})}">
                                     <div class="d-flex align-items-start">
                                         <div class="p-3">

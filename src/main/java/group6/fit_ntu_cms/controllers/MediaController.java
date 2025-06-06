@@ -6,7 +6,9 @@ import group6.fit_ntu_cms.models.PostModel;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.repositories.EventRepository;
 import group6.fit_ntu_cms.repositories.PostRepository;
+import group6.fit_ntu_cms.services.EventService;
 import group6.fit_ntu_cms.services.MediaService;
+import group6.fit_ntu_cms.services.PostService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +28,12 @@ public class MediaController {
 
     @Autowired
     private MediaService mediaService;
+
     @Autowired
-    private PostRepository postRepository;
+    private PostService postService;
+
     @Autowired
-    private EventRepository eventRepository;
+    private EventService eventService;
 
     @GetMapping
     public String showMedia(Model model, @RequestParam(value = "search", required = false) String search, HttpSession session) {
@@ -103,27 +107,22 @@ public class MediaController {
         try {
             MediaModel media = mediaService.getMediaById(id)
                     .orElseThrow(() -> new RuntimeException("Media not found with ID: " + id));
-            String filePath = media.getFileUpload(); // Giả sử fileUpload chứa đường dẫn tương đối (ví dụ: /uploads/filename.jpg)
+            String filePath = media.getFileUpload();
             String absoluteFilePath = "src/main/resources/static" + filePath;
-            File file = new File(absoluteFilePath);
 
-            // Kiểm tra xem file có được sử dụng bởi Post hoặc Event không
-            Optional<PostModel> post = postRepository.findByFilePath(filePath);
-            Optional<PostModel> postImage = postRepository.findByPostImage(filePath); // Kiểm tra postImage
-            Optional<EventModel> event = eventRepository.findByFilePath(filePath);
-            Optional<EventModel> eventImage = eventRepository.findByEventImage(filePath); // Kiểm tra eventImage
+            boolean isUsedInPost = postService.isFileUsed(filePath);
+            boolean isUsedInEvent = eventService.isFileUsed(filePath);
 
-            if (post.isPresent() || postImage.isPresent() || event.isPresent() || eventImage.isPresent()) {
+            if (isUsedInPost || isUsedInEvent) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Cannot delete file. It is being used by a Post or Event.");
                 return "redirect:/media";
             }
 
-            // Nếu file không được sử dụng, xóa file và bản ghi
-            if (file.exists()) {
-                if (!file.delete()) {
-                    throw new RuntimeException("Failed to delete file from disk: " + filePath);
-                }
+            File file = new File(absoluteFilePath);
+            if (file.exists() && !file.delete()) {
+                throw new RuntimeException("Failed to delete file from disk: " + filePath);
             }
+
             mediaService.deleteById(id);
             redirectAttributes.addFlashAttribute("successMessage", "File deleted successfully!");
         } catch (Exception e) {

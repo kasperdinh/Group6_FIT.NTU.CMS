@@ -17,7 +17,7 @@
     <div id="content">
       <div th:replace="~{fragments/topbar}"></div>
       <div class="container-fluid">
-        <h1 th:text="#{edit.category}">Edit Category</h1>
+        <h1>Chỉnh sửa danh mục</h1>
 
         <!-- Success/Error Messages -->
         <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="${successMessage}"></div>
@@ -26,11 +26,11 @@
         <form th:action="@{/tittles/update}" method="post">
           <input type="hidden" name="tittleId" th:value="${tittle.tittleId}">
           <div class="mb-3">
-            <label class="form-label" th:text="#{category.name}">Category Name</label>
+            <label class="form-label" >Tên danh mục</label>
             <input type="text" class="form-control" name="titleName" th:value="${tittle.titleName}" required>
           </div>
-          <button type="submit" class="btn btn-primary" th:text="#{save.changes}">Save</button>
-          <a href="/tittles" class="btn btn-secondary" th:text="#{cancel}">Cancel</a>
+          <button type="submit" class="btn btn-primary" >Lưu thay đổi</button>
+          <a href="/tittles" class="btn btn-secondary" >Hủy</a>
         </form>
       </div>
     </div>

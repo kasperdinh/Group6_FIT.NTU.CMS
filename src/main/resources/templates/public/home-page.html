@@ -12,39 +12,40 @@
         <main class="col-md-10 px-md-5 py-4">
             <div class="row gx-4 gy-4 mt-3">
                 <div class="col-md-3">
-                    <h4 class="mb-3 fw-bold">Bài viết khác</h4>
+                    <h4 class="mb-3 fw-bold" >Bài viết khác</h4>
                     <div th:if="${subNewsList != null}">
                         <div class="d-flex flex-column" th:each="news : ${subNewsList}">
                             <a th:href="@{/{slug}/post/{id}(slug=${news.page.slug}, id=${news.postId})}"
-                               class="d-flex p-2 text-decoration-none text-dark hover-zoom">
+                               class="post-item d-flex p-2 post-list">
                                 <img th:src="@{${news.postImage}}" style="width: 70px; height: 50px; object-fit: cover;" class="rounded me-2" alt="Ảnh nhỏ">
-                                <span class="fw-medium small flex-grow-1 pt-2 pl-2" th:text="${news.postTitle}">Tiêu đề</span>
+                                <span class="post-title flex-grow-1 pt-2 pl-2" th:text="${news.postTitle}">Tiêu đề</span>
                             </a>
                         </div>
-
                     </div>
                 </div>
 
+
                 <div class="col-md-5">
-                    <h4 class="mb-3 fw-bold">Bài viết mới</h4>
-                    <div th:if="${firstNews != null}" class="card border-0 shadow-sm rounded p-3 bg-white">
+                    <h4 class="mb-3 fw-bold" >Bài viết mới</h4>
+                    <div th:if="${firstNews != null}" class="card border-0 shadow-sm rounded p-4 bg-white">
                         <a th:href="@{/{slug}/post/{id}(slug=${firstNews.page.slug}, id=${firstNews.postId})}"
-                           class="text-decoration-none text-dark hover-zoom">
+                           class="post-list text-decoration-none text-dark hover-zoom">
                             <img th:src="@{${firstNews.postImage}}" class="card-img-top rounded img-fluid"
                                  style="width: 100%; height: 333px; object-fit: cover;" alt="Ảnh tin tức">
                             <div class="card-body px-0">
-                                <div class="fw-semibold fs-5 text-primary mt-2" th:text="${firstNews.postTitle}">Tiêu đề</div>
+                                <div class="fw-semibold fs-5 text-primary mt-2" th:text="${firstNews.postTitle}"></div>
                                 <p th:text="${firstNews.summary}">Tóm tắt</p>
+                                <p th:text="${firstNews.creationDate}"></p>
                             </div>
                         </a>
                     </div>
                 </div>
 
                 <div class="col-md-4">
-                    <h4 class="mb-3 fw-bold">Sự kiện</h4>
+                    <h4 class="mb-3 fw-bold" >Sự kiện</h4>
                     <ul class="list-group list-group-flush">
                         <div th:if="${events != null}">
-                            <div th:each="event : ${events}" class="mb-3 border-bottom pb-2">
+                            <div th:each="event : ${events}" class="post-list mb-3 border-bottom pb-2">
                                 <a class="post-item d-flex mb-3" th:href="@{/event/{id}(id=${event.eventId})}">
                                     <div class="d-flex align-items-start">
                                         <div class="p-3">
@@ -52,8 +53,8 @@
                                                  class="me-2 rounded" style="width: 60px; height: 60px; object-fit: cover;">
                                         </div>
                                         <div>
-                                            <strong th:text="${event.eventName}">Tên sự kiện</strong>
-                                            <div class="text-muted" th:text="${event.summary}">Tóm tắt</div>
+                                            <strong >Tên sự kiện</strong>
+                                            <div class="text-muted post-summary" >Tóm tắt</div>
                                             <small class="text-muted">
                                                 <span th:text="${#temporals.format(event.beginDate, 'dd/MM/yyyy')}"></span>
                                                 -
@@ -71,6 +72,31 @@
         </main>
     </div>
 </div>
+<style>
+    .post-item {
+        color: inherit;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 10px;
+    }
+
+    .post-item:hover {
+        text-decoration: none;
+        background-color: #f9f9f9;
+    }
+
+    .post-title {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .post-summary {
+        font-size: 0.875rem;
+        line-height: 1.4;
+    }
+    .post-list:hover {
+        transform: scale(1.02);
+    }
+</style>
 
 <!-- Footer -->
 <div th:replace="fragments/footer"></div>

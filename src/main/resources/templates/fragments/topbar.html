@@ -18,13 +18,13 @@
       <div class="collapse position-absolute" id="notificationCollapse" style="right: 150px; top: 60px; z-index: 1000; width: 300px;">
         <div class="card shadow animated--grow-in">
           <div class="card-header py-2 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary" th:text="#{notify.title}">Notifications</h6>
-            <button class="btn btn-sm btn-danger" id="clearAllNotifications" th:if="${notifications != null and !#lists.isEmpty(notifications)}" th:text="#{notify.clearAll}">Clear All</button>
+            <h6 class="m-0 font-weight-bold text-primary" >Thông báo</h6>
+            <button class="btn btn-sm btn-danger" id="clearAllNotifications" th:if="${notifications != null and !#lists.isEmpty(notifications)}" >Xóa hết</button>
           </div>
           <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
             <div th:if="${notifications == null or #lists.isEmpty(notifications)}" class="text-center p-3">
-              <span th:if="${session.user != null}" th:text="#{welcome.message}">Chào mừng đến với NTU CMS</span>
-              <span th:unless="${session.user != null}" th:text="#{notify.empty}">No notifications</span>
+              <span th:if="${session.user != null}">Chào mừng đến với NTU CMS</span>
+              <span th:unless="${session.user != null}" >Không có thông báo</span>
             </div>
             <div th:unless="${notifications == null or #lists.isEmpty(notifications)}">
               <div th:each="notify : ${notifications}"
@@ -43,26 +43,26 @@
       </div>
     </li>
 
-    <!-- Language Switcher -->
-    <li class="nav-item dropdown no-arrow">
-      <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${#locale.language == 'vi' ? 'VI' : 'EN'}">EN</span>
-      </a>
-      <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="languageDropdown">
-        <a class="dropdown-item" th:href="@{/changeLanguage(lang='en')}" th:text="#{lang.english}">English</a>
-        <a class="dropdown-item" th:href="@{/changeLanguage(lang='vi')}" th:text="#{lang.vietnamese}">Vietnamese</a>
-      </div>
-    </li>
+<!--    &lt;!&ndash; Language Switcher &ndash;&gt;-->
+<!--    <li class="nav-item dropdown no-arrow">-->
+<!--      <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--        <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${#locale.language == 'vi' ? 'VI' : 'EN'}">EN</span>-->
+<!--      </a>-->
+<!--      <div class="dropdown-menu dropdown-menu-right shadow animated&#45;&#45;grow-in" aria-labelledby="languageDropdown">-->
+<!--        <a class="dropdown-item" th:href="@{/changeLanguage(lang='en')}" th:text="#{lang.english}">English</a>-->
+<!--        <a class="dropdown-item" th:href="@{/changeLanguage(lang='vi')}" th:text="#{lang.vietnamese}">Vietnamese</a>-->
+<!--      </div>-->
+<!--    </li>-->
 
     <!-- Nav Item - User Information -->
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="mr-2 d-none d-lg-inline text-gray-600 small"
               th:switch="${session.role.name()}">
-          <span th:case="'ADMIN'" th:text="#{user.admin}">Quản trị viên</span>
-          <span th:case="'WRITER'" th:text="#{user.writer}">Người viết</span>
-          <span th:case="'MODERATOR'" th:text="#{user.moderator}">Người kiểm duyệt</span>
-          <span th:case="*" th:text="#{user.user}">Người dùng</span>
+          <span th:case="'ADMIN'" >Quản trị viên</span>
+          <span th:case="'WRITER'">Người soạn thảo</span>
+          <span th:case="'MODERATOR'" >Người kiểm duyệt</span>
+          <span th:case="*">Người dùng</span>
         </span>
         <img class="img-profile rounded-circle" src="/img/undraw_profile.svg" alt="">
       </a>
@@ -70,35 +70,34 @@
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#profileModal">
           <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-          <span th:text="#{user.profile}">Profile</span>
+          <span >Hồ sơ người dùng</span>
         </a>
         <a class="dropdown-item" href="#">
           <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-          <span th:text="#{user.settings}">Settings</span>
+          <span th:text="#{user.settings}">Cài đặt</span>
         </a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
           <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-          <span th:href="@{/logout}" th:text="#{user.logout}">Logout</span>
+          <span th:href="@{/logout}" >Đăng xuất</span>
         </a>
       </div>
     </li>
   </ul>
 
-  <!-- Logout Modal -->
-  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+  <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel" th:text="#{logout.title}">Ready to Leave?</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Bạn có thật sự muốn thoát?</h5>
           <button class="close" type="button" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
-        <div class="modal-body" th:text="#{logout.message}">Select "Logout" below if you are ready to end your current session.</div>
+        <div class="modal-body">Chọn "Đăng xuất" nếu bạn muốn kết thúc phiên đăng nhập hiện tại.</div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal" th:text="#{cancel}">Cancel</button>
-          <a class="btn btn-primary" th:href="@{/logout}" th:text="#{user.logout}">Logout</a>
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Hủy</button>
+          <a class="btn btn-primary" th:href="@{/logout}">Đăng xuất</a>
         </div>
       </div>
     </div>
@@ -109,74 +108,71 @@
     <i class="fas fa-angle-up"></i>
   </a>
 
-  <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="profileModalLabel" th:text="#{user.profile}">Thông tin người dùng</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <p><strong th:text="#{user.username}">Tên đăng nhập:</strong> <span th:text="${session.user.username}"></span></p>
-          <p><strong>Email:</strong> <span th:text="${session.user.email}"></span></p>
-          <p><strong th:text="#{user.role}">Vai trò:</strong>
-            <span th:switch="${session.role.name()}">
-              <span th:case="'ADMIN'" th:text="#{user.admin}">Quản trị viên</span>
-              <span th:case="'WRITER'" th:text="#{user.writer}">Người viết</span>
-              <span th:case="'MODERATOR'" th:text="#{user.moderator}">Người kiểm duyệt</span>
-              <span th:case="*" th:text="#{user.user}">Người dùng</span>
-            </span>
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{profile.closeBtn}">Đóng</button>
-          <button type="button"
-                  class="btn btn-primary"
-                  id="editProfileBtn" th:text="#{profile.editBtn}">
-            Chỉnh sửa
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="editProfileModal"
-       th:if="${session.user != null}"
-       tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <form th:action="@{/users/profile/update}" th:object="${user}" method="post">
+  <div th:if="${session.user != null}">
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="editProfileModalLabel" th:text="#{edit.editHead}">Cập nhật thông tin</h5>
+            <h5 class="modal-title" id="profileModalLabel">Thông tin người dùng</h5>
             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
-
           <div class="modal-body">
-            <div class="form-group">
-              <label for="username" th:text="#{edit.username}">Tên đăng nhập</label>
-              <input id="username" type="text" class="form-control" th:value="${session.user.username}" readonly/>
-            </div>
-
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input id="email" type="email" class="form-control" th:field="*{email}" required/>
-            </div>
-
-            <div class="form-group">
-              <label for="password" th:text="#{edit.password}">Mật khẩu mới</label>
-              <input id="password" type="password" class="form-control" th:field="*{password}" th:placeholder="#{edit.placeHolder}"/>
-            </div>
+            <p><strong>Tên đăng nhập:</strong> <span th:text="${session.user.username}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${session.user.email}"></span></p>
+            <p><strong >Vai trò:</strong>
+              <span th:switch="${session.role.name()}">
+                <span th:case="'ADMIN'">Quản trị viên</span>
+                <span th:case="'WRITER'">Người soạn thảo</span>
+                <span th:case="'MODERATOR'" >Người kiểm duyệt</span>
+                <span th:case="*">Người dùng</span>
+              </span>
+            </p>
           </div>
-
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{edit.cancel}">Hủy</button>
-            <button type="submit" class="btn btn-success" th:text="#{edit.save}">Lưu thay đổi</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            <button type="button" class="btn btn-primary" id="editProfileBtn" >Chỉnh sửa</button>
           </div>
-        </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editProfileModal"
+         tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <form th:action="@{/users/profile/update}" th:object="${user}" method="post">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editProfileModalLabel">Cập nhật thông tin</h5>
+              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="username">Tên đăng nhập</label>
+                <input id="username" type="text" class="form-control" th:value="${session.user.username}" readonly/>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input id="email" type="email" class="form-control" th:field="*{email}" required/>
+              </div>
+
+              <div class="form-group">
+                <label for="password" >Mật khẩu mới</label>
+                <input id="password" type="password" class="form-control" th:field="*{password}" th:placeholder="#{edit.placeHolder}"/>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Hủy</button>
+              <button type="submit" class="btn btn-success" >Lưu thay đổi</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>

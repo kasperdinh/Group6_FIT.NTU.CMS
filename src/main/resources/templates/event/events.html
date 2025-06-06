@@ -16,76 +16,82 @@
     <div id="content">
       <div th:replace="~{fragments/topbar}"></div>
       <div class="container-fluid">
-        <h1 th:text="#{list.events}">List of Events</h1>
-        <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addEventModal" th:text="#{event.add}">Add Event</button>
+        <h1>Danh sách sự kiện</h1>
+        <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addEventModal">Thêm sự kiện</button>
+
         <div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <form th:action="@{/events}" th:object="${event}" method="post" enctype="multipart/form-data">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="addEventModalLabel" th:text="#{add.event}">Add New Event</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <h5 class="modal-title" id="addEventModalLabel">Thêm sự kiện mới</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
                 <div class="modal-body">
-                  <!-- Error message -->
+                  <!-- Thông báo lỗi -->
                   <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
-                  <!-- Validation errors -->
+                  <!-- Lỗi xác thực -->
                   <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
                     <ul>
                       <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
                     </ul>
                   </div>
+
                   <div class="input-row">
                     <div class="mb-3">
-                      <label class="form-label" th:text="#{event.name}"></label>
+                      <label class="form-label">Tên sự kiện</label>
                       <input type="text" class="form-control" th:field="*{eventName}" required>
                       <div th:errors="*{eventName}" class="text-danger"></div>
                     </div>
                     <div class="mb-3">
-                      <label class="form-label" th:text="#{event.sumary}">Summary</label>
+                      <label class="form-label">Tóm tắt</label>
                       <input type="text" class="form-control" th:field="*{summary}" required>
                       <div th:errors="*{summary}" class="text-danger"></div>
                     </div>
                     <div class="mb-3 flex-item">
-                      <label class="form-label" th:text="#{event.location}">Location</label>
+                      <label class="form-label">Địa điểm</label>
                       <input type="text" class="form-control" th:field="*{eventLocation}">
                       <div th:errors="*{eventLocation}" class="text-danger"></div>
                     </div>
                   </div>
+
                   <div class="mb-3">
-                    <label class="form-label" th:text="#{event.description}">Content</label>
+                    <label class="form-label">Nội dung sự kiện</label>
                     <textarea id="ckeditor-content" class="form-control" th:field="*{eventDescription}" rows="5"></textarea>
                     <div th:errors="*{eventDescription}" class="text-danger"></div>
                   </div>
+
                   <div class="input-row">
                     <div class="mb-3 flex-item">
-                      <label class="form-label" th:text="#{event.timeBegin}">Begin Time</label>
+                      <label class="form-label">Thời gian bắt đầu</label>
                       <input type="datetime-local" class="form-control" th:field="*{beginDate}" required>
                       <div th:errors="*{beginDate}" class="text-danger"></div>
                     </div>
                     <div class="mb-3 flex-item">
-                      <label class="form-label" th:text="#{event.timeFinish}">Finish Time</label>
+                      <label class="form-label">Thời gian kết thúc</label>
                       <input type="datetime-local" class="form-control" th:field="*{finishDate}" required>
                       <div th:errors="*{finishDate}" class="text-danger"></div>
                     </div>
                     <div class="mb-3">
-                      <label class="form-label" th:text="#{event.image}">Event Image</label>
+                      <label class="form-label">Hình ảnh sự kiện</label>
                       <input type="file" class="form-control" name="imageFile" accept="image/*">
                     </div>
                     <div class="mb-3">
-                      <label class="form-label" th:text="#{event.filePath}">Event File</label>
+                      <label class="form-label">Tập tin sự kiện</label>
                       <input type="file" class="form-control" name="file" accept=".pdf,.doc,.docx,.png">
                     </div>
                   </div>
                 </div>
+
                 <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary" th:text="#{save.changes}">Save Event</button>
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                  <button type="submit" class="btn btn-primary">Lưu sự kiện</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                 </div>
               </form>
             </div>
           </div>
         </div>
+
 
         <!-- Edit Event Modal -->
         <div class="modal fade" id="editEventModal" tabindex="-1" aria-labelledby="editEventModalLabel" aria-hidden="true">
@@ -93,121 +99,126 @@
             <div class="modal-content">
               <form th:action="@{/editEvents}" method="post" enctype="multipart/form-data">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="editEventModalLabel" th:text="#{edit.event}">Edit Event</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <h5 class="modal-title" id="editEventModalLabel">Chỉnh sửa sự kiện</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
                 <div class="modal-body">
                   <div class="input-row">
                     <div class="mb-3 flex-item">
-                      <label class="form-label" th:text="#{event.id}">Event ID</label>
+                      <label class="form-label">Mã sự kiện</label>
                       <input type="text" class="form-control" id="editEventId" name="eventId" readonly />
                     </div>
                     <div class="mb-3">
-                      <label class="form-label" th:text="#{event.name}">Event Name</label>
+                      <label class="form-label">Tên sự kiện</label>
                       <input type="text" class="form-control" id="editEventName" name="eventName" required>
                     </div>
                     <div class="mb-3">
-                      <label class="form-label" th:text="#{event.sumary}">Summary</label>
+                      <label class="form-label">Tóm tắt</label>
                       <input type="text" class="form-control" id="editSummary" name="summary" required>
                     </div>
                     <div class="mb-3 flex-item">
-                      <label class="form-label" th:text="#{event.location}">Location</label>
+                      <label class="form-label">Địa điểm</label>
                       <input type="text" class="form-control" id="editEventLocation" name="eventLocation">
                     </div>
                   </div>
                   <div class="mb-3">
-                    <label class="form-label" th:text="#{event.description}">Event Description</label>
+                    <label class="form-label">Mô tả sự kiện</label>
                     <textarea class="form-control" id="editEventDescription" name="eventDescription" rows="2"></textarea>
                   </div>
                   <div class="input-row">
                     <div class="mb-3 flex-item">
-                      <label class="form-label" th:text="#{event.timeBegin}">Begin Time</label>
+                      <label class="form-label">Thời gian bắt đầu</label>
                       <input type="datetime-local" class="form-control" id="editBeginDate" name="beginDate" required>
                     </div>
                     <div class="mb-3 flex-item">
-                      <label class="form-label" th:text="#{event.timeFinish}">Finish Time</label>
+                      <label class="form-label">Thời gian kết thúc</label>
                       <input type="datetime-local" class="form-control" id="editFinishDate" name="finishDate" required>
                     </div>
                   </div>
                   <div class="mb-3">
-                    <label class="form-label" th:text="#{current.image}">Current Image</label>
-                    <img id="editEventImage" class="img-fluid mb-2" style="max-width: 100px; display: none;" alt="Event Image">
-                    <label class="form-label" th:text="#{upload.image}">Upload New Image (optional)</label>
+                    <label class="form-label">Ảnh hiện tại</label>
+                    <img id="editEventImage" class="img-fluid mb-2" style="max-width: 100px; display: none;" alt="Ảnh sự kiện">
+                    <label class="form-label">Tải ảnh mới (không bắt buộc)</label>
                     <input type="file" class="form-control" id="editImageFile" name="imageFile" accept="image/*">
                   </div>
                   <div class="mb-3">
-                    <label class="form-label" th:text="#{current.filePath}">Current File</label>
-                    <a id="editFilePathLink" th:href="#{event.filePath}" target="_blank" style="display: none;"></a>
-                    <label class="form-label" th:text="#{upload.filePath}">Upload New File (optional)</label>
+                    <label class="form-label">File hiện tại</label>
+                    <a id="editFilePathLink" target="_blank" style="display: none;"></a>
+                    <label class="form-label">Tải file mới (không bắt buộc)</label>
                     <input type="file" class="form-control" id="editFilePath" name="file" accept=".pdf,.doc,.docx,.png" />
                   </div>
-                  <input type="hidden" name="existingImage" id="editExistingImage">
-                  <input type="hidden" name="existingFilePath" id="existingFilePath">
+                  <input type="hidden" name="existingImage" class="form-control" id="editExistingImage">
+                  <input type="hidden" name="existingFilePath" class="form-control" id="existingFilePath">
                 </div>
                 <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary" th:text="#{save.changes}">Save Changes</button>
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                  <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                 </div>
               </form>
             </div>
           </div>
         </div>
 
-        <!-- Delete Confirmation Modal -->
+        <!-- Modal xác nhận xóa -->
         <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <form th:action="@{/deleteEvent}" method="post">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="deleteConfirmModalLabel" th:text="#{confirm.delete}">Confirm Delete</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <h5 class="modal-title" id="deleteConfirmModalLabel">Xác nhận xóa</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
                 <div class="modal-body">
-                  <span th:text="#{quotes.delete}">Are you sure you want to delete this event?</span>
+                  <span>Bạn có chắc chắn muốn xóa sự kiện này không?</span>
                   <input type="hidden" name="eventId" id="deleteEventId">
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{delete.no}">No</button>
-                  <button type="submit" class="btn btn-danger" id="confirmDeleteBtn" th:text="#{delete.yes}">Yes</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Không</button>
+                  <button type="submit" class="btn btn-danger" id="confirmDeleteBtn">Xóa</button>
                 </div>
               </form>
             </div>
           </div>
         </div>
 
-        <!-- Event List -->
+
+        <!-- Danh sách sự kiện -->
         <div class="row row-cols-1 row-cols-md-2 g-4">
           <div class="col" th:each="event : ${events}">
-            <div class="card mb-3 shadow-sm h-100 event-card">
+            <div class="card p-2 shadow-sm h-100 event-card">
               <div class="row g-0">
                 <div class="col-md-4">
-                  <img style="width: 50%" th:src="${event.eventImage}" class="img-fluid rounded-start h-100 object-fit-cover" alt="Event Image">
+                  <img th:if="${event.eventImage != null}"
+                       th:src="@{${event.eventImage}}"
+                       class="img-fluid rounded-start object-fit-cover p-1"
+                       style="width: 100%; height: 200px; object-fit: cover;"
+                       alt="Ảnh sự kiện" />
                 </div>
                 <div class="col-md-8">
                   <div class="card-body">
-                    <h5 class="card-title mb-1" th:text="${event.eventName}">Event Name</h5>
-                    <p class="card-text text-muted mb-1" th:text="${event.summary}">Event Summary</p>
+                    <h5 class="card-title mb-1" th:text="${event.eventName}">Tên sự kiện</h5>
+                    <p class="card-text text-muted mb-1" th:text="${event.summary}">Tóm tắt sự kiện</p>
                     <p class="card-text small mb-2">
                       <i class="bi bi-clock"></i>
-                      <span th:text="${#temporals.format(event.beginDate, 'HH:mm')}">Start Time</span> -
-                      <span th:text="${#temporals.format(event.finishDate, 'HH:mm')}">End Time</span>
+                      <span th:text="${#temporals.format(event.beginDate, 'HH:mm')}">Giờ bắt đầu</span> -
+                      <span th:text="${#temporals.format(event.finishDate, 'HH:mm')}">Giờ kết thúc</span>
                     </p>
                     <div class="d-flex justify-content-between">
                       <a class="btn btn-outline-primary btn-sm" th:href="@{/events/{id}(id=${event.eventId})}">
-                        <i class="bi bi-info-circle"></i> View Details
+                        <i class="bi bi-info-circle"></i> Xem chi tiết
                       </a>
                       <div>
                         <button class="btn btn-sm btn-outline-warning me-1 edit-btn"
                                 data-bs-toggle="modal"
                                 data-bs-target="#editEventModal"
                                 th:data-event-id="${event.eventId}">
-                          <i class="bi bi-pencil-square"></i>
+                          <i class="bi bi-pencil-square"></i> Sửa
                         </button>
                         <button class="btn btn-sm btn-outline-danger delete-btn"
                                 data-bs-toggle="modal"
                                 data-bs-target="#deleteConfirmModal"
                                 th:data-event-id="${event.eventId}">
-                          <i class="bi bi-trash"></i>
+                          <i class="bi bi-trash"></i> Xóa
                         </button>
                       </div>
                     </div>
@@ -217,6 +228,7 @@
             </div>
           </div>
         </div>
+
 
         <!-- Pagination -->
         <div th:replace="~{fragments/pageNavigate}"></div>
