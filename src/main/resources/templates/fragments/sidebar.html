@@ -3,9 +3,9 @@
   <!-- Sidebar - Brand -->
   <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
     <div class="sidebar-brand-icon rotate-n-15">
-      <i class="fas fa-laugh-wink"></i>
+      <img th:src="${setting.logoUrl != null ? setting.logoUrl : '/uploads/img/logoCms.png'}" alt="Logo" style="width: 24px; height: 24px; object-fit: contain;">
     </div>
-    <div class="sidebar-brand-text mx-2">PUBLIC</div>
+    <div class="sidebar-brand-text mx-2" th:text="${setting.siteName != null ? setting.siteName : 'No Name'}">PUBLIC</div>
   </a>
 
   <!-- Divider -->
@@ -43,7 +43,7 @@
       <i class="fas fa-fw fa-photo-video"></i>
       <span th:text="#{media}">Media</span>
     </a>
-    <div id="collapseMedia" class="collapse" aria-labelledby="headingMedia" data-parent="#accordionSidebar" >
+    <div id="collapseMedia" class="collapse" aria-labelledby="headingMedia" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <a th:text="#{list.media}" class="collapse-item" th:href="@{/media}"></a>
       </div>
@@ -74,7 +74,7 @@
   </li>
 
   <!-- Nav Item - Event -->
-  <li class="nav-item" >
+  <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEvent" aria-expanded="true" aria-controls="collapseEvent">
       <i class="fas fa-fw fa-calendar-alt"></i>
       <span th:text="#{event}">Event</span>
@@ -86,29 +86,6 @@
       </div>
     </div>
   </li>
-
-<!--  <li class="nav-item">-->
-<!--    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNotice" aria-expanded="true" aria-controls="collapseNotice">-->
-<!--      <i class="fas fa-fw fa-bell"></i>-->
-<!--      <span th:text="#{notice}">Notice</span>-->
-<!--    </a>-->
-<!--    <div id="collapseNotice" class="collapse" aria-labelledby="headingNotice" data-parent="#accordionSidebar">-->
-<!--      <div class="bg-white py-2 collapse-inner rounded">-->
-<!--        <h6 th:text="#{notice.features}" class="collapse-header">Notice Features:</h6>-->
-<!--        <a class="collapse-item" th:text="#{list.notice}" href="/notices">List of Events</a>-->
-<!--        <a class="collapse-item" th:text="#{create.notice}" href="/notices/create">List of Events</a>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </li>-->
-
-<!--  &lt;!&ndash; Nav Item - Comments &ndash;&gt;-->
-<!--  <li class="nav-item">-->
-<!--    <a class="nav-link" href="/comments">-->
-<!--      <i class="fas fa-fw fa-comments"></i>-->
-<!--      <span th:text="#{comments}">Comments</span>-->
-<!--    </a>-->
-<!--  </li>-->
-
 
   <!-- Nav Item - Users -->
   <li class="nav-item" th:if="${session.role.name() == 'ADMIN'}">
@@ -127,7 +104,7 @@
 
   <!-- Nav Item - Setting -->
   <li class="nav-item">
-    <a class="nav-link" href="/setting">
+    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#settingModal">
       <i class="fas fa-fw fa-cogs"></i>
       <span th:text="#{setting}">Setting</span>
     </a>
@@ -141,4 +118,33 @@
     <button class="rounded-circle border-0" id="sidebarToggle"></button>
   </div>
 
+  <!-- Setting Modal -->
+  <div class="modal fade" id="settingModal" tabindex="-1" aria-labelledby="settingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" th:text="#{setting.edit}">Edit Settings</h5>
+
+        </div>
+        <div class="modal-body">
+          <form th:action="@{/setting}" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="siteName" th:text="#{setting.siteNameLabel}" class="form-label">Site Name</label>
+              <input type="text" id="siteName" name="siteName" class="form-control" th:value="${setting.siteName}" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" th:text="#{current.filePath}">Current File</label>
+              <a id="existingLogo" th:href="${setting.logoUrl}" th:text="${setting.logoUrl != null ? setting.logoUrl : 'No file'}" target="_blank" th:style="${setting.logoUrl != null} ? 'display: inline-block' : 'display: inline-block'"></a>
+              <input type="hidden" id="editExistingLogo" name="existingLogo" th:value="${setting.logoUrl}"/>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" th:text="#{upload.filePath}">Upload New File (optional)</label>
+              <input type="file" class="form-control" name="logo" accept="image/*" />
+            </div>
+            <button type="submit" class="btn btn-primary" th:text="#{setting.save}">Save Changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </ul>
