@@ -85,6 +85,11 @@ public class PostService {
         return postRepository.findFirstByPageOrderByCreationDateDesc(page);
     }
 
+    public boolean isFileUsed(String filePath) {
+        return postRepository.findByFilePath(filePath).isPresent()
+                || postRepository.findByPostImage(filePath).isPresent();
+    }
+
     // Delete a Post by ID
     @Transactional
     public void deletePost(Long id) {

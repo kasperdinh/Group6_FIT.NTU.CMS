@@ -28,9 +28,6 @@ public class AuthController {
     private UserService userService;
 
     @Autowired
-    private UsersRepository usersRepository;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
 
@@ -125,7 +122,7 @@ public class AuthController {
     public String resetPassword(@RequestParam("email") String email,
                                 @RequestParam("password") String password,
                                 Model model) {
-        UsersModel user = usersRepository.findByEmail(email);
+        UsersModel user = userService.findByEmail(email);
         if (user != null) {
             user.setPassword(passwordEncoder.encode(password));
             user.setOtp(null);

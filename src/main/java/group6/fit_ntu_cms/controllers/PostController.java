@@ -45,7 +45,7 @@ public class PostController {
     @Autowired
     private NotifyService notifyService;
     @Autowired
-    private UsersRepository usersRepository;
+    private UserService userService;
     @GetMapping("/posts")
     public String showPosts(@RequestParam(required = false) String status,
                             @RequestParam(required = false) Long category,
@@ -129,8 +129,8 @@ public class PostController {
             NotifyModel notify = new NotifyModel();
             notifyService.saveNotify(notify,user,"Bài viết vừa thêm của bạn: "+postName+" đang được phê duyệt");
             // Gửi thông báo cho tất cả ADMIN và MODERATOR
-            List<UsersModel> admins = usersRepository.findByRole(Role.ADMIN);
-            List<UsersModel> moderators = usersRepository.findByRole(Role.MODERATOR);
+            List<UsersModel> admins = userService.findByRole(Role.ADMIN);
+            List<UsersModel> moderators = userService.findByRole(Role.MODERATOR);
             admins.addAll(moderators); // Gộp danh sách ADMIN và MODERATOR
             notifyService.saveNotifyForUsers(admins, "Bạn có bài viết:" + postName + " cần được kiểm duyệt");
             model.addAttribute("successMessage", "Sự kiện đã được thêm thành công!");

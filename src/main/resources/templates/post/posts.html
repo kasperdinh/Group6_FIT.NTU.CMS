@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Posts</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
@@ -18,33 +17,33 @@
     <div id="content">
       <div th:replace="~{fragments/topbar}"></div>
       <div class="container-fluid">
-        <h1 th:text="#{list.posts}">List of Posts</h1>
+        <h1>Danh sách bài viết</h1>
 
         <!-- Add Post Button and Search Form -->
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPostModal" th:text="#{post.add}">Add Post</button>
+          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPostModal">Thêm bài viết</button>
           <form class="d-flex" th:action="@{/posts}" method="get">
-            <input class="form-control me-2" type="search" name="search" placeholder="Search Posts" aria-label="Search">
-            <button class="btn btn-outline-primary" type="submit">Search</button>
+            <input class="form-control me-2" type="search" name="search" placeholder="Tìm kiếm..." aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Tìm</button>
           </form>
         </div>
 
         <!-- Filters -->
         <div class="d-flex mb-3">
           <form th:action="@{/posts}" method="get" class="d-flex">
-            <select name="status" class="form-select me-2" style="width: auto;">
-              <option value="" th:text="#{post.status}">All Statuses</option>
-              <option value="Published" th:text="#{post.approved}">Approved</option>
-              <option value="Denied" th:text="#{post.denied}">Denied</option>
-              <option value="Pending" th:text="#{post.pending}">Pending</option>
+            <select name="status" class="form-select form-control me-2" style="width: auto;">
+              <option value="">Tất cả trạng thái</option>
+              <option value="Published">Đã duyệt</option>
+              <option value="Denied">Bị từ chối</option>
+              <option value="Pending">Đang chờ</option>
             </select>
-            <select name="category" class="form-select me-2" style="width: auto;">
-              <option value="">All Categories</option>
+            <select name="category" class="form-select form-control  me-2" style="width: auto;">
+              <option value="">Tất cả chuyên mục</option>
               <option th:each="category : ${allCategories}"
                       th:value="${category.tittleId}"
                       th:text="${category.titleName}"></option>
             </select>
-            <button class="btn btn-outline-secondary" type="submit">Filter</button>
+            <button class="btn btn-outline-secondary" type="submit">Lọc</button>
           </form>
         </div>
 
@@ -54,8 +53,8 @@
             <div class="modal-content">
               <form th:action="@{/post-add}" th:object="${post}" method="post" enctype="multipart/form-data">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="addPostModalLabel" th:text="#{add.post}">Add New Post</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <h5 class="modal-title" id="addPostModalLabel">Thêm bài viết mới</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
                 <div class="modal-body">
                   <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
@@ -66,19 +65,19 @@
                   </div>
                   <div class="input-row">
                     <div class="mb-3">
-                      <label class="form-label" th:text="#{post.title}">Post Title</label>
+                      <label class="form-label">Tiêu đề bài viết</label>
                       <input type="text" class="form-control" th:field="*{postTitle}" required>
                       <div th:errors="*{postTitle}" class="text-danger"></div>
                     </div>
                     <div class="mb-3">
-                      <label class="form-label" th:text="#{post.summary}">Summary</label>
+                      <label class="form-label">Tóm tắt</label>
                       <input type="text" class="form-control" th:field="*{summary}" required>
                       <div th:errors="*{summary}" class="text-danger"></div>
                     </div>
                     <div class="mb-3 flex-item">
-                      <label class="form-label" th:text="#{post.category}">Category</label>
+                      <label class="form-label">Chuyên mục</label>
                       <select class="form-control" th:field="*{category}">
-                        <option value="" th:text="#{select.category}"></option>
+                        <option value="">-- Chọn chuyên mục --</option>
                         <option th:each="category : ${allCategories}"
                                 th:value="${category.tittleId}"
                                 th:text="${category.titleName}"></option>
@@ -86,9 +85,9 @@
                       <div th:errors="*{category}" class="text-danger"></div>
                     </div>
                     <div class="mb-3 flex-item">
-                      <label class="form-label" th:text="#{post.page}">Category</label>
+                      <label class="form-label">Trang</label>
                       <select class="form-control" th:field="*{page}">
-                        <option th:text="#{select.page}" value=""></option>
+                        <option value="">-- Chọn trang --</option>
                         <option th:each="page : ${allPages}"
                                 th:value="${page.id}"
                                 th:text="${page.title}"></option>
@@ -96,122 +95,132 @@
                     </div>
                   </div>
                   <div class="mb-3">
-                    <label class="form-label" th:text="#{post.content}">Content</label>
+                    <label class="form-label">Nội dung</label>
                     <textarea id="ckeditor-content" class="form-control" th:field="*{content}" rows="5"></textarea>
                     <div th:errors="*{content}" class="text-danger"></div>
                   </div>
                   <div class="input-row">
                     <div class="mb-3">
-                      <label class="form-label" th:text="#{post.file}">File</label>
+                      <label class="form-label">File đính kèm</label>
                       <input type="file" class="form-control" name="file" accept=".pdf,.doc,.docx,.png">
                     </div>
                     <div class="mb-3">
-                      <label class="form-label" th:text="#{event.image}">File</label>
+                      <label class="form-label">Ảnh đại diện</label>
                       <input type="file" class="form-control" name="imgFile" accept="image/*">
                     </div>
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary" th:text="#{save.changes}">Save Post</button>
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                  <button type="submit" class="btn btn-primary">Lưu bài viết</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                 </div>
               </form>
             </div>
           </div>
         </div>
 
-        <!-- Edit Post Modal -->
+
+        <!-- Modal Chỉnh sửa bài viết -->
         <div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="editPostModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <form th:action="@{/editPosts}" th:object="${post}" method="post" enctype="multipart/form-data">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="editPostModalLabel" th:text="#{edit.post}">Edit Post</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <h5 class="modal-title" id="editPostModalLabel">Chỉnh sửa bài viết</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
                 <div class="modal-body">
                   <div class="input-row">
                     <div class="mb-3 flex-item">
-                      <label class="form-label" th:text="#{post.id}">Post ID</label>
+                      <label class="form-label">Mã bài viết</label>
                       <input type="text" class="form-control" id="editPostId" name="postId" readonly />
                     </div>
                     <div class="mb-3">
-                      <label class="form-label" th:text="#{post.title}">Post Title</label>
+                      <label class="form-label">Tiêu đề bài viết</label>
                       <input type="text" class="form-control" id="editPostTitle" name="postTitle" required />
                     </div>
                     <div class="mb-3">
-                      <label class="form-label" th:text="#{post.summary}">Summary</label>
+                      <label class="form-label">Tóm tắt</label>
                       <input type="text" class="form-control" id="editSummary" name="summary" required />
                     </div>
                     <div class="mb-3 flex-item">
-                      <label class="form-label" th:text="#{post.category}">Category</label>
+                      <label class="form-label">Danh mục</label>
                       <select class="form-control" id="editCategory" name="category">
-                        <option value="">-- Select a category (optional) --</option>
+                        <option value="">-- Chọn danh mục (không bắt buộc) --</option>
                         <option th:each="category : ${allCategories}"
                                 th:value="${category.tittleId}"
                                 th:text="${category.titleName}"></option>
                       </select>
                     </div>
                     <div class="mb-3 flex-item">
-                      <label class="form-label" th:text="#{post.page}">Category</label>
+                      <label class="form-label">Trang</label>
                       <select class="form-control" id="editPage" name="page">
-                        <option th:text="#{select.page}" value=""></option>
+                        <option value="">-- Chọn trang --</option>
                         <option th:each="page : ${allPages}"
                                 th:value="${page.id}"
                                 th:utext="${page.title}"></option>
                       </select>
                     </div>
                   </div>
+
                   <div class="mb-3">
-                    <label class="form-label" th:text="#{post.content}">Content</label>
+                    <label class="form-label">Nội dung</label>
                     <textarea id="edit-ckeditor-content" class="form-control" th:field="*{content}" rows="5"></textarea>
                     <div th:errors="*{content}" class="text-danger"></div>
                   </div>
+
                   <div class="input-row">
                     <div class="mb-3 flex-item">
-                      <label class="form-label" th:text="#{post.creationDate}">Creation Date</label>
+                      <label class="form-label">Ngày tạo</label>
                       <input type="datetime-local" class="form-control" id="editCreationDate" name="creationDate" readonly />
                     </div>
                     <div class="mb-3 flex-item">
-                      <label class="form-label" th:text="#{post.updateDate}">Update Date</label>
+                      <label class="form-label">Ngày cập nhật</label>
                       <input type="datetime-local" class="form-control" id="editUpdateDate" name="updateDate" readonly />
                     </div>
                   </div>
+
                   <div class="mb-3">
-                    <label class="form-label" th:text="#{current.image}">Current Image</label>
-                    <img id="editPostImage" src="" alt="Post Image" style="max-width: 200px; display: none;" />
+                    <label class="form-label">Ảnh hiện tại</label>
+                    <img id="editPostImage" src="" alt="Ảnh bài viết" style="max-width: 200px; display: none;" />
                     <input type="hidden" id="editExistingImage" name="existingImagePath" />
                   </div>
+
                   <div class="mb-3">
-                    <label class="form-label" th:text="#{upload.image}">Upload New Image (optional)</label>
+                    <label class="form-label">Tải ảnh mới (không bắt buộc)</label>
                     <input type="file" class="form-control" name="imgFile" accept="image/*" />
                   </div>
+
                   <div class="mb-3">
-                    <label class="form-label" th:text="#{current.filePath}">Current File</label>
-                    <a id="editFilePathLink" href="" target="_blank" style="display: none;">No file</a>
+                    <label class="form-label">Tệp hiện tại</label>
+                    <a id="editFilePathLink" href="" target="_blank" style="display: none;">Không có tệp</a>
                     <input type="hidden" id="editExistingFilePath" name="existingFilePath" />
                   </div>
+
                   <div class="mb-3">
-                    <label class="form-label" th:text="#{upload.filePath}">Upload New File (optional)</label>
+                    <label class="form-label">Tải tệp mới (không bắt buộc)</label>
                     <input type="file" class="form-control" name="file" accept=".pdf,.doc,.docx,.png" />
                   </div>
+
                   <div class="mb-3">
-                    <label class="form-label" th:text="#{post.status}">Status</label>
+                    <label class="form-label">Trạng thái</label>
                     <select class="form-control" id="editStatus" name="status" readonly>
-                      <option value="Pending">Pending</option>
-                      <option value="Approved">Published</option>
-                      <option value="Denied">Denied</option>
+                      <option value="Pending">Chờ duyệt</option>
+                      <option value="Approved">Đã đăng</option>
+                      <option value="Denied">Từ chối</option>
                     </select>
                   </div>
                 </div>
+
                 <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary" th:text="#{save.changes}">Save Changes</button>
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                  <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                 </div>
               </form>
             </div>
           </div>
         </div>
+
 
         <!-- Delete Confirmation Modal -->
         <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
@@ -219,16 +228,16 @@
             <div class="modal-content">
               <form th:action="@{/deletePost}" method="post">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="deleteConfirmModalLabel" th:text="#{confirm.delete}">Confirm Delete</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <h5 class="modal-title" id="deleteConfirmModalLabel">Xác nhận xóa</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
                 <div class="modal-body">
-                  <span th:text="#{quotes.delete}">Are you sure you want to delete this post?</span>
+                  <span>Bạn có chắc chắn muốn xóa bài viết này không?</span>
                   <input type="hidden" name="postId" id="deletePostId">
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{delete.no}">No</button>
-                  <button type="submit" class="btn btn-danger" id="confirmDeleteBtn" th:text="#{delete.yes}">Yes</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Không</button>
+                  <button type="submit" class="btn btn-danger" id="confirmDeleteBtn">Có</button>
                 </div>
               </form>
             </div>
@@ -240,44 +249,43 @@
           <table class="table table-striped table-hover">
             <thead>
             <tr>
-              <th scope="col" th:text="#{post.title}">Title</th>
-              <th scope="col" th:text="#{post.author}">Author</th>
-              <th scope="col" th:text="#{post.category}">Category</th>
-              <th scope="col" th:text="#{post.status}">Status</th>
-              <th scope="col" th:text="#{post.creationDate}">Date</th>
-              <th scope="col" th:text="#{post.updateDate}">Actions</th>
+              <th scope="col">Tiêu đề</th>
+              <th scope="col">Tác giả</th>
+              <th scope="col">Chuyên mục</th>
+              <th scope="col">Trạng thái</th>
+              <th scope="col">Ngày tạo</th>
+              <th scope="col">Ngày cập nhật</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="post : ${posts}">
               <td>
                 <a th:href="@{/postsDetail/{id}(id=${post.postId})}" th:text="${post.postTitle}"></a>
-                <div class="post-actions small ">
+                <div class="post-actions small">
                   <a href="#" class="edit-btn me-1 text-warning"
                      data-bs-toggle="modal"
                      data-bs-target="#editPostModal"
-                     th:data-post-id="${post.postId}"
-                     th:text="#{edit}">Edit</a> |
+                     th:data-post-id="${post.postId}">Chỉnh sửa</a> |
                   <a href="#" class="delete-btn text-danger"
                      data-bs-toggle="modal"
                      data-bs-target="#deleteConfirmModal"
-                     th:data-post-id="${post.postId}"
-                     th:text="#{delete}">Delete</a>
+                     th:data-post-id="${post.postId}">Xóa</a>
                 </div>
               </td>
-              <td th:text="${post.user.username}">Author</td>
-              <td th:text="${post.category != null ? post.category.titleName : 'Uncategorized'}">Category</td>
+              <td th:text="${post.user.username}">Tác giả</td>
+              <td th:text="${post.category != null ? post.category.titleName : 'Không có chuyên mục'}">Chuyên mục</td>
               <td>
-                <span th:if="${post.status == 'Approved'}" class="text-success" th:text="#{post.approved}"></span>
-                <span th:if="${post.status == 'Denied'}" class="text-danger" th:text="#{post.denied}"></span>
-                <span th:if="${post.status == 'Pending'}" class="text-warning" th:text="#{post.pending}"></span>
+                <span th:if="${post.status == 'Approved'}" class="text-success">Đã duyệt</span>
+                <span th:if="${post.status == 'Denied'}" class="text-danger">Từ chối</span>
+                <span th:if="${post.status == 'Pending'}" class="text-warning">Chờ duyệt</span>
               </td>
-              <td th:text="${#temporals.format(post.creationDate, 'dd/MM/yyyy HH:mm')}">Date</td>
-              <td th:text="${#temporals.format(post.updateDate, 'dd/MM/yyyy HH:mm')}">Date</td>
+              <td th:text="${#temporals.format(post.creationDate, 'dd/MM/yyyy HH:mm')}">Ngày tạo</td>
+              <td th:text="${#temporals.format(post.updateDate, 'dd/MM/yyyy HH:mm')}">Ngày cập nhật</td>
             </tr>
             </tbody>
           </table>
         </div>
+
 
         <!-- Pagination -->
         <div th:replace="~{fragments/footer}"></div>

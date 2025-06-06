@@ -25,10 +25,8 @@
       <!-- Begin Page Content -->
       <div class="container-fluid">
 
-        <!-- Page Heading -->
-        <h1 class="h3 mb-4 text-gray-800">Pages</h1>
+        <h1 class="h3 mb-4 text-gray-800">Danh sách trang</h1>
 
-        <!-- Pages Table -->
         <table class="table table-bordered">
           <thead>
           <tr>
@@ -36,7 +34,8 @@
             <th>Tên trang</th>
             <th>Đường dẫn</th>
             <th>Nội dung</th>
-            <th>Hành động</th>
+            <th >Hành động</th>
+          </tr>
           </thead>
           <tbody>
           <tr th:each="page : ${pages}">
@@ -47,14 +46,18 @@
             </td>
             <td th:text="${page.content}"></td>
             <td>
-              <a th:href="@{/pages/edit/{id}(id=${page.id})}" class="btn btn-primary btn-sm">Sửa</a>
-              <a th:href="@{/pages/delete/{id}(id=${page.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa trang này?');">Xóa</a>
-              <a class="btn btn-sm btn-info" th:href="@{/pages/set-default/{id}(id=${page.id})}" th:if="${!page.default}">Đặt làm mặc định</a>
-              <span class="badge bg-success" th:if="${page.default}">Trang mặc định</span>
+              <a th:href="@{/pages/edit/{id}(id=${page.id})}" class="btn btn-primary btn-sm" >Sửa</a>
+              <a th:href="@{/pages/delete/{id}(id=${page.id})}" class="btn btn-danger btn-sm"
+                 th:onclick="'return confirm(' + '\'' + #{page.confirmDelete} + '\'' + ');'"
+                 th:text="#{page.delete}">Xóa</a>
+              <a class="btn btn-sm btn-info" th:href="@{/pages/set-default/{id}(id=${page.id})}"
+                 th:if="${!page.default}" >Đặt làm mặc định</a>
+              <span class="badge bg-success" th:if="${page.default}" >Trang mặc định</span>
             </td>
           </tr>
           </tbody>
         </table>
+
 
       </div>
       <!-- /.container-fluid -->

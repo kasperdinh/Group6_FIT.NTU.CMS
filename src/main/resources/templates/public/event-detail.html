@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head"></head>
 <style>
     .event-description img {
@@ -49,16 +49,12 @@
                     <div class="event-description"
                          th:utext="${event.eventDescription}"
                          style="font-size: 1.1rem; line-height: 1.8; color: #333;"></div>
-
                     <div th:if="${event.filePath != null}" class="mt-4">
                         <a th:href="@{${event.filePath}}" class="btn btn-outline-primary" target="_blank">
                             <i class="bi bi-paperclip"></i> Xem tệp đính kèm
                         </a>
                     </div>
-                </div>
 
-                <div th:if="${event == null}">
-                    <p class="text-danger">Không tìm thấy sự kiện.</p>
                 </div>
 
             </div>

@@ -1,49 +1,54 @@
-<!-- templates/enter-otp.html -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8">
     <title>Nhập mã xác thực</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 </head>
 <body class="bg-gradient-primary">
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-lg-6">
-            <div class="card o-hidden border-0 shadow-lg my-5">
-                <div class="card-body p-5">
-                    <div class="text-center">
-                        <h1 class="h4 text-gray-900 mb-4">Xác minh mã OTP</h1>
-                        <p>Mã OTP đã được gửi đến địa chỉ email của bạn.</p>
+<!-- Canh giữa -->
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+    <div class="col-lg-6">
+        <div class="card o-hidden border-0 shadow-lg">
+            <div class="card-body p-5">
+                <div class="text-center">
+                    <h1 class="h4 text-gray-900 mb-4">Xác minh mã OTP</h1>
+                    <p>Mã OTP đã được gửi đến địa chỉ email của bạn.</p>
+                </div>
+                <form action="/verify-otp" method="post">
+                    <input type="hidden" name="email" th:value="${email}">
+                    <div class="form-group">
+                        <input id="otp" type="text" name="otp" class="form-control form-control-user"
+                               placeholder="Nhập mã OTP" required>
                     </div>
-                    <form action="/verify-otp" method="post">
+                    <button type="submit" class="btn btn-primary btn-user btn-block">Xác minh</button>
+                </form>
+                <hr>
+                <div class="text-center">
+                    <form action="/resend-otp" method="post" style="display: inline;">
                         <input type="hidden" name="email" th:value="${email}">
-                        <div class="form-group">
-                            <label for="otp"></label>
-                            <input id="otp" type="text" name="otp" class="form-control form-control-user" placeholder="Nhập mã OTP">
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-user btn-block">Xác minh</button>
+                        <button type="submit" class="btn btn-link small p-0 m-0 align-baseline">Gửi lại mã OTP</button>
                     </form>
-                    <hr>
-                    <div class="text-center">
-                        <form action="/resend-otp" method="post" style="display: inline;">
-                            <input type="hidden" name="email" th:value="${email}">
-                            <button type="submit" class="btn btn-link small p-0 m-0 align-baseline">Gửi lại OTP</button>
-                        </form>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div th:if="${success}"
-     class="alert alert-success"
+
+<!-- Alerts -->
+<div th:if="${success}" class="alert alert-success"
      style="position: fixed; top: 100px; right: 20px; z-index: 1050; min-width: 250px; box-shadow: 0 0 10px rgba(0,0,0,0.3);"
      th:text="${success}">
 </div>
-<div th:if="${error}" class="alert alert-danger" style="position: fixed; top: 100px; right: 20px;" th:text="${error}"></div>
+
+<div th:if="${error}" class="alert alert-danger"
+     style="position: fixed; top: 100px; right: 20px; z-index: 1050; min-width: 250px; box-shadow: 0 0 10px rgba(0,0,0,0.3);"
+     th:text="${error}">
+</div>
 
 <script>
     setTimeout(() => {
