@@ -1,5 +1,6 @@
 package group6.fit_ntu_cms.controllers;
 
+import group6.fit_ntu_cms.models.MediaModel;
 import group6.fit_ntu_cms.models.SettingModel;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.services.MediaService;
@@ -26,7 +27,14 @@ public class SettingController {
     private SettingService settingService;
     @Autowired
     private MediaService mediaService;
-
+    @GetMapping
+    public String showSettingPage(Model model,HttpSession session) {
+        UsersModel user = (UsersModel) session.getAttribute("user");
+        SettingModel setting = settingService.getSetting();
+        model.addAttribute("setting", setting);
+        model.addAttribute("user", user);
+        return "setting"; // Trả về setting.html
+    }
     @PostMapping
     public String updateSetting(
             @RequestParam("siteName") String siteName,
@@ -58,6 +66,8 @@ public class SettingController {
 
             // Tạo đường dẫn động để lưu vào database
             String logoPath = "/uploads/img/" + filename;
+            MediaModel media = new MediaModel();
+            mediaService.saveMedia(media,user,logoPath);
             setting.setLogoUrl(logoPath);
 
             // Xóa logo cũ nếu tồn tại
