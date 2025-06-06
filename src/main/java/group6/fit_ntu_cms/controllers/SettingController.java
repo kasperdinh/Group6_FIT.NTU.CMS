@@ -22,18 +22,30 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/setting")
 public class SettingController {
+    private final GlobalController globalController;
+    private final HttpSession httpSession;
+
+    public SettingController(HttpSession httpSession, GlobalController globalController) {
+        this.globalController = globalController;
+        this.httpSession = httpSession;
+    }
 
     @Autowired
     private SettingService settingService;
     @Autowired
     private MediaService mediaService;
     @GetMapping
-    public String showSettingPage(Model model,HttpSession session) {
-        UsersModel user = (UsersModel) session.getAttribute("user");
+    public String showSettingPage(Model model) {
+        UsersModel user = (UsersModel) httpSession.getAttribute("user");
+        if (user == null) {
+            return "redirect:/access-denied";
+        } else if (globalController.isUserRole()) {
+            return "redirect:/access-denied";
+        }
         SettingModel setting = settingService.getSetting();
         model.addAttribute("setting", setting);
         model.addAttribute("user", user);
-        return "setting"; // Trả về setting.html
+        return "/setting"; // Trả về setting.html
     }
     @PostMapping
     public String updateSetting(
