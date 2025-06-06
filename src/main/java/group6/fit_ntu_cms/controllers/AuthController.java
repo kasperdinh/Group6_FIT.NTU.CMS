@@ -93,7 +93,7 @@ public class AuthController {
     public String verifyOtp(@RequestParam("email") String email,
                             @RequestParam("otp") String otp,
                             Model model) {
-        UsersModel user = usersRepository.findByEmail(email);
+        UsersModel user = userService.findByEmail(email);
         if (user != null && user.getOtp().equals(otp) &&
                 Duration.between(user.getOtpRequestedTime(), LocalDateTime.now()).toMinutes() <= 10) {
             model.addAttribute("email", email);
@@ -106,11 +106,11 @@ public class AuthController {
 
     @PostMapping("/resend-otp")
     public String resendOtp(@RequestParam("email") String email, Model model) {
-        UsersModel user = usersRepository.findByEmail(email);
+        UsersModel user = userService.findByEmail(email);
         if (user != null) {
             user.setOtp(null);
             user.setOtpRequestedTime(null);
-            usersRepository.save(user);
+            userService.save(user);
             userService.generateAndSendOtp(email);
             model.addAttribute("email", email);
             model.addAttribute("success", "Mã OTP mới đã được gửi.");
@@ -130,7 +130,7 @@ public class AuthController {
             user.setPassword(passwordEncoder.encode(password));
             user.setOtp(null);
             user.setOtpRequestedTime(null);
-            usersRepository.save(user);
+            userService.save(user);
             return "redirect:/login?resetSuccess";
         } else {
             model.addAttribute("error", "Không tìm thấy người dùng");

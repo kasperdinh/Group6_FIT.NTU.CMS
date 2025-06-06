@@ -1,5 +1,6 @@
 package group6.fit_ntu_cms.services;
 
+import group6.fit_ntu_cms.models.PageModel;
 import group6.fit_ntu_cms.models.PostModel;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.repositories.PostRepository;
@@ -59,8 +60,8 @@ public class PostService {
     }
 
     // Read a Post by ID
-    public Optional<PostModel> getPostById(Long id) {
-        return postRepository.findById(id);
+    public PostModel getPostById(Long id) {
+        return postRepository.findById(id).orElse(null);
     }
 
     // Read all Posts
@@ -78,6 +79,10 @@ public class PostService {
                 .sorted((p1, p2) -> p2.getCreationDate().compareTo(p1.getCreationDate()))
                 .limit(5)
                 .collect(Collectors.toList());
+    }
+
+    public PostModel getFirstPostByPage(Optional<PageModel> page) {
+        return postRepository.findFirstByPageOrderByCreationDateDesc(page);
     }
 
     // Delete a Post by ID

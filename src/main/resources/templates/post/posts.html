@@ -158,7 +158,7 @@
                         <option th:text="#{select.page}" value=""></option>
                         <option th:each="page : ${allPages}"
                                 th:value="${page.id}"
-                                th:text="${page.title}"></option>
+                                th:utext="${page.title}"></option>
                       </select>
                     </div>
                   </div>

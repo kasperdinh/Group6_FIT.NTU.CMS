@@ -56,4 +56,12 @@ public class UserService {
             mailSender.send(message);
         }
     }
+
+    public UsersModel findByEmail(String email) {
+        return usersRepository.findByEmail(email);
+    }
+
+    public void save(UsersModel user) {
+        usersRepository.save(user);
+    }
 }

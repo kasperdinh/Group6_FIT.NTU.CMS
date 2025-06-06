@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"></head>
+<style>
+    .post-content img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+</style>
+<body class="bg-light">
+
+<!-- Navbar -->
+<div th:replace="fragments/public-navbar"></div>
+
+<!-- Page Layout -->
+<div class="container-fluid pl-0">
+    <div class="row">
+
+        <!-- Sidebar -->
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar" th:replace="fragments/public-sidebar"></nav>
+
+        <!-- Main Content -->
+        <main class="col-md-10 px-md-5 py-4">
+            <div class="bg-white rounded shadow-sm p-4">
+
+                <div th:if="${post != null}">
+                    <div class="post-content"
+                         th:utext="${post.content}"
+                         style="font-size: 1.1rem; line-height: 1.8; color: #333;">
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Footer -->
+<div th:replace="fragments/footer"></div>
+</body>
+</html>

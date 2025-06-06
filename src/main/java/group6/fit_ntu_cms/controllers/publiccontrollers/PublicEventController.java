@@ -4,6 +4,7 @@ import group6.fit_ntu_cms.models.EventModel;
 import group6.fit_ntu_cms.models.UsersModel;
 import group6.fit_ntu_cms.repositories.EventRepository;
 import group6.fit_ntu_cms.repositories.UsersRepository;
+import group6.fit_ntu_cms.services.EventService;
 import group6.fit_ntu_cms.services.MenuService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class PublicEventController {
     private final HttpSession httpSession;
 
     @Autowired
-    private EventRepository eventRepository;
+    private EventService eventService;
 
     @Autowired
     private MenuService menuService;
@@ -30,7 +31,7 @@ public class PublicEventController {
 
     @GetMapping("/event/{id}")
     public String showEventDetail(@PathVariable Long id, Model model) {
-        EventModel event = eventRepository.getReferenceById(id);
+        EventModel event = eventService.getEventById(id);
         UsersModel user = (UsersModel) httpSession.getAttribute("user");
         model.addAttribute("user", user);
         model.addAttribute("event", event);
