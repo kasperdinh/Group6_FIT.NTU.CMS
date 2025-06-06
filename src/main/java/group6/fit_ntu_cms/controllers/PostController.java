@@ -64,6 +64,7 @@ public class PostController {
         model.addAttribute("allPages",pageService.getAllPages());
         return "/post/posts";
     }
+
     @PostMapping("/post-add")
     public String addPost(
             @Valid @ModelAttribute("post") PostModel post,
@@ -141,6 +142,7 @@ public class PostController {
 
         return "redirect:/posts";
     }
+
     @PostMapping("/deletePost")
     @Transactional
     public String removePost(@RequestParam(value = "postId", required = false) Long postId, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
