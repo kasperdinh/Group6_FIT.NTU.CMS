@@ -95,4 +95,15 @@ public String showCreateForm(Model model) {
       }
       return "redirect:/pages";
   }
+
+    @GetMapping("/clear-default")
+    public String clearDefaultPage(RedirectAttributes redirectAttributes) {
+        boolean result = pageService.clearDefaultPage();
+        if (result) {
+            redirectAttributes.addFlashAttribute("success", "Tất cả trang đã được bỏ mặc định.");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Không có trang nào đang được đặt làm mặc định.");
+        }
+        return "redirect:/pages";
+    }
 }

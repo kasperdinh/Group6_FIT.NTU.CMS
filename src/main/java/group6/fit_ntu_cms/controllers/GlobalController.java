@@ -46,7 +46,7 @@ public class GlobalController {
       model.addAttribute("page", defaultPage);
       return "redirect:/" + slug;
     }
-    return "index";
+    return "redirect:/trang-chu";
   }
 
   @GetMapping("/access-denied")

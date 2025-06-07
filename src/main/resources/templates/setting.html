@@ -39,6 +39,52 @@
                 <input type="text" id="siteName" name="siteName" class="form-control" th:value="${setting.siteName}" required>
               </div>
             </div>
+            <div class="mb-3">
+              <label for="footerName" class="form-label">Footer Name</label>
+              <input type="text" id="footerName" name="footerName" class="form-control" th:value="${setting.footerName}">
+            </div>
+
+            <!-- Footer Text -->
+            <div class="mb-3">
+              <label for="footerText" class="form-label">Footer Text</label>
+              <textarea id="footerText" name="footerText" class="form-control" rows="3" th:text="${setting.footerText}"></textarea>
+            </div>
+
+            <!-- Footer Phone -->
+            <div class="mb-3">
+              <label for="footerPhone" class="form-label">Footer Phone</label>
+              <input type="text" id="footerPhone" name="footerPhone" class="form-control" th:value="${setting.footerPhone}">
+            </div>
+
+            <!-- Footer Email -->
+            <div class="mb-3">
+              <label for="footerEmail" class="form-label">Footer Email</label>
+              <input type="email" id="footerEmail" name="footerEmail" class="form-control" th:value="${setting.footerEmail}">
+            </div>
+
+            <!-- Footer Facebook URL -->
+            <div class="mb-3">
+              <label for="footerFacebookUrl" class="form-label">Footer Facebook URL</label>
+              <input type="url" id="footerFacebookUrl" name="footerFacebookUrl" class="form-control" th:value="${setting.footerFacebookUrl}">
+            </div>
+
+            <!-- Footer Twitter URL -->
+            <div class="mb-3">
+              <label for="footerTwitterUrl" class="form-label">Footer Twitter URL</label>
+              <input type="url" id="footerTwitterUrl" name="footerTwitterUrl" class="form-control" th:value="${setting.footerTwitterUrl}">
+            </div>
+
+            <!-- Footer Youtube URL -->
+            <div class="mb-3">
+              <label for="footerYoutubeUrl" class="form-label">Footer Youtube URL</label>
+              <input type="url" id="footerYoutubeUrl" name="footerYoutubeUrl" class="form-control" th:value="${setting.footerYoutubeUrl}">
+            </div>
+
+            <!-- Footer Instagram URL -->
+            <div class="mb-3">
+              <label for="footerInstagramUrl" class="form-label">Footer Instagram URL</label>
+              <input type="url" id="footerInstagramUrl" name="footerInstagramUrl" class="form-control" th:value="${setting.footerInstagramUrl}">
+            </div>
           </div>
           <!-- Save Button dưới Current Logo -->
           <div class="mb-3">
