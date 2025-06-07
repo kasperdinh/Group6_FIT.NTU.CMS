@@ -4,9 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Settings</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<div th:replace="~{fragments/head}"></div>
 <body id="page-top">
+<div th:replace="~{fragments/head}"></div>
 <div id="wrapper">
   <div th:replace="~{fragments/sidebar}"></div>
   <div id="content-wrapper" class="d-flex flex-column">
@@ -16,26 +19,36 @@
         <h1 th:text="#{setting.page}">Settings</h1>
         <!-- Nội dung chính của trang Setting -->
         <form th:action="@{/setting}" method="post" enctype="multipart/form-data">
-          <div class="mb-3">
-            <label for="siteName" th:text="#{setting.siteNameLabel}" class="form-label">Site Name</label>
-            <input type="text" id="siteName" name="siteName" class="form-control" th:value="${setting.siteName}" required>
+          <div class="row">
+            <!-- Cột 1: Site Name và Current Logo -->
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label class="form-label" th:text="#{setting.upLoadLogo}">Upload New Logo (optional)</label>
+                <input type="file" class="form-control" name="logo" accept="image/*" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Logo hiện tại</label>
+                <a id="existingLogo" th:href="${setting.logoUrl}" th:text="${setting.logoUrl != null ? setting.logoUrl : 'Không có logo'}" target="_blank" th:style="${setting.logoUrl != null} ? 'display: inline-block' : 'display: none'"></a>
+                <input type="hidden" id="editExistingLogo" name="existingLogo" th:value="${setting.logoUrl}"/>
+              </div>
+            </div>
+            <!-- Cột 2: New Logo Upload -->
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="siteName" th:text="#{setting.siteNameLabel}" class="form-label">Site Name</label>
+                <input type="text" id="siteName" name="siteName" class="form-control" th:value="${setting.siteName}" required>
+              </div>
+            </div>
           </div>
+          <!-- Save Button dưới Current Logo -->
           <div class="mb-3">
-            <label class="form-label" th:text="#{setting.logoLabel}">Current File</label>
-            <a id="existingLogo" th:href="${setting.logoUrl}" th:text="${setting.logoUrl != null ? setting.logoUrl : 'No file'}" target="_blank" th:style="${setting.logoUrl != null} ? 'display: inline-block' : 'display: none'"></a>
-            <input type="hidden" id="editExistingLogo" name="existingLogo" th:value="${setting.logoUrl}"/>
+            <button type="submit" class="btn btn-primary" th:text="#{setting.save}">Save Changes</button>
           </div>
-          <div class="mb-3">
-            <label class="form-label" th:text="#{upload.filePath}">Upload New File (optional)</label>
-            <input type="file" class="form-control" name="logo" accept="image/*" />
-          </div>
-          <button type="submit" class="btn btn-primary" th:text="#{setting.save}">Save Changes</button>
         </form>
       </div>
     </div>
     <div th:replace="~{fragments/footer}"></div>
   </div>
 </div>
-
 </body>
 </html>
