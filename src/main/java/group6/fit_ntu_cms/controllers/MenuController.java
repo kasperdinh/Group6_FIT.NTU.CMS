@@ -35,7 +35,7 @@ public class MenuController {
     UsersModel user = (UsersModel) httpSession.getAttribute("user");
     if (user == null) {
       return "redirect:/access-denied";
-    } else if (globalController.isUserRole()) {
+    } else if (globalController.isUserRole() || globalController.isWriterRole()) {
       return "redirect:/access-denied";
     }
     model.addAttribute("user", user);
@@ -50,7 +50,7 @@ public class MenuController {
       @RequestParam("pageId") Long pageId) {
 
     Role role = (Role) httpSession.getAttribute("role");
-    if (role == Role.USER) {
+    if (role == Role.USER || role == Role.WRITER) {
       return "redirect:/access-denied";
     }
     var page = pageService.getPageById(pageId);
