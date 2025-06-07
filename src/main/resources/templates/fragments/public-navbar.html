@@ -1,7 +1,10 @@
 <nav th:fragment="topbar" id="topbar" class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
   <!-- Sidebar Toggle (Topbar) -->
-  <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
-    <img th:src="${setting.logoUrl != null ? setting.logoUrl : '/uploads/img/logoCms.png'}" alt="Logo" style="width: 50%; height: 60px; object-fit: contain;">
+  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+    <div class="sidebar-brand-icon">
+      <img th:src="${setting.logoUrl != null ? setting.logoUrl : '/uploads/img/logoCms.png'}" alt="Logo" style="width: 80px; height: 60px; object-fit: contain;">
+    </div>
+    <divg class="sidebar-brand-text mx-2" th:text="${setting.siteName != null ? setting.siteName : 'No Name'}">PUBLIC</divg>
   </a>
 
 
