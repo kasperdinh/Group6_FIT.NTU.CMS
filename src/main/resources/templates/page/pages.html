@@ -48,8 +48,8 @@
             <td>
               <a th:href="@{/pages/edit/{id}(id=${page.id})}" class="btn btn-primary btn-sm" >Sửa</a>
               <a th:href="@{/pages/delete/{id}(id=${page.id})}" class="btn btn-danger btn-sm"
-                 th:onclick="'return confirm(' + '\'' + #{page.confirmDelete} + '\'' + ');'"
-                 th:text="#{page.delete}">Xóa</a>
+                 th:onclick="'return confirm(' + '\'' + 'Bạn có chắc chắn muốn xóa?' + '\'' + ');'"
+                 >Xóa</a>
               <a class="btn btn-sm btn-info" th:href="@{/pages/set-default/{id}(id=${page.id})}"
                  th:if="${!page.default}" >Đặt làm mặc định</a>
               <span class="badge bg-success" th:if="${page.default}" >Trang mặc định</span>
