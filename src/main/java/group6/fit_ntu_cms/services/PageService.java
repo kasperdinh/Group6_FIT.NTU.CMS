@@ -81,4 +81,20 @@ public class PageService {
         .findFirst()
         .orElse(null);
   }
+
+  public boolean clearDefaultPage() {
+    List<PageModel> defaultPages = pageRepository.findAll()
+            .stream()
+            .filter(PageModel::isDefault)
+            .toList();
+
+    if (defaultPages.isEmpty()) return false;
+
+    defaultPages.forEach(p -> {
+      p.setDefault(false);
+      pageRepository.save(p);
+    });
+
+    return true;
+  }
 }

@@ -1,10 +1,10 @@
 <nav th:fragment="topbar" id="topbar" class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
   <!-- Sidebar Toggle (Topbar) -->
-  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+  <a class=" d-flex align-items-center justify-content-center" href="/">
     <div class="sidebar-brand-icon">
       <img th:src="${setting.logoUrl != null ? setting.logoUrl : '/uploads/img/logoCms.png'}" alt="Logo" style="width: 80px; height: 60px; object-fit: contain;">
     </div>
-    <divg class="sidebar-brand-text mx-2" th:text="${setting.siteName != null ? setting.siteName : 'No Name'}">PUBLIC</divg>
+    <divg class="sidebar-brand-text mx-2 site-name-text" th:text="${setting.siteName != null ? setting.siteName : 'No Name'}">PUBLIC</divg>
   </a>
 
 
@@ -175,4 +175,21 @@
     });
   </script>
 
+  <style>
+    .site-name-text {
+      font-size: 1.05rem;              /* Cỡ chữ vừa phải, dễ đọc */
+      font-weight: 700;                /* Đậm nhưng không quá nặng */
+      color: #003366;                  /* Màu xanh đậm trang nhã, chuyên nghiệp */
+      text-align: center;             /* Căn giữa */
+      text-transform: uppercase;      /* Viết hoa toàn bộ */
+      letter-spacing: 0.8px;          /* Giãn chữ nhẹ để dễ đọc */
+      font-family: "Segoe UI", sans-serif;  /* Font hiện đại, phổ biến */
+      line-height: 1.3;
+      transition: color 0.3s ease;
+    }
+
+    .site-name-text:hover {
+      color: #0055aa;                 /* Hover nhẹ nhàng */
+    }
+  </style>
 </nav>
