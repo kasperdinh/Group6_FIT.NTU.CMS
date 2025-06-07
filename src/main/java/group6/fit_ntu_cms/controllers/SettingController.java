@@ -52,6 +52,15 @@ public class SettingController {
             @RequestParam("siteName") String siteName,
             @RequestParam(value = "logo", required = false) MultipartFile logoFile,
             @RequestParam(value = "existingLogo", required = false) String existingLogo,
+            @RequestParam(value = "footerName", required = false) String footerName,
+            @RequestParam(value = "footerText", required = false) String footerText,
+            @RequestParam(value = "location", required = false) String location,
+            @RequestParam(value = "footerPhone", required = false) String footerPhone,
+            @RequestParam(value = "footerEmail", required = false) String footerEmail,
+            @RequestParam(value = "footerFacebookUrl", required = false) String footerFacebookUrl,
+            @RequestParam(value = "footerTwitterUrl", required = false) String footerTwitterUrl,
+            @RequestParam(value = "footerYoutubeUrl", required = false) String footerYoutubeUrl,
+            @RequestParam(value = "footerInstagramUrl", required = false) String footerInstagramUrl,
             HttpSession session,
             Model model) throws IOException {
 
@@ -64,8 +73,17 @@ public class SettingController {
         // Lấy bản ghi cài đặt hiện tại
         SettingModel setting = settingService.getSetting();
 
-        // Cập nhật siteName
+        // Cập nhật các trường
         setting.setSiteName(siteName);
+        setting.setFooterName(footerName);
+        setting.setFooterText(footerText);
+        setting.setLocation(location);
+        setting.setFooterPhone(footerPhone);
+        setting.setFooterEmail(footerEmail);
+        setting.setFooterFacebookUrl(footerFacebookUrl);
+        setting.setFooterTwitterUrl(footerTwitterUrl);
+        setting.setFooterYoutubeUrl(footerYoutubeUrl);
+        setting.setFooterInstagramUrl(footerInstagramUrl);
 
         // Xử lý upload logo
         if (logoFile != null && !logoFile.isEmpty()) {
@@ -79,7 +97,7 @@ public class SettingController {
             // Tạo đường dẫn động để lưu vào database
             String logoPath = "/uploads/img/" + filename;
             MediaModel media = new MediaModel();
-            mediaService.saveMedia(media,user,logoPath);
+            mediaService.saveMedia(media, user, logoPath);
             setting.setLogoUrl(logoPath);
 
             // Xóa logo cũ nếu tồn tại

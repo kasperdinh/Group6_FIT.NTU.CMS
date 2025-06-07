@@ -16,6 +16,7 @@ public class SettingModel {
     private String siteName;
     private String logoUrl;
     private String footerName;
+    private String location;
     @Column(columnDefinition = "TEXT")
     private String footerText;
     private String footerFacebookUrl;
