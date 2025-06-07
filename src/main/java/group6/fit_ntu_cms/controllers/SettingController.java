@@ -101,7 +101,7 @@ public class SettingController {
             model.addAttribute("successMessage", "Settings updated successfully!");
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Failed to update settings.");
-            return "redirect:/dashboard"; // Quay lại dashboard ngay cả khi lỗi
+            return "redirect:/dashboard";
         }
 
         return "redirect:/dashboard"; // Chuyển hướng về dashboard sau khi lưu
