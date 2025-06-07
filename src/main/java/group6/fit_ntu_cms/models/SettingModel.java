@@ -15,12 +15,9 @@ public class SettingModel {
     private Long id ;
     private String siteName;
     private String logoUrl;
-    private String footerName;
     private String location;
     @Column(columnDefinition = "TEXT")
-    private String footerText;
     private String footerFacebookUrl;
-    private String footerTwitterUrl;
     private String footerYoutubeUrl;
     private String footerInstagramUrl;
     private String footerPhone;
