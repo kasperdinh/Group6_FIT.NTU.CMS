@@ -64,4 +64,4 @@ build/
 !**/src/test/**/build/
 
 # Upload directories
-!**/src/main/resources/static/uploads/
+/src/main/resources/static/uploads/

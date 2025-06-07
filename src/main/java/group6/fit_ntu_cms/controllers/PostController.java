@@ -146,84 +146,116 @@ public class PostController {
 
     @PostMapping("/deletePost")
     @Transactional
-    public String removePost(@RequestParam(value = "postId", required = false) Long postId, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
+    public String removePost(@RequestParam(value = "postId", required = false) Long postId,
+                             Model model,
+                             RedirectAttributes redirectAttributes,
+                             HttpSession session) {
+
+        // Kiểm tra nếu không có postId được truyền vào
         if (postId == null) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Post ID is missing. Unable to delete the post.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy ID bài viết. Xóa bài viết thất bại.");
             return "redirect:/posts";
         }
 
+        // Lấy bài viết từ cơ sở dữ liệu theo postId
         PostModel post = postService.getPostById(postId);
         if (post == null) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Post not found with ID: " + postId);
+            redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy ID bài viết: " + postId);
             return "redirect:/posts";
         }
 
         try {
-            // Delete associated image file
+            // Xóa file ảnh liên quan nếu có
             if (post.getPostImage() != null) {
+                // Tạo đường dẫn tuyệt đối đến file ảnh
                 String imagePath = new File("src/main/resources/static" + post.getPostImage().replaceFirst("^/", "")).getAbsolutePath();
                 File imageFile = new File(imagePath);
+
+                // Kiểm tra file ảnh tồn tại và tiến hành xóa
                 if (imageFile.exists()) {
                     if (imageFile.delete()) {
-                        System.out.println("Deleted image file: " + imagePath);
+                        System.out.println("Đã xóa ảnh: " + imagePath);
                     } else {
-                        System.out.println("Failed to delete image file: " + imagePath);
+                        System.out.println("Lỗi khi xóa ảnh: " + imagePath);
                     }
                 } else {
-                    System.out.println("Image file does not exist: " + imagePath);
+                    System.out.println("Ảnh không tồn tại: " + imagePath);
                 }
+
+                // Xóa thông tin file ảnh trong mediaService
                 mediaService.deleteMedia(post.getPostImage());
             }
 
-            // Delete associated document file
+            // Xóa file tài liệu đính kèm nếu có
             if (post.getFilePath() != null) {
+                // Tạo đường dẫn tuyệt đối đến file
                 String filePath = new File("src/main/resources/static" + post.getFilePath().replaceFirst("^/", "")).getAbsolutePath();
                 File file = new File(filePath);
+
+                // Kiểm tra file tồn tại và tiến hành xóa
                 if (file.exists()) {
                     if (file.delete()) {
-                        System.out.println("Deleted file: " + filePath);
+                        System.out.println("Đã xóa file: " + filePath);
                     } else {
-                        System.out.println("Failed to delete file: " + filePath);
+                        System.out.println("Lỗi khi xóa file: " + filePath);
                     }
                 } else {
-                    System.out.println("File does not exist: " + filePath);
+                    System.out.println("File không tồn tại: " + filePath);
                 }
+
+                // Xóa thông tin file trong mediaService
                 mediaService.deleteMedia(post.getFilePath());
             }
 
-            // Delete the post from the database
+            // Xóa bài viết trong cơ sở dữ liệu
             UsersModel user = (UsersModel) session.getAttribute("user");
             NotifyModel notify = new NotifyModel();
-            notifyService.saveNotify(notify,user,"Bạn đã xóa bài viết: "+post.getPostTitle()+" thành công");
-            postService.deletePost(postId);
+            notifyService.saveNotify(notify, user, "Bạn đã xóa bài viết: " + post.getPostTitle() + " thành công"); // Lưu thông báo
+            postService.deletePost(postId); // Xóa bài viết khỏi DB
+
             redirectAttributes.addFlashAttribute("successMessage", "Post deleted successfully.");
         } catch (Exception e) {
             System.err.println("Error deleting post with ID " + postId + ": " + e.getMessage());
             e.printStackTrace();
-            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting post: " + e.getMessage());
+
+            redirectAttributes.addFlashAttribute("errorMessage", "Lỗi khi xóa bài viết: " + e.getMessage());
         }
 
         return "redirect:/posts";
     }
+
     @PostMapping("/editPosts")
     public String editPost(
-            @ModelAttribute PostModel post,
-            HttpSession session,
-            @RequestParam("imgFile") MultipartFile imageFile,
-            @RequestParam(value = "existingImagePath", required = false) String existingImage,
-            @RequestParam(value = "existingFilePath", required = false) String existingFilePath,
-            @RequestParam("file") MultipartFile filePath, Model model) throws IOException {
+        @ModelAttribute PostModel post,
+        HttpSession session,
+        @RequestParam("imgFile") MultipartFile imageFile,
+        @RequestParam(value = "existingImagePath", required = false) String existingImage,
+        @RequestParam(value = "existingFilePath", required = false) String existingFilePath,
+        @RequestParam("file") MultipartFile filePath,
+        Model model) throws IOException {
+
+        // Lấy thông tin người dùng từ session
         UsersModel user = (UsersModel) session.getAttribute("user");
+
+        // XỬ LÝ ẢNH ĐÍNH KÈM MỚI
         if (imageFile != null && !imageFile.isEmpty()) {
+            // Tạo đường dẫn tuyệt đối đến thư mục lưu ảnh
             String uploadDir = new File("src/main/resources/static/uploads/img/").getAbsolutePath();
+
+            // Tạo tên file mới không trùng lặp
             String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
             File saveFile = new File(uploadDir, filename);
-            saveFile.getParentFile().mkdirs();
+            saveFile.getParentFile().mkdirs(); // Tạo thư mục nếu chưa có
+
+            // Lưu file ảnh vào thư mục
             imageFile.transferTo(saveFile);
+
+            // Lưu thông tin ảnh vào mediaService
             MediaModel media = new MediaModel();
             String file = "/uploads/img/" + filename;
-            mediaService.saveMedia(media,user,file);
+            mediaService.saveMedia(media, user, file);
 
+            // Xóa ảnh cũ nếu tồn tại
             if (existingImage != null && !existingImage.isEmpty()) {
                 String oldImagePath = new File("src/main/resources/static" + existingImage).getAbsolutePath();
                 File oldImageFile = new File(oldImagePath);
@@ -231,21 +263,33 @@ public class PostController {
                     oldImageFile.delete();
                 }
             }
+
+            // Gán đường dẫn ảnh mới cho bài viết
             post.setPostImage(file);
         } else {
+            // Nếu không có ảnh mới => giữ nguyên ảnh cũ
             post.setPostImage(existingImage);
         }
 
+        // XỬ LÝ FILE ĐÍNH KÈM MỚI
         if (filePath != null && !filePath.isEmpty()) {
+            // Tạo đường dẫn tuyệt đối đến thư mục lưu file
             String uploadDir = new File("src/main/resources/static/uploads/files/").getAbsolutePath();
+
+            // Tạo tên file mới không trùng lặp
             String filename = UUID.randomUUID() + "_" + filePath.getOriginalFilename();
             File saveFile = new File(uploadDir, filename);
-            saveFile.getParentFile().mkdirs();
+            saveFile.getParentFile().mkdirs(); // Tạo thư mục nếu chưa có
+
+            // Lưu file vào thư mục
             filePath.transferTo(saveFile);
+
+            // Lưu thông tin file vào mediaService
             MediaModel media = new MediaModel();
             String file = "/uploads/files/" + filename;
-            mediaService.saveMedia(media,user,file);
+            mediaService.saveMedia(media, user, file);
 
+            // Xóa file cũ nếu tồn tại
             if (existingFilePath != null && !existingFilePath.isEmpty()) {
                 String oldFilePath = new File("src/main/resources/static" + existingFilePath).getAbsolutePath();
                 File oldFile = new File(oldFilePath);
@@ -255,14 +299,18 @@ public class PostController {
             }
 
             post.setFilePath(file);
-        } else{
+        } else {
             post.setFilePath(existingFilePath);
         }
 
+        // Gán bài viết đã chỉnh sửa vào model để render lại
         model.addAttribute("post", post);
+
         postService.savePost(post, user);
+
         return "redirect:/posts";
     }
+
     @GetMapping("/posts/{id}")
     @ResponseBody
     public ResponseEntity<PostModel> getPostById(@PathVariable Long id) {

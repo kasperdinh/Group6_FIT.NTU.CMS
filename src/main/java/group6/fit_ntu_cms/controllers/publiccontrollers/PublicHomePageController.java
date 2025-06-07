@@ -34,15 +34,25 @@ public class PublicHomePageController {
 
     @GetMapping("/trang-chu")
     public String publicHomePage(Model model) {
-        List<PostModel> newsList = postService.getAllPosts();
-        List<PostModel> subNewsList = new ArrayList<>();
+        List<PostModel> allPosts = postService.getAllPosts();
 
-        if (newsList.size() > 1) {
-            subNewsList = newsList.subList(1, Math.min(8, newsList.size()));
+        List<PostModel> approvedPosts = allPosts.stream()
+                .filter(post -> "Approved".equalsIgnoreCase(post.getStatus()))
+                .toList();
+
+        if (approvedPosts.isEmpty()) {
+            model.addAttribute("firstNews", null);
+            model.addAttribute("subNewsList", new ArrayList<>());
+        } else {
+            model.addAttribute("firstNews", approvedPosts.get(0));
+
+            List<PostModel> subNewsList = new ArrayList<>();
+            if (approvedPosts.size() > 1) {
+                subNewsList = approvedPosts.subList(1, Math.min(8, approvedPosts.size()));
+            }
+            model.addAttribute("subNewsList", subNewsList);
         }
 
-        model.addAttribute("firstNews", newsList.get(0));
-        model.addAttribute("subNewsList", subNewsList);
         UsersModel user = (UsersModel) httpSession.getAttribute("user");
         model.addAttribute("user", user);
         model.addAttribute("events", eventService.getAllEvents());
@@ -50,4 +60,5 @@ public class PublicHomePageController {
 
         return "public/home-page";
     }
+
 }

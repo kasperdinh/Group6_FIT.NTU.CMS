@@ -8,7 +8,7 @@
 
   <!-- Link: Dynamic Menus -->
   <li class="nav-item" th:each="menu : ${menus}">
-    <a class="nav-link text-dark" th:href="@{${menu.url}}" th:text="${menu.name}">
+    <a class="nav-link text-dark" th:href="@{${menu.page.slug}}" th:text="${menu.name}">
       Menu Name
     </a>
   </li>
