@@ -39,11 +39,12 @@ public class GlobalController {
   @GetMapping({"/", "/home", "/index"})
   public String home(Model model) {
     PageModel defaultPage = pageService.getDefaultPage();
-    if (defaultPage != null) {
+    if (defaultPage != null && Boolean.TRUE.equals(defaultPage.isDefault())) {
+      String slug = defaultPage.getSlug();
       UsersModel user = (UsersModel) httpSession.getAttribute("user");
       model.addAttribute("user", user);
       model.addAttribute("page", defaultPage);
-      return "redirect:/trang-chu";
+      return "redirect:/" + slug;
     }
     return "index";
   }
