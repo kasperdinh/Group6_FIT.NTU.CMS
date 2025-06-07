@@ -22,7 +22,6 @@
           <div class="row">
             <!-- Thông tin chung -->
             <div class="col-md-6">
-              <h5 class="mb-3">Thông tin trang web</h5>
               <div class="mb-3">
                 <label for="siteName" class="form-label">Tên trang web</label>
                 <input type="text" id="siteName" name="siteName" class="form-control"
@@ -34,6 +33,16 @@
                 <label class="form-label">Tải lên logo mới (tùy chọn)</label>
                 <input type="file" class="form-control" name="logo" accept="image/*" />
               </div>
+            </div>
+
+            <!-- Thông tin footer -->
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="location" class="form-label">Địa chỉ</label>
+                <input type="text" id="location" name="location" class="form-control"
+                       th:value="${setting.location}"
+                       th:placeholder="${setting.location != null ? setting.location : 'Nhập địa chỉ'}">
+              </div>
               <div class="mb-3">
                 <label class="form-label">Logo hiện tại</label>
                 <div>
@@ -44,29 +53,7 @@
                   <input type="hidden" id="editExistingLogo" name="existingLogo" th:value="${setting.logoUrl}"/>
                 </div>
               </div>
-            </div>
 
-            <!-- Thông tin footer -->
-            <div class="col-md-6">
-              <h5 class="mb-3">Thông tin footer</h5>
-              <div class="mb-3">
-                <label for="footerName" class="form-label">Tên footer</label>
-                <input type="text" id="footerName" name="footerName" class="form-control"
-                       th:value="${setting.footerName}"
-                       th:placeholder="${setting.footerName != null ? setting.footerName : 'Nhập tên footer'}">
-              </div>
-              <div class="mb-3">
-                <label for="footerText" class="form-label">Mô tả footer</label>
-                <textarea id="footerText" name="footerText" class="form-control" rows="3"
-                          th:text="${setting.footerText}"
-                          th:placeholder="${setting.footerText != null ? setting.footerText : 'Nhập mô tả footer'}"></textarea>
-              </div>
-              <div class="mb-3">
-                <label for="location" class="form-label">Địa chỉ</label>
-                <input type="text" id="location" name="location" class="form-control"
-                       th:value="${setting.location}"
-                       th:placeholder="${setting.location != null ? setting.location : 'Nhập địa chỉ'}">
-              </div>
             </div>
 
             <!-- Thông tin liên hệ -->
@@ -97,12 +84,6 @@
                   <input type="url" id="footerFacebookUrl" name="footerFacebookUrl" class="form-control"
                          th:value="${setting.footerFacebookUrl}"
                          th:placeholder="${setting.footerFacebookUrl != null ? setting.footerFacebookUrl : 'Nhập URL Facebook'}">
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label for="footerTwitterUrl" class="form-label">Twitter URL</label>
-                  <input type="url" id="footerTwitterUrl" name="footerTwitterUrl" class="form-control"
-                         th:value="${setting.footerTwitterUrl}"
-                         th:placeholder="${setting.footerTwitterUrl != null ? setting.footerTwitterUrl : 'Nhập URL Twitter'}">
                 </div>
                 <div class="col-md-6 mb-3">
                   <label for="footerYoutubeUrl" class="form-label">YouTube URL</label>

@@ -3,15 +3,12 @@
     <div class="row">
       <div class="col-md-12 mb-3">
         <h5 th:text="${setting.siteName}">Tên trang web</h5>
-        <p th:text="${setting.footerText}">
-          Mô tả trang web hoặc footer text mặc định
-        </p>
       </div>
 
       <div class="col-md-12 mb-3 text-white" >
         <h6><strong>Thông tin liên hệ</strong></h6>
         <p>
-          <i class="fas fa-map-marker-alt me-2"></i><span th:text="${setting.location}"> 02 Nguyễn Đình Chiểu, phường Vĩnh Thọ, Nha Trang, Khánh Hòa</span><br>
+          <i class="fas fa-map-marker-alt me-2"></i><span th:text=" ${setting.location}"> 02 Nguyễn Đình Chiểu, phường Vĩnh Thọ, Nha Trang, Khánh Hòa</span><br>
           <i class="fas fa-phone me-2"></i> <span th:text="${setting.footerPhone}" class="">Số điện thoại</span><br>
           <i class="fas fa-envelope me-2"></i> <a th:href="'mailto:' + ${setting.footerEmail}" class="text-white text-decoration-underline" th:text="${setting.footerEmail}">Email</a><br>
         </p>
@@ -20,13 +17,12 @@
       <div class="col-md-12">
         <a th:href="${setting.footerFacebookUrl}" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
         <a th:href="${setting.footerYoutubeUrl}" class="text-white me-3"><i class="fab fa-youtube fa-lg"></i></a>
-        <a th:href="${setting.footerTwitterUrl}" class="text-white me-3"><i class="fab fa-x-twitter fa-lg"></i></a>
         <a th:href="${setting.footerInstagramUrl}" class="text-white me-3"><i class="fab fa-instagram fa-lg"></i></a>
       </div>
     </div>
   </div>
 
   <div class="text-center py-2" style="background-color: rgb(53	81 190)	;">
-    <small>Copyright &copy; 2025 <span th:text="${setting.footerName}">Tên footer</span></small>
+    <small>Copyright &copy; 2025 <span>Group6_FIT.NTU.CMS</span></small>
   </div>
 </footer>
