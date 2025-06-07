@@ -3,6 +3,11 @@
     let editEditor;
 
     document.addEventListener('DOMContentLoaded', function () {
+        ClassicEditor
+            .create(document.querySelector('#ckeditor-content'))
+            .catch(error => {
+                console.error(error);
+            });
     // Khởi tạo CKEditor cho modal Edit Post
     ClassicEditor
         .create(document.querySelector('#edit-ckeditor-content'))
