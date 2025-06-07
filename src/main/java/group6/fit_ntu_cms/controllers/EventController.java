@@ -6,11 +6,14 @@ import group6.fit_ntu_cms.services.EventService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -178,8 +181,33 @@ public class EventController {
   }
 
   @GetMapping("/events/{id}")
+  public String getEventById(@PathVariable Long id, Model model, HttpSession session) {
+    UsersModel user = (UsersModel) session.getAttribute("user");
+    if (user == null || globalController.isUserRole()) {
+      return "redirect:/access-denied";
+    }
+    EventModel event = eventService.getEventById(id);
+    if (event == null) {
+      model.addAttribute("errorMessage", "Sự kiện không tồn tại.");
+      model.addAttribute("events", eventService.getAllEvents());
+      model.addAttribute("event", new EventModel());
+      return "event/events";
+    }
+    model.addAttribute("user", user);
+    model.addAttribute("event", event);
+    return "event/event-detail";
+  }
+  @GetMapping("/api/events/{id}")
   @ResponseBody
-  public EventModel getEventById(@PathVariable Long id) {
-    return eventService.getEventById(id);
+  public EventModel getEventByIdJson(@PathVariable Long id, HttpSession session) {
+    UsersModel user = (UsersModel) session.getAttribute("user");
+    if (user == null || globalController.isUserRole()) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Không có quyền truy cập");
+    }
+    EventModel event = eventService.getEventById(id);
+    if (event == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sự kiện không tồn tại");
+    }
+    return event;
   }
 }

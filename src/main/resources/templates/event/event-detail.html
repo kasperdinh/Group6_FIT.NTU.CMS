@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi tiết sự kiện - <span th:text="${event.eventName}">Event Name</span></title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Poppins Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+    }
+    #content-wrapper {
+      min-height: 100vh;
+      background-color: #ffffff;
+    }
+    .container-fluid {
+      max-width: 900px;
+    }
+    .card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+    .card-header {
+      background-color: #007bff;
+      color: white;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      padding: 1.5rem;
+    }
+    .card-body {
+      padding: 2rem;
+    }
+    .event-info p {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+    .event-info strong {
+      color: #343a40;
+      margin-right: 0.5rem;
+    }
+    .event-info .bi {
+      margin-right: 0.5rem;
+      color: #6c757d;
+    }
+    .event-content {
+      background-color: #f1f3f5;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+    .event-content img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    .btn-back {
+      background-color: #007bff;
+      border-color: #007bff;
+      transition: background-color 0.3s ease;
+    }
+    .btn-back:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+    }
+    @media (max-width: 576px) {
+      .container-fluid {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body id="page-top">
+<div th:replace="~{fragments/head}"></div>
+<div id="wrapper">
+  <div th:replace="~{fragments/sidebar}"></div>
+  <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content">
+      <div th:replace="~{fragments/topbar}"></div>
+      <div class="container-fluid">
+        <h1 class="mb-4">Chi tiết sự kiện</h1>
+        <div th:if="${event == null}">
+          <div class="alert alert-danger">Không tìm thấy sự kiện</div>
+        </div>
+        <div th:if="${event != null}">
+          <div class="card">
+            <div class="card-header">
+              <h2 th:text="${event.eventName}" class="mb-0 text-dark"></h2>
+            </div>
+            <div class="card-body">
+              <div class="event-info">
+                <p>
+                  <strong><i class="bi bi-blockquote-left"></i> Tóm tắt:</strong>
+                  <span th:text="${event.summary}">Event Summary</span>
+                </p>
+                <p th:if="${event.eventLocation}">
+                  <strong><i class="bi bi-geo-alt"></i> Địa điểm:</strong>
+                  <span th:text="${event.eventLocation}">Event Location</span>
+                </p>
+                <p>
+                  <strong><i class="bi bi-clock"></i> Thời gian:</strong>
+                  <span th:text="${#temporals.format(event.beginDate, 'dd/MM/yyyy HH:mm')} + ' - ' + ${#temporals.format(event.finishDate, 'dd/MM/yyyy HH:mm')}">Start - End Time</span>
+                </p>
+                <p th:if="${event.eventImage}">
+                  <strong><i class="bi bi-image-fill"></i> Hình ảnh:</strong><br>
+                  <img th:src="@{${event.eventImage}}" alt="Event Image" style="max-width: 300px; border-radius: 10px; margin-top: 0.5rem;" />
+                </p>
+                <p th:if="${event.filePath}">
+                  <strong><i class="bi bi-file-earmark-arrow-down-fill"></i> File:</strong>
+                  <a th:href="@{${event.filePath}}" target="_blank" th:text="${event.filePath}" class="text-primary"></a>
+                </p>
+                <p>
+                  <strong><i class="bi bi-text-paragraph"></i> Nội dung:</strong>
+                </p>
+                <div class="event-content" th:utext="${event.eventDescription}"></div>
+              </div>
+              <a th:href="@{/events}" class="btn btn-back mt-3">Quay lại</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div th:replace="~{fragments/footer}"></div>
+  </div>
+</div>
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
