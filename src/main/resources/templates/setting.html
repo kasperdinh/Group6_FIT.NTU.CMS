@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Settings</title>
+  <title>Cài đặt</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -16,79 +17,112 @@
     <div id="content">
       <div th:replace="~{fragments/topbar}"></div>
       <div class="container-fluid">
-        <h1 th:text="#{setting.page}">Settings</h1>
-        <!-- Nội dung chính của trang Setting -->
+        <h1 class="mb-4">Cài đặt hệ thống</h1>
         <form th:action="@{/setting}" method="post" enctype="multipart/form-data">
           <div class="row">
-            <!-- Cột 1: Site Name và Current Logo -->
+            <!-- Thông tin chung -->
             <div class="col-md-6">
+              <h5 class="mb-3">Thông tin trang web</h5>
               <div class="mb-3">
-                <label class="form-label" th:text="#{setting.upLoadLogo}">Upload New Logo (optional)</label>
+                <label for="siteName" class="form-label">Tên trang web</label>
+                <input type="text" id="siteName" name="siteName" class="form-control"
+                       th:value="${setting.siteName}"
+                       th:placeholder="${setting.siteName != null ? setting.siteName : 'Nhập tên trang web'}"
+                       required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Tải lên logo mới (tùy chọn)</label>
                 <input type="file" class="form-control" name="logo" accept="image/*" />
               </div>
               <div class="mb-3">
                 <label class="form-label">Logo hiện tại</label>
-                <a id="existingLogo" th:href="${setting.logoUrl}" th:text="${setting.logoUrl != null ? setting.logoUrl : 'Không có logo'}" target="_blank" th:style="${setting.logoUrl != null} ? 'display: inline-block' : 'display: none'"></a>
-                <input type="hidden" id="editExistingLogo" name="existingLogo" th:value="${setting.logoUrl}"/>
+                <div>
+                  <a id="existingLogo" th:href="${setting.logoUrl}"
+                     th:text="${setting.logoUrl != null ? setting.logoUrl : 'Không có logo'}"
+                     target="_blank"
+                     th:style="${setting.logoUrl != null} ? 'display: inline-block' : 'display: none'"></a>
+                  <input type="hidden" id="editExistingLogo" name="existingLogo" th:value="${setting.logoUrl}"/>
+                </div>
               </div>
             </div>
-            <!-- Cột 2: New Logo Upload -->
+
+            <!-- Thông tin footer -->
             <div class="col-md-6">
+              <h5 class="mb-3">Thông tin footer</h5>
               <div class="mb-3">
-                <label for="siteName" th:text="#{setting.siteNameLabel}" class="form-label">Site Name</label>
-                <input type="text" id="siteName" name="siteName" class="form-control" th:value="${setting.siteName}" required>
+                <label for="footerName" class="form-label">Tên footer</label>
+                <input type="text" id="footerName" name="footerName" class="form-control"
+                       th:value="${setting.footerName}"
+                       th:placeholder="${setting.footerName != null ? setting.footerName : 'Nhập tên footer'}">
+              </div>
+              <div class="mb-3">
+                <label for="footerText" class="form-label">Mô tả footer</label>
+                <textarea id="footerText" name="footerText" class="form-control" rows="3"
+                          th:text="${setting.footerText}"
+                          th:placeholder="${setting.footerText != null ? setting.footerText : 'Nhập mô tả footer'}"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="location" class="form-label">Địa chỉ</label>
+                <input type="text" id="location" name="location" class="form-control"
+                       th:value="${setting.location}"
+                       th:placeholder="${setting.location != null ? setting.location : 'Nhập địa chỉ'}">
               </div>
             </div>
-            <div class="mb-3">
-              <label for="footerName" class="form-label">Footer Name</label>
-              <input type="text" id="footerName" name="footerName" class="form-control" th:value="${setting.footerName}">
+
+            <!-- Thông tin liên hệ -->
+            <div class="col-12">
+              <h5 class="mb-3">Thông tin liên hệ</h5>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="footerPhone" class="form-label">Số điện thoại</label>
+                  <input type="text" id="footerPhone" name="footerPhone" class="form-control"
+                         th:value="${setting.footerPhone}"
+                         th:placeholder="${setting.footerPhone != null ? setting.footerPhone : 'Nhập số điện thoại'}">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="footerEmail" class="form-label">Email</label>
+                  <input type="email" id="footerEmail" name="footerEmail" class="form-control"
+                         th:value="${setting.footerEmail}"
+                         th:placeholder="${setting.footerEmail != null ? setting.footerEmail : 'Nhập email'}">
+                </div>
+              </div>
             </div>
 
-            <!-- Footer Text -->
-            <div class="mb-3">
-              <label for="footerText" class="form-label">Footer Text</label>
-              <textarea id="footerText" name="footerText" class="form-control" rows="3" th:text="${setting.footerText}"></textarea>
-            </div>
-
-            <!-- Footer Phone -->
-            <div class="mb-3">
-              <label for="footerPhone" class="form-label">Footer Phone</label>
-              <input type="text" id="footerPhone" name="footerPhone" class="form-control" th:value="${setting.footerPhone}">
-            </div>
-
-            <!-- Footer Email -->
-            <div class="mb-3">
-              <label for="footerEmail" class="form-label">Footer Email</label>
-              <input type="email" id="footerEmail" name="footerEmail" class="form-control" th:value="${setting.footerEmail}">
-            </div>
-
-            <!-- Footer Facebook URL -->
-            <div class="mb-3">
-              <label for="footerFacebookUrl" class="form-label">Footer Facebook URL</label>
-              <input type="url" id="footerFacebookUrl" name="footerFacebookUrl" class="form-control" th:value="${setting.footerFacebookUrl}">
-            </div>
-
-            <!-- Footer Twitter URL -->
-            <div class="mb-3">
-              <label for="footerTwitterUrl" class="form-label">Footer Twitter URL</label>
-              <input type="url" id="footerTwitterUrl" name="footerTwitterUrl" class="form-control" th:value="${setting.footerTwitterUrl}">
-            </div>
-
-            <!-- Footer Youtube URL -->
-            <div class="mb-3">
-              <label for="footerYoutubeUrl" class="form-label">Footer Youtube URL</label>
-              <input type="url" id="footerYoutubeUrl" name="footerYoutubeUrl" class="form-control" th:value="${setting.footerYoutubeUrl}">
-            </div>
-
-            <!-- Footer Instagram URL -->
-            <div class="mb-3">
-              <label for="footerInstagramUrl" class="form-label">Footer Instagram URL</label>
-              <input type="url" id="footerInstagramUrl" name="footerInstagramUrl" class="form-control" th:value="${setting.footerInstagramUrl}">
+            <!-- Liên kết mạng xã hội -->
+            <div class="col-12">
+              <h5 class="mb-3">Liên kết mạng xã hội</h5>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="footerFacebookUrl" class="form-label">Facebook URL</label>
+                  <input type="url" id="footerFacebookUrl" name="footerFacebookUrl" class="form-control"
+                         th:value="${setting.footerFacebookUrl}"
+                         th:placeholder="${setting.footerFacebookUrl != null ? setting.footerFacebookUrl : 'Nhập URL Facebook'}">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="footerTwitterUrl" class="form-label">Twitter URL</label>
+                  <input type="url" id="footerTwitterUrl" name="footerTwitterUrl" class="form-control"
+                         th:value="${setting.footerTwitterUrl}"
+                         th:placeholder="${setting.footerTwitterUrl != null ? setting.footerTwitterUrl : 'Nhập URL Twitter'}">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="footerYoutubeUrl" class="form-label">YouTube URL</label>
+                  <input type="url" id="footerYoutubeUrl" name="footerYoutubeUrl" class="form-control"
+                         th:value="${setting.footerYoutubeUrl}"
+                         th:placeholder="${setting.footerYoutubeUrl != null ? setting.footerYoutubeUrl : 'Nhập URL YouTube'}">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="footerInstagramUrl" class="form-label">Instagram URL</label>
+                  <input type="url" id="footerInstagramUrl" name="footerInstagramUrl" class="form-control"
+                         th:value="${setting.footerInstagramUrl}"
+                         th:placeholder="${setting.footerInstagramUrl != null ? setting.footerInstagramUrl : 'Nhập URL Instagram'}">
+                </div>
+              </div>
             </div>
           </div>
-          <!-- Save Button dưới Current Logo -->
-          <div class="mb-3">
-            <button type="submit" class="btn btn-primary" th:text="#{setting.save}">Save Changes</button>
+
+          <!-- Nút lưu -->
+          <div class="mt-4">
+            <button type="submit" class="btn btn-primary mb-5">Lưu thay đổi</button>
           </div>
         </form>
       </div>
@@ -96,5 +130,6 @@
     <div th:replace="~{fragments/footer}"></div>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
