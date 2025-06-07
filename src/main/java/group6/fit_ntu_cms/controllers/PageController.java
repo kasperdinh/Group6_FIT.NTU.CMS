@@ -30,7 +30,7 @@ public class PageController {
     UsersModel user = (UsersModel) httpSession.getAttribute("user");
     if (user == null) {
       return "redirect:/access-denied";
-    } else if (globalController.isUserRole()) {
+    } else if (globalController.isUserRole() || globalController.isWriterRole()) {
       return "redirect:/access-denied";
     }
     model.addAttribute("user", user);
@@ -43,7 +43,7 @@ public String showCreateForm(Model model) {
     UsersModel user = (UsersModel) httpSession.getAttribute("user");
     if (user == null) {
         return "redirect:/access-denied";
-    } else if (globalController.isUserRole()) {
+    } else if (globalController.isUserRole() || globalController.isWriterRole()) {
         return "redirect:/access-denied";
     }
     model.addAttribute("user", user);

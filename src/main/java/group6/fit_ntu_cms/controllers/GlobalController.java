@@ -36,6 +36,11 @@ public class GlobalController {
     return role == Role.USER;
   }
 
+  public boolean isWriterRole() {
+    Role role = (Role) httpSession.getAttribute("role");
+    return role == Role.WRITER;
+  }
+
   @GetMapping({"/", "/home", "/index"})
   public String home(Model model) {
     PageModel defaultPage = pageService.getDefaultPage();
